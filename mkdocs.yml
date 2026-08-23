@@ -1,0 +1,47 @@
+site_name: Mango4j Crypto Workshop
+site_description: A step-by-step workshop for the mango4j crypto framework
+repo_url: https://github.com/bitstep-ie/mango4j-crypto-workshop
+repo_name: bitstep-ie/mango4j-crypto-workshop
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path:
+        - docs/.snippets
+      check_paths: true
+      dedent_subsections: true
+
+hooks:
+  - hooks.py
+
+plugins:
+  - search
+
+extra:
+  version:
+    provider: mike
+
+nav:
+  - Home: index.md
+  - Chapters:
+      - "1. Getting Started": chapters/01-getting-started.md
