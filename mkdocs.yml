@@ -45,3 +45,4 @@ nav:
   - Home: index.md
   - Steps:
       - "1. Getting Started": steps/01-getting-started.md
+  - How This Workshop Works: how-it-works.md

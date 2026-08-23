@@ -12,14 +12,14 @@ Docs-site scaffolding (MkDocs) and a `step-01` branch exist; most steps are not 
 
 ## Workshop structure: branch-per-step + MkDocs
 
-Learners create their own working branch (`git checkout -b my-workshop`) and progress through the workshop by merging one step branch into it at a time (`git merge step-01`, then `git merge step-02`, etc.), so at every point they have real, compiling code rather than just prose, on a branch that's theirs to modify without touching the step branches themselves. The docs site (built with MkDocs + Material, deployed to GitHub Pages) narrates each step and pulls its code samples directly from that step's branch, so the two never drift apart.
+Each step branch (`step-01`, `step-02`, ...) is a complete, self-contained snapshot of the workshop project at that point — not a diff meant to be merged. Learners progress by checking one out directly (`git checkout step-01`, later `git checkout step-02`, etc.), so at every point they have real, compiling code rather than just prose. There is no per-learner working branch and no merging: switching branches directly means a learner's own exercise edits can never produce a merge conflict against the next step. See [docs/how-it-works.md](docs/how-it-works.md) for the full explanation (also published on the docs site).
 
-Each step asks learners to make some changes themselves as an exercise. Before merging the next step, they're instructed to discard those changes (`git reset --hard && git clean -fd`) rather than commit them — this guarantees their working branch tip is always byte-identical to the step branch they last merged, so every subsequent `git merge step-0N` is conflict-free regardless of what they tried during the exercise.
+Each step asks learners to make some changes themselves as an exercise. Before switching to the next step, they're instructed to discard those changes (`git reset --hard && git clean -fd`) rather than commit them, then `git checkout step-0N` — this keeps the exercise from following them into the next step's branch.
 
 **Step branches**
 
 - Named `step-01`, `step-02`, ... (zero-padded, sorts naturally).
-- Each branch is a linear increment on the previous step — `step-02` should be based on `step-01`, etc. — so `git merge step-0N` from a learner's `step-0(N-1)` checkout is a clean fast-forward/no-conflict merge.
+- Each branch is a linear increment on the previous step — `step-02` should be based on `step-01`, etc. — so it's always a complete, ready-to-build snapshot, and `git diff step-01..step-02` shows exactly what changed between steps (used for authoring, not something learners need to run).
 - Contain only the actual workshop project code (currently a standalone Maven project depending on `mango4j-crypto`) — not `AGENTS.md`/`CLAUDE.md`/docs-site files, which live only on `main`.
 - Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in `pom.xml`:
   ```xml
