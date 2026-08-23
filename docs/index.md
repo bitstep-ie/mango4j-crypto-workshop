@@ -11,12 +11,18 @@ Each chapter builds on the last. Rather than just reading, you'll progress your 
 
 ## How to follow along
 
-Clone the workshop repository and start from chapter 1:
+Clone the workshop repository, then create and switch to your own working branch:
 
 ```bash
 git clone https://github.com/bitstep-ie/mango4j-crypto-workshop.git
 cd mango4j-crypto-workshop
-git checkout chapter-01
+git checkout -b my-workshop
+```
+
+Merge in chapter 1 to get started:
+
+```bash
+git merge chapter-01
 ```
 
 Each subsequent chapter page will tell you which branch to merge in next, e.g.:

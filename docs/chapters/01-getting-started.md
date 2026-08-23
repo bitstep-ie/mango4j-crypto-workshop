@@ -4,7 +4,8 @@ In this chapter you'll create a Maven project and add the `mango4j-crypto` depen
 
 !!! tip "Follow along"
     ```bash
-    git checkout chapter-01
+    git checkout -b my-workshop
+    git merge chapter-01
     ```
 
 ## Add the dependency

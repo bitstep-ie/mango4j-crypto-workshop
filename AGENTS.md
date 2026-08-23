@@ -12,7 +12,7 @@ Docs-site scaffolding (MkDocs) and a `chapter-01` branch exist; most chapters ar
 
 ## Workshop structure: branch-per-chapter + MkDocs
 
-Learners progress through the workshop by merging one chapter branch into their local checkout at a time (`git checkout chapter-01`, then `git merge chapter-02`, etc.), so at every step they have real, compiling code rather than just prose. The docs site (built with MkDocs + Material, deployed to GitHub Pages) narrates each chapter and pulls its code samples directly from that chapter's branch, so the two never drift apart.
+Learners create their own working branch (`git checkout -b my-workshop`) and progress through the workshop by merging one chapter branch into it at a time (`git merge chapter-01`, then `git merge chapter-02`, etc.), so at every step they have real, compiling code rather than just prose, on a branch that's theirs to modify without touching the chapter branches themselves. The docs site (built with MkDocs + Material, deployed to GitHub Pages) narrates each chapter and pulls its code samples directly from that chapter's branch, so the two never drift apart.
 
 **Chapter branches**
 
@@ -37,7 +37,7 @@ Learners progress through the workshop by merging one chapter branch into their 
   ```
   (path is relative to `docs/.snippets/`, `:label` selects the marked section; omit `:label` to include a whole file.)
 - `requirements.txt` — `mkdocs`, `mkdocs-material`, `mike`, `pymdown-extensions`.
-- `.github/workflows/docs.yml` — on push to `main`, fetches all branches (chapter branches must be fetchable — `fetch-depth: 0` plus an explicit `git fetch` of all remote heads) and deploys via `mike deploy --push --update-aliases latest latest` to the `gh-pages` branch.
+- `.github/workflows/docs.yml` — on push to `main`, fetches all branches (chapter branches must be fetchable — `fetch-depth: 0` plus an explicit `git fetch` of all remote heads) and deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
 
 **Adding a new chapter**
 
