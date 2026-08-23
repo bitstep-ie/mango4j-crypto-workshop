@@ -1,15 +1,15 @@
 # 1. Getting Started
 
-In this step you'll create a Maven project and add the `mango4j-crypto` dependency, ready to start encrypting entity fields in the next step.
+This step sets up a Maven project with the `mango4j-crypto` dependency already in place, ready to start encrypting entity fields in the next step.
 
 !!! tip "Follow along"
     ```bash
     git checkout step-01
     ```
 
-## Add the dependency
+## The dependency
 
-Add `mango4j-crypto` to your `pom.xml`:
+Checking out this step gives you a `pom.xml` with `mango4j-crypto` already declared:
 
 ```xml
 --8<-- "step-01/pom.xml:dependency"
