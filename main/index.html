@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="chapters/01-getting-started/">
+        <link rel="next" href="steps/01-getting-started/">
       
       
         
@@ -246,11 +246,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="chapters/01-getting-started/" class="md-tabs__link">
+        <a href="steps/01-getting-started/" class="md-tabs__link">
           
   
   
-  Chapters
+  Steps
 
         </a>
       </li>
@@ -392,10 +392,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#chapters" class="md-nav__link">
+  <a href="#steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chapters
+        Steps
       
     </span>
   </a>
@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Chapters
+    Steps
   
 
     
@@ -456,7 +456,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Chapters
+    Steps
   
 
           </label>
@@ -469,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="chapters/01-getting-started/" class="md-nav__link">
+      <a href="steps/01-getting-started/" class="md-nav__link">
         
   
   
@@ -546,10 +546,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#chapters" class="md-nav__link">
+  <a href="#steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chapters
+        Steps
       
     </span>
   </a>
@@ -578,7 +578,8 @@
 
 <h1 id="mango4j-crypto-workshop">Mango4j Crypto Workshop</h1>
 <p>A hands-on, step-by-step workshop for <a href="https://github.com/bitstep-ie/mango4j-crypto">mango4j-crypto</a> — a framework for implementing Application Level Encryption in Java applications.</p>
-<p>Each chapter builds on the last. Rather than just reading, you'll progress your own local copy of the project chapter by chapter, merging in each chapter's changes as you go — so at every step you have real, compiling code, not just snippets on a page.</p>
+<p>Each step builds on the last. Rather than just reading, you'll progress your own local copy of the project step by step, merging in each step's changes as you go — so at every point you have real, compiling code, not just snippets on a page.</p>
+<p>Each step's page will ask you to make some changes yourself as an exercise. Before moving to the next step, <strong>discard those changes</strong> — this keeps your working branch identical to the step branch you last merged, so merging the next step is always clean, with no conflicts against your own edits.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 <li>JDK 17+</li>
@@ -590,16 +591,18 @@
 <span class="nb">cd</span><span class="w"> </span>mango4j-crypto-workshop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>my-workshop
 </code></pre></div>
-<p>Merge in chapter 1 to get started:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>chapter-01
+<p>Merge in step 1 to get started:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>step-01
 </code></pre></div>
-<p>Each subsequent chapter page will tell you which branch to merge in next, e.g.:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>chapter-02
+<p>Once you've tried a step's exercise, discard your changes and merge the next step:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>reset<span class="w"> </span>--hard
+git<span class="w"> </span>clean<span class="w"> </span>-fd
+git<span class="w"> </span>merge<span class="w"> </span>step-02
 </code></pre></div>
-<p>The code samples shown on each page are pulled directly from that chapter's branch, so what you read here always matches what you'll have locally.</p>
-<h2 id="chapters">Chapters</h2>
+<p>The code samples shown on each page are pulled directly from that step's branch, so what you read here always matches what you'll have locally.</p>
+<h2 id="steps">Steps</h2>
 <ol>
-<li><a href="chapters/01-getting-started/">Getting Started</a></li>
+<li><a href="steps/01-getting-started/">Getting Started</a></li>
 </ol>
 
 
