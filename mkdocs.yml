@@ -43,5 +43,5 @@ extra:
 
 nav:
   - Home: index.md
-  - Chapters:
-      - "1. Getting Started": chapters/01-getting-started.md
+  - Steps:
+      - "1. Getting Started": steps/01-getting-started.md

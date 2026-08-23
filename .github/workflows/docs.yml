@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch chapter branches
+      - name: Fetch step branches
         run: git fetch origin '+refs/heads/*:refs/remotes/origin/*'
 
       - uses: actions/setup-python@v5

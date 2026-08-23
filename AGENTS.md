@@ -4,20 +4,22 @@ Guidance for agents working in this repository.
 
 ## Project purpose
 
-This repository is a step-by-step workshop teaching the **mango4j** crypto framework. It is intended to guide learners through progressively building up usage of mango4j, likely as a series of numbered/staged exercises or modules.
+This repository is a step-by-step workshop teaching the **mango4j** crypto framework. It is intended to guide learners through progressively building up usage of mango4j, likely as a series of numbered steps.
 
 ## Current status
 
-Docs-site scaffolding (MkDocs) and a `chapter-01` branch exist; most chapters are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, etc.), so workshop steps are implemented in Java/Maven.
+Docs-site scaffolding (MkDocs) and a `step-01` branch exist; most steps are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, etc.), so workshop code is implemented in Java/Maven.
 
-## Workshop structure: branch-per-chapter + MkDocs
+## Workshop structure: branch-per-step + MkDocs
 
-Learners create their own working branch (`git checkout -b my-workshop`) and progress through the workshop by merging one chapter branch into it at a time (`git merge chapter-01`, then `git merge chapter-02`, etc.), so at every step they have real, compiling code rather than just prose, on a branch that's theirs to modify without touching the chapter branches themselves. The docs site (built with MkDocs + Material, deployed to GitHub Pages) narrates each chapter and pulls its code samples directly from that chapter's branch, so the two never drift apart.
+Learners create their own working branch (`git checkout -b my-workshop`) and progress through the workshop by merging one step branch into it at a time (`git merge step-01`, then `git merge step-02`, etc.), so at every point they have real, compiling code rather than just prose, on a branch that's theirs to modify without touching the step branches themselves. The docs site (built with MkDocs + Material, deployed to GitHub Pages) narrates each step and pulls its code samples directly from that step's branch, so the two never drift apart.
 
-**Chapter branches**
+Each step asks learners to make some changes themselves as an exercise. Before merging the next step, they're instructed to discard those changes (`git reset --hard && git clean -fd`) rather than commit them — this guarantees their working branch tip is always byte-identical to the step branch they last merged, so every subsequent `git merge step-0N` is conflict-free regardless of what they tried during the exercise.
 
-- Named `chapter-01`, `chapter-02`, ... (zero-padded, sorts naturally).
-- Each branch is a linear increment on the previous chapter — `chapter-02` should be based on `chapter-01`, etc. — so `git merge chapter-0N` from a learner's `chapter-0(N-1)` checkout is a clean fast-forward/no-conflict merge.
+**Step branches**
+
+- Named `step-01`, `step-02`, ... (zero-padded, sorts naturally).
+- Each branch is a linear increment on the previous step — `step-02` should be based on `step-01`, etc. — so `git merge step-0N` from a learner's `step-0(N-1)` checkout is a clean fast-forward/no-conflict merge.
 - Contain only the actual workshop project code (currently a standalone Maven project depending on `mango4j-crypto`) — not `AGENTS.md`/`CLAUDE.md`/docs-site files, which live only on `main`.
 - Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in `pom.xml`:
   ```xml
@@ -30,20 +32,20 @@ Learners create their own working branch (`git checkout -b my-workshop`) and pro
 **Docs site (`main` branch)**
 
 - `mkdocs.yml` — site config; theme is `material`; `pymdownx.snippets` is configured with `base_path: [docs/.snippets]` and `dedent_subsections: true`.
-- `hooks.py` — an MkDocs build hook (`on_config`) that finds every `chapter-\d+` branch (local or `origin/`) and materializes each into a `git worktree` at `docs/.snippets/chapter-NN/`. This directory is build-generated and gitignored — never commit it or edit files inside it.
-- `docs/chapters/0N-*.md` — one page per chapter. Pull code into a page with:
+- `hooks.py` — an MkDocs build hook (`on_config`) that finds every `step-\d+` branch (local or `origin/`) and materializes each into a `git worktree` at `docs/.snippets/step-NN/`. This directory is build-generated and gitignored — never commit it or edit files inside it.
+- `docs/steps/0N-*.md` — one page per step. Pull code into a page with:
   ```
-  --8<-- "chapter-01/pom.xml:dependency"
+  --8<-- "step-01/pom.xml:dependency"
   ```
   (path is relative to `docs/.snippets/`, `:label` selects the marked section; omit `:label` to include a whole file.)
 - `requirements.txt` — `mkdocs`, `mkdocs-material`, `mike`, `pymdown-extensions`.
-- `.github/workflows/docs.yml` — on push to `main`, fetches all branches (chapter branches must be fetchable — `fetch-depth: 0` plus an explicit `git fetch` of all remote heads) and deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
+- `.github/workflows/docs.yml` — on push to `main`, fetches all branches (step branches must be fetchable — `fetch-depth: 0` plus an explicit `git fetch` of all remote heads) and deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
 
-**Adding a new chapter**
+**Adding a new step**
 
-1. Branch `chapter-0N` from `chapter-0(N-1)`, make the code changes for that step, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, commit, push.
-2. Add `docs/chapters/0N-*.md` on `main`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
-3. Preview locally with `mkdocs serve` (requires the chapter branches to exist/be fetchable locally so `hooks.py` can create their worktrees).
+1. Branch `step-0N` from `step-0(N-1)`, make the code changes for that step, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, commit, push.
+2. Add `docs/steps/0N-*.md` on `main`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
+3. Preview locally with `mkdocs serve` (requires the step branches to exist/be fetchable locally so `hooks.py` can create their worktrees).
 
 ## License
 
