@@ -585,10 +585,13 @@
 <li>Maven</li>
 </ul>
 <h2 id="how-to-follow-along">How to follow along</h2>
-<p>Clone the workshop repository and start from chapter 1:</p>
+<p>Clone the workshop repository, then create and switch to your own working branch:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bitstep-ie/mango4j-crypto-workshop.git
 <span class="nb">cd</span><span class="w"> </span>mango4j-crypto-workshop
-git<span class="w"> </span>checkout<span class="w"> </span>chapter-01
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>my-workshop
+</code></pre></div>
+<p>Merge in chapter 1 to get started:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>chapter-01
 </code></pre></div>
 <p>Each subsequent chapter page will tell you which branch to merge in next, e.g.:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>chapter-02
