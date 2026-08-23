@@ -28,16 +28,19 @@ def _branch_name(ref):
 
 
 def _list_chapter_branches():
-    branches = set()
-    for line in _run(["git", "branch", "--format=%(refname:short)"]).splitlines():
-        name = _branch_name(line)
-        if CHAPTER_BRANCH_RE.match(name):
-            branches.add(name)
+    # Maps chapter name -> ref to check out. Prefers a local branch (dev
+    # machines) over the remote-tracking ref (CI, where only `origin/*`
+    # exists) when both are present.
+    branches = {}
     for line in _run(["git", "branch", "-r", "--format=%(refname:short)"]).splitlines():
         name = _branch_name(line)
         if CHAPTER_BRANCH_RE.match(name):
-            branches.add(name)
-    return sorted(branches)
+            branches[name] = line.strip()
+    for line in _run(["git", "branch", "--format=%(refname:short)"]).splitlines():
+        name = _branch_name(line)
+        if CHAPTER_BRANCH_RE.match(name):
+            branches[name] = name
+    return dict(sorted(branches.items()))
 
 
 def on_config(config):
@@ -54,16 +57,16 @@ def on_config(config):
     except subprocess.CalledProcessError:
         existing = ""
 
-    for branch in branches:
+    for branch, ref in branches.items():
         worktree_path = SNIPPETS_DIR / branch
         if str(worktree_path) in existing or worktree_path.exists():
             continue
         result = subprocess.run(
-            ["git", "worktree", "add", "--detach", str(worktree_path), branch],
+            ["git", "worktree", "add", "--detach", str(worktree_path), ref],
             capture_output=True,
             text=True,
         )
         if result.returncode != 0:
-            print(f"[hooks.py] failed to add worktree for '{branch}': {result.stderr.strip()}")
+            print(f"[hooks.py] failed to add worktree for '{branch}' ({ref}): {result.stderr.strip()}")
 
     return config
