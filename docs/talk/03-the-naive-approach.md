@@ -1,17 +1,17 @@
-# 3. The Naive Approach: How Most Teams First Build This
+# 3. The Naive Approach: A Simple Case of Implementing ALE
 
-## Encrypting each field directly into its own column
+## Encryption with just the ciphertext
+
+*Content coming soon.*
+
+## Adding the key alias alongside the ciphertext
+
+*Content coming soon.*
+
+## HMAC stored in a single field for search purposes
 
 *Content coming soon.*
 
 ## Ad hoc cryptographic code scattered across the codebase
-
-*Content coming soon.*
-
-## Hardcoding a single cryptographic provider
-
-*Content coming soon.*
-
-## A HMAC-in-a-column for search and uniqueness
 
 *Content coming soon.*

@@ -1,4 +1,4 @@
-# 7. Failure Mode: Locked Into One Encryption Scheme or Provider
+# 5. Encryption With Multiple Providers and Key Rotation Support
 
 ## Hardcoding a KMS/HSM/algorithm choice into application code
 
@@ -13,5 +13,9 @@
 *Content coming soon.*
 
 ## The cost of a "big bang" re-encryption project
+
+*Content coming soon.*
+
+## Adding encryption key rotation support to the demo
 
 *Content coming soon.*

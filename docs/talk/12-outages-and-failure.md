@@ -1,4 +1,4 @@
-# 9. When It All Comes Together: Outages and Application Failure
+# 12. When It All Comes Together: Outages and Application Failure
 
 ## Search functionality silently degrading in production
 

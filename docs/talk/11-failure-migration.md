@@ -1,4 +1,4 @@
-# 8. Failure Mode: Migrating an Unencrypted Field to Encrypted
+# 11. Failure Mode: Migrating an Unencrypted Field to Encrypted
 
 ## Why you can't just "turn on" encryption for an existing column
 

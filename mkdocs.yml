@@ -51,16 +51,19 @@ nav:
   - The Talk:
       - "1. What Is ALE?": talk/01-what-is-ale.md
       - "2. Why Do We Need It?": talk/02-why-we-need-it.md
-      - "3. The Naive Approach": talk/03-the-naive-approach.md
+      - "3. A Simple Case of ALE": talk/03-the-naive-approach.md
       - "4. Failure: Encrypted Columns": talk/04-failure-columns.md
-      - "5. Failure: Single HMAC Column": talk/05-failure-single-hmac.md
-      - "6. Failure: Key Rotation": talk/06-failure-key-rotation.md
-      - "7. Failure: Locked-In Provider": talk/07-failure-locked-in.md
-      - "8. Failure: Migration": talk/08-failure-migration.md
-      - "9. Outages and Application Failure": talk/09-outages-and-failure.md
-      - "10. Doing It Right": talk/10-doing-it-right.md
-      - "11. Introducing mango4j-crypto": talk/11-introducing-mango4j-crypto.md
-      - "12. What We're Building Today": talk/12-what-were-building-today.md
+      - "5. Multiple Providers & Key Rotation": talk/05-multiple-providers-and-key-rotation.md
+      - "6. HMAC Search & Key Rotation": talk/06-hmac-search-key-rotation.md
+      - "7. HMAC for Uniqueness": talk/07-hmac-unique-constraints.md
+      - "8. Single vs. List HMAC Strategy": talk/08-hmac-strategies-single-vs-list.md
+      - "9. Rekeying Encrypted Data": talk/09-rekeying-encrypted-data.md
+      - "10. Rekeying HMACs": talk/10-rekeying-hmacs.md
+      - "11. Failure: Migration": talk/11-failure-migration.md
+      - "12. Outages and Application Failure": talk/12-outages-and-failure.md
+      - "13. Doing It Right": talk/13-doing-it-right.md
+      - "14. Introducing mango4j-crypto": talk/14-introducing-mango4j-crypto.md
+      - "15. What We're Building Today": talk/15-what-were-building-today.md
   - Workshop:
       - "1. Getting Started": stages/01-getting-started.md
       - "2. Encrypting a Field": stages/02-encrypting-a-field.md

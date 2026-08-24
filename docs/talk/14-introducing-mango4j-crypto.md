@@ -1,4 +1,4 @@
-# 11. Introducing mango4j-crypto
+# 14. Introducing mango4j-crypto
 
 ## Key-driven design: keys as objects, not strings
 
