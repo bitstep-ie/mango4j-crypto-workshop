@@ -3,58 +3,77 @@
 !!! abstract "Overview"
     This is the first stage that actually encrypts something. The goal is the minimum set of moving parts needed to do that: one field marked `@Encrypt`, one field marked `@EncryptedData` for the ciphertext to land in, a key source (`CryptoKeyProvider`), and something to do the actual encrypting (`EncryptionServiceDelegate`). We deliberately use a fake Base64 "encryption" delegate here so the plumbing is visible without any real cryptography or KMS setup getting in the way — real encryption comes in a later stage.
 
+This stage comes as two projects:
+
+- **`starter/`** — what you actually work in. It compiles and runs as-is, but `PaymentCardEntity` isn't annotated yet, so nothing gets encrypted (`encryptedData` stays `null`). Look for the `// TODO` comments — that's the exercise.
+- **`complete/`** — the finished, working reference. Check it if you get stuck, or just to confirm your result.
+
 !!! tip "Follow along"
     ```bash
-    cd stages/02-Encrypt-a-Field
+    cd stages/02-Encrypt-a-Field/starter
     ```
-    Using an IDE instead? Just open `stages/02-Encrypt-a-Field` as its own project.
+    Using an IDE instead? Just open `stages/02-Encrypt-a-Field/starter` as its own project.
 
 ## The entity
 
-`mango4j-crypto` works by annotating fields on a plain Java object. `PaymentCardEntity` has two fields that matter:
+`mango4j-crypto` works by annotating fields on a plain Java object. `PaymentCardEntity` has two fields that matter — this is what they look like once annotated:
 
 ```java
---8<-- "02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypt-field"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypt-field"
 ```
 
 `@Encrypt` marks `cardNumber` as confidential — note it must be `transient`, which the library enforces. Its plaintext value is never written to `encryptedData` or stored anywhere by the library itself; it just stays as a normal, in-memory value on the object you're holding.
 
 ```java
---8<-- "02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypted-data-field"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypted-data-field"
 ```
 
 `@EncryptedData` marks where the resulting ciphertext goes. This is the field you'd actually persist (to a database, a file, wherever) — never `cardNumber` itself.
 
+**Your turn:** in `starter/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java`, replace the two `// TODO` comments with `@Encrypt` and `@EncryptedData` on the fields above them.
+
 ## Wiring up CryptoShield
 
-`CryptoShield` is the object you call `encrypt()`/`decrypt()` on. Building one needs two things: something that supplies cryptographic keys (a `CryptoKeyProvider`), and something that does the actual encrypting (an `EncryptionServiceDelegate`).
+`CryptoShield` is the object you call `encrypt()`/`decrypt()` on. Building one needs two things: something that supplies cryptographic keys (a `CryptoKeyProvider`), and something that does the actual encrypting (an `EncryptionServiceDelegate`). Both are already wired up for you in `starter/` — this part isn't the exercise.
 
-For this stage, [`InMemoryCryptoKeyProvider`](https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java) hands back one hardcoded key — a real application would look keys up from wherever it stores them. And rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in `Base64EncryptionService`, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.
+For this stage, [`InMemoryCryptoKeyProvider`](https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java) hands back one hardcoded key — a real application would look keys up from wherever it stores them. And rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in `Base64EncryptionService`, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.
 
 ```java
---8<-- "02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/Main.java:build-shield"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:build-shield"
 ```
 
 ## Encrypting and decrypting
 
 ```java
---8<-- "02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/Main.java:encrypt"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:encrypt"
 ```
 
 `encrypt()` reads the `@Encrypt` field(s), builds the ciphertext, and writes it to the `@EncryptedData` field — `cardNumber` itself is left untouched, so you can keep using it in your code right after encrypting.
 
 ```java
---8<-- "02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/Main.java:decrypt"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:decrypt"
 ```
 
 `decrypt()` does the reverse: given only the ciphertext, it reconstructs `cardNumber`. This is what "loading an entity back from storage" looks like in practice — you'd load a row containing only `encryptedData`, then call `decrypt()` to get the real value back.
 
-Run it and you'll see something like:
+## Running it
+
+Run `starter/` now, before making any changes, and you'll see:
+
+```
+cardNumber (still in memory): 4111111111111111
+encryptedData:                null
+decrypted cardNumber:         null
+```
+
+Nothing's encrypted yet — that's expected, `PaymentCardEntity` isn't annotated. Once you've added the two annotations, run it again and you should see:
 
 ```
 cardNumber (still in memory): 4111111111111111
 encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
 decrypted cardNumber:         4111111111111111
 ```
+
+That's `complete/` — if yours doesn't match, compare against it.
 
 Next: *3. Coming soon*.

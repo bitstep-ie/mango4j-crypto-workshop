@@ -8,7 +8,7 @@ This repository is a step-by-step workshop teaching the **mango4j** crypto frame
 
 ## Current status
 
-Docs-site scaffolding (MkDocs) and `stages/01-Getting-Started/` (adds the `mango4j-crypto` dependency) and `stages/02-Encrypt-a-Field/` (encrypts a single `cardNumber` field, verified by actually compiling/running against the real published `mango4j-crypto` 1.0.0) exist; later stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
+Docs-site scaffolding (MkDocs), `stages/01-Getting-Started/` (a plain stage: adds the `mango4j-crypto` dependency), and `stages/02-Encrypt-a-Field/` (a starter/complete stage: encrypts a single `cardNumber` field) exist, plus `.github/workflows/ci.yml` which builds/verifies every stage; later stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
 
 ## Workshop structure: folder-per-stage + MkDocs
 
@@ -19,13 +19,35 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
 - Named `stages/NN-Stage-Name/` — zero-padded number prefix (so folders sort in workshop order) followed by a short, descriptive, hyphenated title-case name (e.g. `stages/01-Getting-Started/`, `stages/02-Encrypt-a-Field/`). Not `stage-01`/`stage-02` — the folder name itself should say what the stage is about.
 - Each folder is typically authored by copying the previous stage's folder and adding that stage's changes, so it's always a complete, ready-to-build project, and e.g. `diff -r stages/01-Getting-Started stages/02-Encrypt-a-Field` shows exactly what changed between stages (an authoring detail, not something learners need to run).
 - **Every stage's `pom.xml` must have a distinct `artifactId` and `name`** (e.g. `mango4j-crypto-workshop-stage-02` / "Mango4j Crypto Workshop - Stage 2: Encrypting a Field") — never copy-paste the previous stage's artifactId/name unchanged. Learners open individual stage folders as separate IDE projects, and identical artifactId/name across stages makes them indistinguishable there.
-- Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in `pom.xml`:
-  ```xml
-  <!-- --8<-- [start:dependency] -->
-  <dependency>...</dependency>
-  <!-- --8<-- [end:dependency] -->
+- Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in a Java file:
+  ```java
+  // --8<-- [start:dependency]
+  ...
+  // --8<-- [end:dependency]
   ```
-  Pick a descriptive label per marker (`dependency`, `encrypt-annotation`, etc.) — labels only need to be unique within one file.
+  Pick a descriptive label per marker (`dependency`, `encrypt-annotation`, etc.) — labels only need to be unique within one file. **In XML files (`pom.xml` etc.) do not wrap the marker in an XML comment** (`<!-- --8<-- ... -->`) — XML comments cannot contain `--`, and `--8<--` contains it, so the file becomes invalid XML that Maven's parser rejects even though `mkdocs build` won't catch it (it just reads raw text). Use an XML processing instruction instead, which has no such restriction:
+  ```xml
+  <?mkdocs-snippet --8<-- [start:dependency]?>
+  ...
+  <?mkdocs-snippet --8<-- [end:dependency]?>
+  ```
+
+**Stages with a starter/complete split**
+
+A stage can instead be three sibling folders — `template/`, `complete/`, and `starter/` — when it should give learners a partially-working exercise rather than a fully-built example (a live-led session needs devs to actually *do* something, not just read finished code). `stages/02-Encrypt-a-Field/` is the example to copy this pattern from.
+
+- `template/src/` is the **only hand-authored source** — not itself a runnable project (no `pom.xml`). It's ordinary source with `--8<--` docs markers plus TODO regions marking the exercise:
+  ```java
+  // TODO:START annotate-encrypt
+  @Encrypt
+  // TODO:END annotate-encrypt
+  ```
+- `scripts/generate_stage.py <stage-dir>` generates both runnable projects from `template/src/`:
+  - `complete/src/` — TODO marker comments stripped, leaving just the wrapped code (e.g. `@Encrypt` alone). This is the finished reference project, and what the docs site pulls its snippets from — it must never show TODO clutter, since it's presented as "the finished version."
+  - `starter/src/` — each TODO region collapsed to one `// TODO: <label> - see the stage docs` placeholder line. This is what learners actually work in; it compiles and runs as-is (functionally incomplete, not broken).
+  - Running it again with no template changes is a no-op (idempotent) — this is what lets CI detect drift (see below).
+- `complete/pom.xml` and `starter/pom.xml` are hand-maintained separately (not generated) — each needs its own distinct `artifactId`/`name` per the rule above, and TODO markers rarely belong in build files anyway.
+- After editing `template/src/`, always rerun `python3 scripts/generate_stage.py stages/NN-Stage-Name` and commit the regenerated `complete/`/`starter/` alongside it — never hand-edit files under `complete/src/` or `starter/src/` directly, they'll just get overwritten and drift will fail CI.
 
 **Docs site**
 
@@ -38,11 +60,23 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
 - `requirements.txt` — `mkdocs`, `mkdocs-material`, `mike`, `pymdown-extensions`.
 - `.github/workflows/docs.yml` — on push to `main`, deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
 
+**CI**
+
+`.github/workflows/ci.yml` runs on every push and pull request (unlike `docs.yml`, which only deploys on push to `main`) and discovers stages generically by globbing, so adding a new stage never requires editing the workflow itself:
+
+- `stages/*/pom.xml` (plain stages) — must `mvn compile`.
+- `stages/*/complete/pom.xml` — must `mvn compile`, and if it declares `exec-maven-plugin`, must also `mvn exec:java` successfully — this is what proves a stage actually *works*, not just compiles.
+- `stages/*/starter/pom.xml`, where present — must `mvn compile` (only compile, since it's deliberately unfinished).
+- `stages/*/template/` — for every stage with one, reruns `scripts/generate_stage.py` and then `git diff --exit-code`, failing the build if `complete/`/`starter/` don't exactly match what the template generates (i.e. someone edited a generated file directly, or edited `template/` without regenerating).
+
 **Adding a new stage**
 
-1. Copy the previous stage's folder to `stages/NN-Stage-Name/` (zero-padded number + hyphenated title-case name), update `pom.xml`'s `artifactId`/`name` to be stage-specific, make the code changes for that stage, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, verify it actually compiles/runs (`mvn compile`, or `mvn exec:java` where applicable), commit.
-2. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes. Start the page with an `!!! abstract "Overview"` admonition — 2-3 sentences on what problem this stage solves and why, written so a workshop facilitator can talk through it before releasing learners to work through the rest of the page themselves (see stages 1 and 2 for examples). This is what makes the docs usable for both self-serve reading and live-led sessions from the same page, without needing a separate facilitator guide.
-3. Preview locally with `mkdocs serve`.
+1. Either:
+   - **Plain stage** (nothing to leave unfinished): copy the previous stage's folder to `stages/NN-Stage-Name/`, update `pom.xml`'s `artifactId`/`name`, make the code changes, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, verify it actually compiles/runs (`mvn compile`, or `mvn exec:java` where applicable).
+   - **Starter/complete stage** (an exercise for learners to do): create `stages/NN-Stage-Name/template/src/` with `--8<--` docs markers and `TODO:START`/`TODO:END` regions around the exercise, hand-write `complete/pom.xml` and `starter/pom.xml` with distinct artifactIds/names, run `python3 scripts/generate_stage.py stages/NN-Stage-Name`, then verify both `complete/` (compiles and runs correctly) and `starter/` (compiles, and demonstrates the "before" state) actually work.
+2. Commit.
+3. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes (pointing at `complete/` for a split stage). Start the page with an `!!! abstract "Overview"` admonition — 2-3 sentences on what problem this stage solves and why, written so a workshop facilitator can talk through it before releasing learners to work through the rest of the page themselves (see stages 1 and 2 for examples). This is what makes the docs usable for both self-serve reading and live-led sessions from the same page, without needing a separate facilitator guide.
+4. Preview locally with `mkdocs serve`.
 
 ## License
 

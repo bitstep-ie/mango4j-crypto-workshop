@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  stages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build plain stage projects
+        run: |
+          set -euo pipefail
+          for pom in stages/*/pom.xml; do
+            [ -e "$pom" ] || continue
+            echo "::group::$pom"
+            mvn -B -q -f "$pom" compile
+            echo "::endgroup::"
+          done
+
+      - name: Build complete/starter stage projects
+        run: |
+          set -euo pipefail
+          for complete_pom in stages/*/complete/pom.xml; do
+            [ -e "$complete_pom" ] || continue
+            stage_dir="$(dirname "$(dirname "$complete_pom")")"
+
+            echo "::group::$stage_dir/complete"
+            mvn -B -q -f "$complete_pom" compile
+            if grep -q exec-maven-plugin "$complete_pom"; then
+              # complete/ must not just compile - it must actually run correctly
+              mvn -B -q -f "$complete_pom" exec:java
+            fi
+            echo "::endgroup::"
+
+            starter_pom="$stage_dir/starter/pom.xml"
+            if [ -e "$starter_pom" ]; then
+              echo "::group::$stage_dir/starter"
+              # starter/ only needs to compile - it's deliberately unfinished
+              mvn -B -q -f "$starter_pom" compile
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Verify complete/ and starter/ match their template/
+        run: |
+          set -euo pipefail
+          for template_dir in stages/*/template; do
+            [ -d "$template_dir" ] || continue
+            python3 scripts/generate_stage.py "$(dirname "$template_dir")"
+          done
+          git diff --exit-code -- stages

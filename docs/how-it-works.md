@@ -21,30 +21,44 @@ Because each stage's folder is entirely separate from the others, there's no git
 
 Under the hood, later stages are typically authored by copying the previous stage's folder and adding that stage's changes, so `diff -r stages/01-Getting-Started stages/02-Encrypt-a-Field` shows exactly what changed. That's an authoring detail, not something learners need to know.
 
+## Some stages give you a starter and a complete version
+
+A fully working example is great to read, but not much to actually *do*. Where a stage is meant to be a hands-on exercise (like [stage 2](stages/02-encrypting-a-field.md)), its folder splits into two runnable projects instead of one:
+
+- **`starter/`** — what you actually work in. It compiles and runs on its own, but is deliberately left unfinished — look for `// TODO` comments marking what to add.
+- **`complete/`** — the finished, working reference, to compare against or fall back on.
+
+Both are generated from a single hand-authored `template/`, so they can never quietly drift apart: `complete/` is `template/` with the `// TODO:START ... TODO:END` markers stripped out (leaving just the finished code), and `starter/` is `template/` with those same regions collapsed down to a single `// TODO: ... - see the stage docs` placeholder. This repo's CI regenerates both from `template/` on every push and fails if the result doesn't match what's committed, so `starter/` and `complete/` are guaranteed to always be exactly what the exercise says they are.
+
 ## Code samples are pulled live from the stage folders
 
-Every code block on a stage's page in this docs site is not hand-copied — it's pulled directly out of that stage's actual folder at build time, so the docs can never drift out of sync with code that really compiles.
+Every code block on a stage's page in this docs site is not hand-copied — it's pulled directly out of that stage's actual folder at build time (`complete/`, for a starter/complete stage), so the docs can never drift out of sync with code that really compiles.
 
 This is done with the `pymdownx.snippets` Markdown extension, configured in `mkdocs.yml` with `stages/` as its search path. A stage's source file can mark the interesting part of itself with comments:
 
-```xml
-<!-- --8<-- [start:dependency] -->
-<dependency>
-    <groupId>ie.bitstep.mango</groupId>
-    <artifactId>mango4j-crypto</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<!-- --8<-- [end:dependency] -->
+```java
+// --8<-- [start:encrypt-field]
+@Encrypt
+private transient String cardNumber;
+// --8<-- [end:encrypt-field]
 ```
 
 And a docs page includes just that section with:
 
 ```
---8<-- "01-Getting-Started/pom.xml:dependency"
+--8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypt-field"
 ```
 
-The path is relative to `stages/`, and `:dependency` selects only the text between the matching `[start:dependency]` / `[end:dependency]` markers — the rest of the file (boilerplate, unrelated config) is left out. Dropping the `:label` includes the whole file instead. Marker labels only need to be unique within their own file, so pick something descriptive per snippet (`dependency`, `encrypt-annotation`, `key-provider`, ...).
+The path is relative to `stages/`, and `:encrypt-field` selects only the text between the matching `[start:encrypt-field]` / `[end:encrypt-field]` markers — the rest of the file (boilerplate, unrelated config) is left out. Dropping the `:label` includes the whole file instead. Marker labels only need to be unique within their own file, so pick something descriptive per snippet (`dependency`, `encrypt-field`, `build-shield`, ...).
+
+!!! note "XML files need a different marker style"
+    In an XML file (`pom.xml` and the like), the usual `<!-- --8<-- [start:label] -->` comment form is actually invalid XML — comments can't contain `--`, and `--8<--` contains it. Maven's parser rejects it even though `mkdocs build` won't catch the problem (it just reads the raw text). Use an XML processing instruction instead, which has no such restriction:
+    ```xml
+    <?mkdocs-snippet --8<-- [start:dependency]?>
+    <dependency>...</dependency>
+    <?mkdocs-snippet --8<-- [end:dependency]?>
+    ```
 
 ## Why this way, instead of hand-written code blocks?
 
-A hand-copied snippet can silently drift from the real code the moment either one changes. Pulling straight from the stage's folder means that's structurally impossible — if a stage's `pom.xml` changes, its docs page picks up the new content the next time the site builds, with no separate step to remember.
+A hand-copied snippet can silently drift from the real code the moment either one changes. Pulling straight from the stage's folder means that's structurally impossible — if a stage's source changes, its docs page picks up the new content the next time the site builds, with no separate step to remember.

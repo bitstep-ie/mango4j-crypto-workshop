@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ie.bitstep.mango.workshop</groupId>
-    <artifactId>mango4j-crypto-workshop-stage-02</artifactId>
+    <artifactId>mango4j-crypto-workshop-stage-02-starter</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>Mango4j Crypto Workshop - Stage 2: Encrypting a Field</name>
+    <name>Mango4j Crypto Workshop - Stage 2: Encrypting a Field (Starter)</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
