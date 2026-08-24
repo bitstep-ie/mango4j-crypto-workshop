@@ -40,6 +40,7 @@ extra:
 
 nav:
   - Home: index.md
+  - The Talk: talk.md
   - Stages:
       - "1. Getting Started": stages/01-getting-started.md
       - "2. Encrypting a Field": stages/02-encrypting-a-field.md

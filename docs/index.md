@@ -4,6 +4,8 @@ A hands-on, step-by-step workshop for [mango4j-crypto](https://github.com/bitste
 
 Each stage is a self-contained, standalone Maven project in its own folder — not something you build up with git. You progress by moving into one stage's folder at a time, trying things out, then moving on to the next.
 
+Before the hands-on stages, [The Talk](talk.md) covers what Application-Level Encryption is, why it's needed, and the numerous ways the typical/naive approach fails in production.
+
 ## Prerequisites
 
 - JDK 17+
