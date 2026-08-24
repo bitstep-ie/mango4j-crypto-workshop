@@ -75,5 +75,3 @@ decrypted cardNumber:         4111111111111111
 ```
 
 That's `complete/` — if yours doesn't match, compare against it.
-
-Next: *3. Coming soon*.

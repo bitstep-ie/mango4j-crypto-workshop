@@ -24,5 +24,3 @@ Feel free to experiment here — each stage is its own standalone folder, so not
 ```bash
 cd ../02-Encrypt-a-Field
 ```
-
-Next: [2. Encrypting a Field](02-encrypting-a-field.md).
