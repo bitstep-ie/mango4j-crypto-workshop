@@ -626,11 +626,15 @@
 <p>This page explains the mechanics behind the workshop, for anyone contributing a stage or just curious how the pieces fit together.</p>
 <h2 id="stages-are-independent-standalone-projects">Stages are independent, standalone projects</h2>
 <p>Each stage of the workshop lives in its own folder — <code>stages/stage-01/</code>, <code>stages/stage-02/</code>, and so on — and each folder is a <strong>complete, standalone, buildable Maven project</strong>, not a diff or a patch on the previous stage.</p>
-<p>As a learner, you move through the workshop by moving into one stage's folder, trying its exercise, then moving into the next stage's folder — <code>cd</code> on the command line, or just opening the folder as its own project in an IDE:</p>
+<p>As a learner, you move through the workshop by moving into one stage's folder, trying its exercise, then moving into the next stage's folder:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/stage-01
 <span class="c1"># ...try the exercise...</span>
 <span class="nb">cd</span><span class="w"> </span>../stage-02
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Using an IDE?</p>
+<p><code>cd</code> is just the command-line way to do it. Each <code>stages/stage-NN/</code> folder is a standalone Maven project, so you can equally open it directly as its own project in an IDE (e.g. "Open" → <code>stages/stage-02</code> in IntelliJ/Eclipse/VS Code) instead of <code>cd</code>-ing.</p>
+</div>
 <p>Because each stage's folder is entirely separate from the others, there's no git branching, merging, or resetting involved in moving between them. Whatever you change while experimenting in <code>stage-01</code> simply has no way to reach <code>stage-02</code> — it's a different folder.</p>
 <p>Under the hood, later stages are typically authored by copying the previous stage's folder and adding that stage's changes, so <code>diff -r stages/stage-01 stages/stage-02</code> shows exactly what changed. That's an authoring detail, not something learners need to know.</p>
 <h2 id="code-samples-are-pulled-live-from-the-stage-folders">Code samples are pulled live from the stage folders</h2>
