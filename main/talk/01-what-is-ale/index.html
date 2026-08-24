@@ -1070,8 +1070,8 @@
   
 
 
-<h1 id="1-what-is-application-level-encryption">1. What Is Application-Level Encryption?</h1>
-<p>Application-Level Encryption (ALE) means your <strong>application code</strong> encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.</p>
+<h1 id="1-what-is-application-level-encryption">1. What Is Application Level Encryption?</h1>
+<p>Application Level Encryption (ALE) means your <strong>application code</strong> encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.</p>
 <p>This is a deliberate contrast with encryption that happens <em>underneath</em> your application, at the infrastructure layer.</p>
 <h2 id="ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</h2>
 <p>Transparent Data Encryption (TDE) and disk/volume encryption protect data <strong>at rest</strong> — the bytes sitting on a physical or virtual disk. They're valuable, but they solve a narrow problem: someone stealing a disk, a decommissioned drive, or an unencrypted backup file. The moment there's an authenticated connection to the database — a valid DB credential, a live query, a DBA doing routine maintenance — TDE decrypts everything transparently and hands back plaintext. That's the point of the "T" in TDE.</p>
