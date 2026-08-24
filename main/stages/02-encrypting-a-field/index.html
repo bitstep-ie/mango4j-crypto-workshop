@@ -535,6 +535,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -637,6 +648,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -662,14 +684,19 @@
 <p class="admonition-title">Overview</p>
 <p>This is the first stage that actually encrypts something. The goal is the minimum set of moving parts needed to do that: one field marked <code>@Encrypt</code>, one field marked <code>@EncryptedData</code> for the ciphertext to land in, a key source (<code>CryptoKeyProvider</code>), and something to do the actual encrypting (<code>EncryptionServiceDelegate</code>). We deliberately use a fake Base64 "encryption" delegate here so the plumbing is visible without any real cryptography or KMS setup getting in the way — real encryption comes in a later stage.</p>
 </div>
+<p>This stage comes as two projects:</p>
+<ul>
+<li><strong><code>starter/</code></strong> — what you actually work in. It compiles and runs as-is, but <code>PaymentCardEntity</code> isn't annotated yet, so nothing gets encrypted (<code>encryptedData</code> stays <code>null</code>). Look for the <code>// TODO</code> comments — that's the exercise.</li>
+<li><strong><code>complete/</code></strong> — the finished, working reference. Check it if you get stuck, or just to confirm your result.</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Follow along</p>
-<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/02-Encrypt-a-Field
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/02-Encrypt-a-Field/starter
 </code></pre></div>
-Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field</code> as its own project.</p>
+Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field/starter</code> as its own project.</p>
 </div>
 <h2 id="the-entity">The entity</h2>
-<p><code>mango4j-crypto</code> works by annotating fields on a plain Java object. <code>PaymentCardEntity</code> has two fields that matter:</p>
+<p><code>mango4j-crypto</code> works by annotating fields on a plain Java object. <code>PaymentCardEntity</code> has two fields that matter — this is what they look like once annotated:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Encrypt</span>
 <span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
 </code></pre></div>
@@ -678,9 +705,10 @@ Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field</code> as its ow
 <span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
 </code></pre></div>
 <p><code>@EncryptedData</code> marks where the resulting ciphertext goes. This is the field you'd actually persist (to a database, a file, wherever) — never <code>cardNumber</code> itself.</p>
+<p><strong>Your turn:</strong> in <code>starter/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java</code>, replace the two <code>// TODO</code> comments with <code>@Encrypt</code> and <code>@EncryptedData</code> on the fields above them.</p>
 <h2 id="wiring-up-cryptoshield">Wiring up CryptoShield</h2>
-<p><code>CryptoShield</code> is the object you call <code>encrypt()</code>/<code>decrypt()</code> on. Building one needs two things: something that supplies cryptographic keys (a <code>CryptoKeyProvider</code>), and something that does the actual encrypting (an <code>EncryptionServiceDelegate</code>).</p>
-<p>For this stage, <a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java"><code>InMemoryCryptoKeyProvider</code></a> hands back one hardcoded key — a real application would look keys up from wherever it stores them. And rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in <code>Base64EncryptionService</code>, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.</p>
+<p><code>CryptoShield</code> is the object you call <code>encrypt()</code>/<code>decrypt()</code> on. Building one needs two things: something that supplies cryptographic keys (a <code>CryptoKeyProvider</code>), and something that does the actual encrypting (an <code>EncryptionServiceDelegate</code>). Both are already wired up for you in <code>starter/</code> — this part isn't the exercise.</p>
+<p>For this stage, <a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java"><code>InMemoryCryptoKeyProvider</code></a> hands back one hardcoded key — a real application would look keys up from wherever it stores them. And rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in <code>Base64EncryptionService</code>, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.</p>
 <div class="highlight"><pre><span></span><code><span class="n">CryptoShield</span><span class="w"> </span><span class="n">cryptoShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
 <span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">())</span>
 <span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
@@ -704,11 +732,18 @@ Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field</code> as its ow
 <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"decrypted cardNumber:         "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loaded</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
 </code></pre></div>
 <p><code>decrypt()</code> does the reverse: given only the ciphertext, it reconstructs <code>cardNumber</code>. This is what "loading an entity back from storage" looks like in practice — you'd load a row containing only <code>encryptedData</code>, then call <code>decrypt()</code> to get the real value back.</p>
-<p>Run it and you'll see something like:</p>
+<h2 id="running-it">Running it</h2>
+<p>Run <code>starter/</code> now, before making any changes, and you'll see:</p>
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 4111111111111111
+encryptedData:                null
+decrypted cardNumber:         null
+</code></pre></div>
+<p>Nothing's encrypted yet — that's expected, <code>PaymentCardEntity</code> isn't annotated. Once you've added the two annotations, run it again and you should see:</p>
 <div class="highlight"><pre><span></span><code>cardNumber (still in memory): 4111111111111111
 encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
 decrypted cardNumber:         4111111111111111
 </code></pre></div>
+<p>That's <code>complete/</code> — if yours doesn't match, compare against it.</p>
 <p>Next: <em>3. Coming soon</em>.</p>
 
 
