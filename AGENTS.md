@@ -41,7 +41,7 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
 **Adding a new stage**
 
 1. Copy the previous stage's folder to `stages/NN-Stage-Name/` (zero-padded number + hyphenated title-case name), update `pom.xml`'s `artifactId`/`name` to be stage-specific, make the code changes for that stage, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, verify it actually compiles/runs (`mvn compile`, or `mvn exec:java` where applicable), commit.
-2. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
+2. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes. Start the page with an `!!! abstract "Overview"` admonition — 2-3 sentences on what problem this stage solves and why, written so a workshop facilitator can talk through it before releasing learners to work through the rest of the page themselves (see stages 1 and 2 for examples). This is what makes the docs usable for both self-serve reading and live-led sessions from the same page, without needing a separate facilitator guide.
 3. Preview locally with `mkdocs serve`.
 
 ## License

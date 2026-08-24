@@ -1,6 +1,7 @@
 # 1. Getting Started
 
-This stage sets up a Maven project with the `mango4j-crypto` dependency already in place, ready to start encrypting entity fields in the next stage.
+!!! abstract "Overview"
+    `mango4j-crypto` works by adding the dependency to your project, then (from the next stage on) annotating the entity fields you want encrypted. This stage doesn't do anything on its own — it's just the starting point: a bare Maven project with the dependency already wired up, so everyone begins from the same place before we start adding the annotations that actually do the work.
 
 !!! tip "Follow along"
     ```bash
