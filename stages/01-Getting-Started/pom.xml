@@ -8,7 +8,7 @@
     <artifactId>mango4j-crypto-workshop-stage-01</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>Mango4j Crypto Workshop - Stage 1: Getting Started</name>
+    <name>Mango4j Crypto ALE Workshop - Stage 1: Getting Started</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

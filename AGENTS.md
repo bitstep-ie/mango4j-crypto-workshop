@@ -18,7 +18,7 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
 
 - Named `stages/NN-Stage-Name/` — zero-padded number prefix (so folders sort in workshop order) followed by a short, descriptive, hyphenated title-case name (e.g. `stages/01-Getting-Started/`, `stages/02-Encrypt-a-Field/`). Not `stage-01`/`stage-02` — the folder name itself should say what the stage is about.
 - Each folder is typically authored by copying the previous stage's folder and adding that stage's changes, so it's always a complete, ready-to-build project, and e.g. `diff -r stages/01-Getting-Started stages/02-Encrypt-a-Field` shows exactly what changed between stages (an authoring detail, not something learners need to run).
-- **Every stage's `pom.xml` must have a distinct `artifactId` and `name`** (e.g. `mango4j-crypto-workshop-stage-02` / "Mango4j Crypto Workshop - Stage 2: Encrypting a Field") — never copy-paste the previous stage's artifactId/name unchanged. Learners open individual stage folders as separate IDE projects, and identical artifactId/name across stages makes them indistinguishable there.
+- **Every stage's `pom.xml` must have a distinct `artifactId` and `name`** (e.g. `mango4j-crypto-workshop-stage-02` / "Mango4j Crypto ALE Workshop - Stage 2: Encrypting a Field") — never copy-paste the previous stage's artifactId/name unchanged. Learners open individual stage folders as separate IDE projects, and identical artifactId/name across stages makes them indistinguishable there.
 - Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in a Java file:
   ```java
   // --8<-- [start:dependency]
