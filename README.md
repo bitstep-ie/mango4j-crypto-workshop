@@ -2,8 +2,6 @@
 
 A hands-on, step-by-step workshop for [mango4j-crypto](https://github.com/bitstep-ie/mango4j-crypto) — a framework for implementing Application Level Encryption in Java applications.
 
-**📚 [Open the Workshop](https://bitstep-ie.github.io/mango4j-crypto-workshop/latest/)**
-
 ## How it works
 
 Each stage of the workshop lives in its own folder under [`stages/`](stages) — `stages/01-Getting-Started/`, `stages/02-Encrypt-a-Field/`, and so on — and each one is a complete, standalone, buildable Maven project, not something you build up with git. You work through the workshop by moving into one stage's folder at a time (`cd` on the command line, or opening it directly as its own project in an IDE), trying its exercise, then moving on to the next. Because every stage is independent, there's nothing to discard, reset, or merge between stages.
