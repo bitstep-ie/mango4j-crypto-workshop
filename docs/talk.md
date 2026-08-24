@@ -5,7 +5,7 @@
 
 ## 1. What Is Application-Level Encryption?
 
-### ALE vs. encryption at rest / TDE / disk encryption
+### ALE versus TDE / disk encryption
 
 *Content coming soon.*
 
