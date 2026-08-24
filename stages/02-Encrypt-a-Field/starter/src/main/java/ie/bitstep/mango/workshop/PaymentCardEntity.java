@@ -5,17 +5,19 @@ import ie.bitstep.mango.crypto.annotations.EncryptedData;
 
 public class PaymentCardEntity {
 
-    // TODO: Add @Encrypt above this field.
-    // TODO: It marks cardNumber as confidential: mango4j-crypto will read
-    // TODO: this field's value when building the ciphertext, but never
-    // TODO: write to it. The field must stay `transient`, which the
-    // TODO: library enforces - it's never meant to be serialized directly.
+    /* TODO: Add @Encrypt above this field.
+     * It marks cardNumber as confidential: mango4j-crypto will read this
+     * field's value when building the ciphertext, but never write to it.
+     * The field must stay `transient`, which the library enforces - it's
+     * never meant to be serialized directly.
+     */
     private transient String cardNumber;
 
-    // TODO: Add @EncryptedData above this field.
-    // TODO: This is where the resulting ciphertext gets written - it's
-    // TODO: the field you'd actually persist (to a database, a file,
-    // TODO: wherever), never cardNumber itself.
+    /* TODO: Add @EncryptedData above this field.
+     * This is where the resulting ciphertext gets written - it's the
+     * field you'd actually persist (to a database, a file, wherever),
+     * never cardNumber itself.
+     */
     private String encryptedData;
 
     public String getCardNumber() {

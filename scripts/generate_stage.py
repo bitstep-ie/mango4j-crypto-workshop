@@ -11,23 +11,28 @@ just source files marked up with:
 
   TODO regions, delimited by matching `// TODO:START <label>` /
   `// TODO:END <label>` comment lines, wrapping the code that's this
-  stage's exercise. Inside a TODO region:
-    - `// TODO: ...` lines are the instructions for the learner - keep
-      writing as many as you need to explain the exercise properly.
-    - every other line is the actual (hidden-from-starter) code.
+  stage's exercise. A region may contain one `/* TODO: ... */` block
+  comment - a multi-line explanation for the learner, written however
+  long it needs to be - alongside the real code it's explaining:
+
+      // TODO:START annotate-encrypt
+      /* TODO: Add @Encrypt above this field. It marks cardNumber as
+         confidential ... */
+      @Encrypt
+      // TODO:END annotate-encrypt
 
 From template/src we generate two runnable projects:
 
-  complete/src - TODO markers and instruction lines are stripped,
-                 leaving just the code. This is the finished, working
-                 reference (and what the docs site pulls its code
-                 snippets from), so it must read as normal code with
-                 no leftover authoring comments.
+  complete/src - TODO markers and any `/* TODO: ... */` block are
+                 stripped, leaving just the code (e.g. `@Encrypt`
+                 alone). This is the finished, working reference (and
+                 what the docs site pulls its code snippets from), so
+                 it must read as normal code with no leftover
+                 authoring comments.
 
   starter/src  - the code inside each TODO region is replaced by its
-                 `// TODO: ...` instruction lines (verbatim, so they
-                 can span as many lines as needed); if a region has no
-                 instruction lines, a generic placeholder is used
+                 own `/* TODO: ... */` block, verbatim; if a region
+                 has none, a generic placeholder comment is used
                  instead. --8<-- docs markers are removed everywhere,
                  since starter/ isn't a docs snippet source.
 
@@ -47,16 +52,18 @@ TODO_BLOCK_RE = re.compile(
     r'^[ \t]*// TODO:START (\S+)\n(.*?)\n[ \t]*// TODO:END \1\n',
     re.DOTALL | re.MULTILINE,
 )
-INSTRUCTION_LINE_RE = re.compile(r'^[ \t]*// TODO:(?!START\b|END\b).*$', re.MULTILINE)
+INSTRUCTION_COMMENT_RE = re.compile(
+    r'^([ \t]*)(/\*\s*TODO:.*?\*/)[ \t]*\n',
+    re.DOTALL | re.MULTILINE,
+)
 SNIPPET_MARKER_RE = re.compile(r'^.*--8<--.*\n', re.MULTILINE)
 
 
 def _split_block(body: str) -> tuple[str, str]:
-    code_lines = []
-    instruction_lines = []
-    for line in body.split("\n"):
-        (instruction_lines if INSTRUCTION_LINE_RE.match(line) else code_lines).append(line)
-    return "\n".join(code_lines), "\n".join(instruction_lines)
+    instruction_match = INSTRUCTION_COMMENT_RE.search(body)
+    code = INSTRUCTION_COMMENT_RE.sub("", body)
+    instruction = f"{instruction_match.group(1)}{instruction_match.group(2)}" if instruction_match else ""
+    return code, instruction
 
 
 def strip_todos(text: str) -> str:
@@ -71,11 +78,10 @@ def strip_todos(text: str) -> str:
 def collapse_todos(text: str) -> str:
     def repl(match: re.Match) -> str:
         label = match.group(1)
-        _, instructions = _split_block(match.group(2))
-        instructions = instructions.strip("\n")
-        if not instructions:
-            instructions = f"// TODO: {label} - see the stage docs"
-        return f"{instructions}\n"
+        _, instruction = _split_block(match.group(2))
+        if not instruction:
+            instruction = f"// TODO: {label} - see the stage docs"
+        return f"{instruction}\n"
 
     text = TODO_BLOCK_RE.sub(repl, text)
     return SNIPPET_MARKER_RE.sub("", text)
