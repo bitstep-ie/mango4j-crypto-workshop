@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="steps/01-getting-started/">
+        <link rel="next" href="stages/01-getting-started/">
       
       
         
@@ -246,11 +246,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="steps/01-getting-started/" class="md-tabs__link">
+        <a href="stages/01-getting-started/" class="md-tabs__link">
           
   
   
-  Steps
+  Stages
 
         </a>
       </li>
@@ -411,10 +411,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#stages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Stages
       
     </span>
   </a>
@@ -459,7 +459,7 @@
   <span class="md-ellipsis">
     
   
-    Steps
+    Stages
   
 
     
@@ -475,7 +475,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Steps
+    Stages
   
 
           </label>
@@ -488,7 +488,7 @@
   
   
     <li class="md-nav__item">
-      <a href="steps/01-getting-started/" class="md-nav__link">
+      <a href="stages/01-getting-started/" class="md-nav__link">
         
   
   
@@ -592,10 +592,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#stages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Stages
       
     </span>
   </a>
@@ -624,28 +624,25 @@
 
 <h1 id="mango4j-crypto-workshop">Mango4j Crypto Workshop</h1>
 <p>A hands-on, step-by-step workshop for <a href="https://github.com/bitstep-ie/mango4j-crypto">mango4j-crypto</a> — a framework for implementing Application Level Encryption in Java applications.</p>
-<p>Each step is a self-contained branch with real, compiling code — not just prose. You progress by checking out one step branch at a time, rather than merging anything into a branch of your own.</p>
-<p>Each step's page will ask you to make some changes yourself as an exercise. Before moving to the next step, <strong>discard those changes</strong> and switch branches — this avoids any risk of merge conflicts between your own edits and the next step's code.</p>
+<p>Each stage is a self-contained, standalone Maven project in its own folder — not something you build up with git. You progress by moving into one stage's folder at a time, trying things out, then moving on to the next.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 <li>JDK 17+</li>
 <li>Maven</li>
 </ul>
 <h2 id="how-to-follow-along">How to follow along</h2>
-<p>Clone the workshop repository, then check out step 1:</p>
+<p>Clone the workshop repository, then move into stage 1's folder:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bitstep-ie/mango4j-crypto-workshop.git
-<span class="nb">cd</span><span class="w"> </span>mango4j-crypto-workshop
-git<span class="w"> </span>checkout<span class="w"> </span>step-01
+<span class="nb">cd</span><span class="w"> </span>mango4j-crypto-workshop/stages/stage-01
 </code></pre></div>
-<p>Once you've tried a step's exercise, discard your changes and switch to the next step:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>reset<span class="w"> </span>--hard
-git<span class="w"> </span>clean<span class="w"> </span>-fd
-git<span class="w"> </span>checkout<span class="w"> </span>step-02
+<p>Each stage's page tells you which folder to move into next, e.g.:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>../stage-02
 </code></pre></div>
-<p>The code samples shown on each page are pulled directly from that step's branch, so what you read here always matches what you'll have locally.</p>
-<h2 id="steps">Steps</h2>
+<p>Because every stage is its own independent folder, anything you change while experimenting in one stage has no effect on the next — there's nothing to discard, reset, or merge.</p>
+<p>The code samples shown on each page are pulled directly from that stage's folder, so what you read here always matches what's on disk.</p>
+<h2 id="stages">Stages</h2>
 <ol>
-<li><a href="steps/01-getting-started/">Getting Started</a></li>
+<li><a href="stages/01-getting-started/">Getting Started</a></li>
 </ol>
 
 
