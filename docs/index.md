@@ -6,10 +6,6 @@
 
 Before the hands-on stages, [The Talk](talk/01-what-is-ale.md) goes deeper: what ALE is, why it's needed, and the numerous ways the typical/naive approach fails in production.
 
-## How the workshop works
-
-Each stage is a self-contained, standalone Maven project in its own folder — not something you build up with git. You progress by moving into one stage's folder at a time, trying things out, then moving on to the next.
-
 ## Prerequisites
 
 - JDK 17+
@@ -38,6 +34,8 @@ Because every stage is its own independent folder, anything you change while exp
 The code samples shown on each page are pulled directly from that stage's folder, so what you read here always matches what's on disk.
 
 ## Workshop
+
+Each stage is a self-contained, standalone Maven project in its own folder — not something you build up with git. You progress by moving into one stage's folder at a time, trying things out, then moving on to the next.
 
 1. [Getting Started](stages/01-getting-started.md)
 2. [Encrypting a Field](stages/02-encrypting-a-field.md)
