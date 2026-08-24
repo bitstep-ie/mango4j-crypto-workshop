@@ -24,4 +24,4 @@ Feel free to experiment here — each stage is its own standalone folder, so not
 cd ../stage-02
 ```
 
-Next: *2. Encrypting Your First Field (coming soon)*.
+Next: [2. Encrypting a Field](02-encrypting-a-field.md).

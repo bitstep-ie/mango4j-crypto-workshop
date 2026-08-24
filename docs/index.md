@@ -34,3 +34,4 @@ The code samples shown on each page are pulled directly from that stage's folder
 ## Stages
 
 1. [Getting Started](stages/01-getting-started.md)
+2. [Encrypting a Field](stages/02-encrypting-a-field.md)

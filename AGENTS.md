@@ -8,7 +8,7 @@ This repository is a step-by-step workshop teaching the **mango4j** crypto frame
 
 ## Current status
 
-Docs-site scaffolding (MkDocs) and a `stages/stage-01/` folder exist; most stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, etc.), so workshop code is implemented in Java/Maven.
+Docs-site scaffolding (MkDocs) and `stages/stage-01/` (adds the `mango4j-crypto` dependency) and `stages/stage-02/` (encrypts a single `cardNumber` field, verified by actually compiling/running against the real published `mango4j-crypto` 1.0.0) exist; later stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
 
 ## Workshop structure: folder-per-stage + MkDocs
 
@@ -18,6 +18,7 @@ Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stag
 
 - Named `stages/stage-01/`, `stages/stage-02/`, ... (zero-padded, sorts naturally).
 - Each folder is typically authored by copying the previous stage's folder and adding that stage's changes, so it's always a complete, ready-to-build project, and `diff -r stages/stage-01 stages/stage-02` shows exactly what changed between stages (an authoring detail, not something learners need to run).
+- **Every stage's `pom.xml` must have a distinct `artifactId` and `name`** (e.g. `mango4j-crypto-workshop-stage-02` / "Mango4j Crypto Workshop - Stage 2: Encrypting a Field") — never copy-paste the previous stage's artifactId/name unchanged. Learners open individual stage folders as separate IDE projects, and identical artifactId/name across stages makes them indistinguishable there.
 - Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in `pom.xml`:
   ```xml
   <!-- --8<-- [start:dependency] -->
@@ -39,7 +40,7 @@ Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stag
 
 **Adding a new stage**
 
-1. Copy `stages/stage-0(N-1)/` to `stages/stage-0N/`, make the code changes for that stage, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, commit.
+1. Copy `stages/stage-0(N-1)/` to `stages/stage-0N/`, update `pom.xml`'s `artifactId`/`name` to be stage-specific, make the code changes for that stage, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, verify it actually compiles/runs (`mvn compile`, or `mvn exec:java` where applicable), commit.
 2. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
 3. Preview locally with `mkdocs serve`.
 

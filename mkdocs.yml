@@ -42,4 +42,5 @@ nav:
   - Home: index.md
   - Stages:
       - "1. Getting Started": stages/01-getting-started.md
+      - "2. Encrypting a Field": stages/02-encrypting-a-field.md
   - How This Workshop Works: how-it-works.md

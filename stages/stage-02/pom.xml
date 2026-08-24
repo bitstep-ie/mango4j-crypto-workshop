@@ -5,24 +5,36 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ie.bitstep.mango.workshop</groupId>
-    <artifactId>mango4j-crypto-workshop-stage-01</artifactId>
+    <artifactId>mango4j-crypto-workshop-stage-02</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>Mango4j Crypto Workshop - Stage 1: Getting Started</name>
+    <name>Mango4j Crypto Workshop - Stage 2: Encrypting a Field</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <exec.mainClass>ie.bitstep.mango.workshop.Main</exec.mainClass>
     </properties>
 
     <dependencies>
-        <!-- --8<-- [start:dependency] -->
         <dependency>
             <groupId>ie.bitstep.mango</groupId>
             <artifactId>mango4j-crypto</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <!-- --8<-- [end:dependency] -->
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>${exec.mainClass}</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
