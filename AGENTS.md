@@ -12,7 +12,7 @@ Docs-site scaffolding (MkDocs) and a `stages/stage-01/` folder exist; most stage
 
 ## Workshop structure: folder-per-stage + MkDocs
 
-Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stages/stage-02/`, ... — on `main`, all present in the checkout at once. A stage's folder is a complete, standalone, buildable Maven project, not a diff meant to be merged. Learners progress by `cd`-ing into one stage's folder at a time, trying its exercise, then moving to the next stage's folder — there is no git branching, merging, or resetting involved, so a learner's own edits can never conflict with anything: they simply don't exist in the next stage's folder. See [docs/how-it-works.md](docs/how-it-works.md) for the full explanation (also published on the docs site).
+Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stages/stage-02/`, ... — on `main`, all present in the checkout at once. A stage's folder is a complete, standalone, buildable Maven project, not a diff meant to be merged. Learners progress by moving into one stage's folder at a time (`cd` on the command line, or opening that folder as its own project in an IDE), trying its exercise, then moving to the next stage's folder — there is no git branching, merging, or resetting involved, so a learner's own edits can never conflict with anything: they simply don't exist in the next stage's folder. See [docs/how-it-works.md](docs/how-it-works.md) for the full explanation (also published on the docs site).
 
 **Stage folders**
 

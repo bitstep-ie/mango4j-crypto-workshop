@@ -6,7 +6,7 @@ This page explains the mechanics behind the workshop, for anyone contributing a 
 
 Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stages/stage-02/`, and so on — and each folder is a **complete, standalone, buildable Maven project**, not a diff or a patch on the previous stage.
 
-As a learner, you move through the workshop by `cd`-ing into one stage's folder, trying its exercise, then moving into the next stage's folder:
+As a learner, you move through the workshop by moving into one stage's folder, trying its exercise, then moving into the next stage's folder — `cd` on the command line, or just opening the folder as its own project in an IDE:
 
 ```bash
 cd stages/stage-01

@@ -6,6 +6,7 @@ This stage sets up a Maven project with the `mango4j-crypto` dependency already 
     ```bash
     cd stages/stage-01
     ```
+    Using an IDE instead? Just open `stages/stage-01` as its own project.
 
 ## The dependency
 

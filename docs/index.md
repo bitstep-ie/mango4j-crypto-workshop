@@ -24,6 +24,9 @@ Each stage's page tells you which folder to move into next, e.g.:
 cd ../stage-02
 ```
 
+!!! tip "Using an IDE?"
+    Each `stages/stage-NN/` folder is a standalone Maven project, so instead of `cd`-ing on the command line, you can just open that folder as its own project in your IDE (e.g. "Open" → `stages/stage-02` in IntelliJ/Eclipse/VS Code).
+
 Because every stage is its own independent folder, anything you change while experimenting in one stage has no effect on the next — there's nothing to discard, reset, or merge.
 
 The code samples shown on each page are pulled directly from that stage's folder, so what you read here always matches what's on disk.
