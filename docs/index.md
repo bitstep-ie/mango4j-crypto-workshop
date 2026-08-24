@@ -33,7 +33,7 @@ Because every stage is its own independent folder, anything you change while exp
 
 The code samples shown on each page are pulled directly from that stage's folder, so what you read here always matches what's on disk.
 
-## Stages
+## Workshop
 
 1. [Getting Started](stages/01-getting-started.md)
 2. [Encrypting a Field](stages/02-encrypting-a-field.md)
