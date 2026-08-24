@@ -2,7 +2,7 @@
 
 A hands-on, step-by-step workshop for [mango4j-crypto](https://github.com/bitstep-ie/mango4j-crypto) — a framework for implementing Application Level Encryption in Java applications.
 
-**📚 [Read the workshop](https://bitstep-ie.github.io/mango4j-crypto-workshop/latest/)**
+**📚 [Open the Workshop](https://bitstep-ie.github.io/mango4j-crypto-workshop/latest/)**
 
 ## How it works
 
