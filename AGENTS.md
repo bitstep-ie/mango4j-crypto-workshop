@@ -36,15 +36,19 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
 
 A stage can instead be three sibling folders — `template/`, `complete/`, and `starter/` — when it should give learners a partially-working exercise rather than a fully-built example (a live-led session needs devs to actually *do* something, not just read finished code). `stages/02-Encrypt-a-Field/` is the example to copy this pattern from.
 
-- `template/src/` is the **only hand-authored source** — not itself a runnable project (no `pom.xml`). It's ordinary source with `--8<--` docs markers plus TODO regions marking the exercise:
+- `template/src/` is the **only hand-authored source** — not itself a runnable project (no `pom.xml`). It's ordinary source with `--8<--` docs markers plus TODO regions marking the exercise. Inside a TODO region, `// TODO: ...` lines are the learner-facing instructions (write as many as needed to actually explain the exercise — they're not limited to one line) and every other line is the real code, hidden from `starter/`:
   ```java
   // TODO:START annotate-encrypt
+  // TODO: Add @Encrypt above this field.
+  // TODO: It marks cardNumber as confidential - mango4j-crypto will read
+  // TODO: this field's value when building the ciphertext, but never
+  // TODO: write to it.
   @Encrypt
   // TODO:END annotate-encrypt
   ```
 - `scripts/generate_stage.py <stage-dir>` generates both runnable projects from `template/src/`:
-  - `complete/src/` — TODO marker comments stripped, leaving just the wrapped code (e.g. `@Encrypt` alone). This is the finished reference project, and what the docs site pulls its snippets from — it must never show TODO clutter, since it's presented as "the finished version."
-  - `starter/src/` — each TODO region collapsed to one `// TODO: <label> - see the stage docs` placeholder line. This is what learners actually work in; it compiles and runs as-is (functionally incomplete, not broken).
+  - `complete/src/` — TODO markers and `// TODO: ...` instruction lines are stripped, leaving just the code (e.g. `@Encrypt` alone). This is the finished reference project, and what the docs site pulls its snippets from — it must never show TODO clutter, since it's presented as "the finished version."
+  - `starter/src/` — each TODO region's code is replaced by its own `// TODO: ...` instruction lines verbatim (falling back to a generic `// TODO: <label> - see the stage docs` if a region has none), and every `--8<--` docs marker is stripped outright, since `starter/` is never a docs snippet source. This is what learners actually work in; it compiles and runs as-is (functionally incomplete, not broken).
   - Running it again with no template changes is a no-op (idempotent) — this is what lets CI detect drift (see below).
 - `complete/pom.xml` and `starter/pom.xml` are hand-maintained separately (not generated) — each needs its own distinct `artifactId`/`name` per the rule above, and TODO markers rarely belong in build files anyway.
 - After editing `template/src/`, always rerun `python3 scripts/generate_stage.py stages/NN-Stage-Name` and commit the regenerated `complete/`/`starter/` alongside it — never hand-edit files under `complete/src/` or `starter/src/` directly, they'll just get overwritten and drift will fail CI.

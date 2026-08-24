@@ -28,7 +28,7 @@ A fully working example is great to read, but not much to actually *do*. Where a
 - **`starter/`** — what you actually work in. It compiles and runs on its own, but is deliberately left unfinished — look for `// TODO` comments marking what to add.
 - **`complete/`** — the finished, working reference, to compare against or fall back on.
 
-Both are generated from a single hand-authored `template/`, so they can never quietly drift apart: `complete/` is `template/` with the `// TODO:START ... TODO:END` markers stripped out (leaving just the finished code), and `starter/` is `template/` with those same regions collapsed down to a single `// TODO: ... - see the stage docs` placeholder. This repo's CI regenerates both from `template/` on every push and fails if the result doesn't match what's committed, so `starter/` and `complete/` are guaranteed to always be exactly what the exercise says they are.
+Both are generated from a single hand-authored `template/`, so they can never quietly drift apart: `complete/` is `template/` with its `// TODO:START ... TODO:END` regions replaced by just the code they wrap, and `starter/` is the same regions replaced by whatever `// TODO: ...` instructions were written inside them (as many lines as it takes to actually explain the exercise). This repo's CI regenerates both from `template/` on every push and fails if the result doesn't match what's committed, so `starter/` and `complete/` are guaranteed to always be exactly what the exercise says they are.
 
 ## Code samples are pulled live from the stage folders
 
