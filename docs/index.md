@@ -35,6 +35,8 @@ The code samples shown on each page are pulled directly from that stage's folder
 
 ## Workshop
 
+To use `mango4j-crypto`, you add the dependency to your project, then annotate the entity fields you want encrypted. This workshop builds that up one stage at a time — starting with stage 1's bare dependency, so everyone begins from the same place, before annotations and everything else get added in later stages.
+
 Each stage is a self-contained, standalone Maven project in its own folder — not something you build up with git. You progress by moving into one stage's folder at a time, trying things out, then moving on to the next.
 
 1. [Getting Started](stages/01-getting-started.md)
