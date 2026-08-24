@@ -617,12 +617,12 @@
 <p>This stage sets up a Maven project with the <code>mango4j-crypto</code> dependency already in place, ready to start encrypting entity fields in the next stage.</p>
 <div class="admonition tip">
 <p class="admonition-title">Follow along</p>
-<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/stage-01
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/01-Getting-Started
 </code></pre></div>
-Using an IDE instead? Just open <code>stages/stage-01</code> as its own project.</p>
+Using an IDE instead? Just open <code>stages/01-Getting-Started</code> as its own project.</p>
 </div>
 <h2 id="the-dependency">The dependency</h2>
-<p><code>stages/stage-01/pom.xml</code> already has <code>mango4j-crypto</code> declared:</p>
+<p><code>stages/01-Getting-Started/pom.xml</code> already has <code>mango4j-crypto</code> declared:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>ie.bitstep.mango<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mango4j-crypto<span class="nt">&lt;/artifactId&gt;</span>
@@ -630,8 +630,8 @@ Using an IDE instead? Just open <code>stages/stage-01</code> as its own project.
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>That's it — this project can now use the <code>@Encrypt</code>, <code>@Hmac</code>, <code>@EncryptedData</code>, <code>@EncryptionKeyId</code> and <code>@HmacKeyId</code> annotations that <code>mango4j-crypto</code> provides.</p>
-<p>Feel free to experiment here — each stage is its own standalone folder, so nothing you change in <code>stage-01</code> affects <code>stage-02</code>. When you're ready, just move on:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>../stage-02
+<p>Feel free to experiment here — each stage is its own standalone folder, so nothing you change in <code>01-Getting-Started</code> affects <code>02-Encrypt-a-Field</code>. When you're ready, just move on:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>../02-Encrypt-a-Field
 </code></pre></div>
 <p>Next: <a href="../02-encrypting-a-field/">2. Encrypting a Field</a>.</p>
 
