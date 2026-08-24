@@ -4,22 +4,22 @@ This page explains the mechanics behind the workshop, for anyone contributing a 
 
 ## Stages are independent, standalone projects
 
-Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stages/stage-02/`, and so on — and each folder is a **complete, standalone, buildable Maven project**, not a diff or a patch on the previous stage.
+Each stage of the workshop lives in its own folder — `stages/01-Getting-Started/`, `stages/02-Encrypt-a-Field/`, and so on — and each folder is a **complete, standalone, buildable Maven project**, not a diff or a patch on the previous stage. The `NN-` prefix keeps the folders sorted in workshop order; the rest of the name says what the stage is about.
 
 As a learner, you move through the workshop by moving into one stage's folder, trying its exercise, then moving into the next stage's folder:
 
 ```bash
-cd stages/stage-01
+cd stages/01-Getting-Started
 # ...try the exercise...
-cd ../stage-02
+cd ../02-Encrypt-a-Field
 ```
 
 !!! tip "Using an IDE?"
-    `cd` is just the command-line way to do it. Each `stages/stage-NN/` folder is a standalone Maven project, so you can equally open it directly as its own project in an IDE (e.g. "Open" → `stages/stage-02` in IntelliJ/Eclipse/VS Code) instead of `cd`-ing.
+    `cd` is just the command-line way to do it. Each stage folder is a standalone Maven project, so you can equally open it directly as its own project in an IDE (e.g. "Open" → `stages/02-Encrypt-a-Field` in IntelliJ/Eclipse/VS Code) instead of `cd`-ing.
 
-Because each stage's folder is entirely separate from the others, there's no git branching, merging, or resetting involved in moving between them. Whatever you change while experimenting in `stage-01` simply has no way to reach `stage-02` — it's a different folder.
+Because each stage's folder is entirely separate from the others, there's no git branching, merging, or resetting involved in moving between them. Whatever you change while experimenting in `01-Getting-Started` simply has no way to reach `02-Encrypt-a-Field` — it's a different folder.
 
-Under the hood, later stages are typically authored by copying the previous stage's folder and adding that stage's changes, so `diff -r stages/stage-01 stages/stage-02` shows exactly what changed. That's an authoring detail, not something learners need to know.
+Under the hood, later stages are typically authored by copying the previous stage's folder and adding that stage's changes, so `diff -r stages/01-Getting-Started stages/02-Encrypt-a-Field` shows exactly what changed. That's an authoring detail, not something learners need to know.
 
 ## Code samples are pulled live from the stage folders
 
@@ -40,7 +40,7 @@ This is done with the `pymdownx.snippets` Markdown extension, configured in `mkd
 And a docs page includes just that section with:
 
 ```
---8<-- "stage-01/pom.xml:dependency"
+--8<-- "01-Getting-Started/pom.xml:dependency"
 ```
 
 The path is relative to `stages/`, and `:dependency` selects only the text between the matching `[start:dependency]` / `[end:dependency]` markers — the rest of the file (boilerplate, unrelated config) is left out. Dropping the `:label` includes the whole file instead. Marker labels only need to be unique within their own file, so pick something descriptive per snippet (`dependency`, `encrypt-annotation`, `key-provider`, ...).

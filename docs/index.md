@@ -15,17 +15,17 @@ Clone the workshop repository, then move into stage 1's folder:
 
 ```bash
 git clone https://github.com/bitstep-ie/mango4j-crypto-workshop.git
-cd mango4j-crypto-workshop/stages/stage-01
+cd mango4j-crypto-workshop/stages/01-Getting-Started
 ```
 
 Each stage's page tells you which folder to move into next, e.g.:
 
 ```bash
-cd ../stage-02
+cd ../02-Encrypt-a-Field
 ```
 
 !!! tip "Using an IDE?"
-    Each `stages/stage-NN/` folder is a standalone Maven project, so instead of `cd`-ing on the command line, you can just open that folder as its own project in your IDE (e.g. "Open" → `stages/stage-02` in IntelliJ/Eclipse/VS Code).
+    Each `stages/NN-Stage-Name/` folder is a standalone Maven project, so instead of `cd`-ing on the command line, you can just open that folder as its own project in your IDE (e.g. "Open" → `stages/02-Encrypt-a-Field` in IntelliJ/Eclipse/VS Code).
 
 Because every stage is its own independent folder, anything you change while experimenting in one stage has no effect on the next — there's nothing to discard, reset, or merge.
 

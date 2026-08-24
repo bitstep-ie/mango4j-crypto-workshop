@@ -4,24 +4,24 @@ This stage sets up a Maven project with the `mango4j-crypto` dependency already 
 
 !!! tip "Follow along"
     ```bash
-    cd stages/stage-01
+    cd stages/01-Getting-Started
     ```
-    Using an IDE instead? Just open `stages/stage-01` as its own project.
+    Using an IDE instead? Just open `stages/01-Getting-Started` as its own project.
 
 ## The dependency
 
-`stages/stage-01/pom.xml` already has `mango4j-crypto` declared:
+`stages/01-Getting-Started/pom.xml` already has `mango4j-crypto` declared:
 
 ```xml
---8<-- "stage-01/pom.xml:dependency"
+--8<-- "01-Getting-Started/pom.xml:dependency"
 ```
 
 That's it — this project can now use the `@Encrypt`, `@Hmac`, `@EncryptedData`, `@EncryptionKeyId` and `@HmacKeyId` annotations that `mango4j-crypto` provides.
 
-Feel free to experiment here — each stage is its own standalone folder, so nothing you change in `stage-01` affects `stage-02`. When you're ready, just move on:
+Feel free to experiment here — each stage is its own standalone folder, so nothing you change in `01-Getting-Started` affects `02-Encrypt-a-Field`. When you're ready, just move on:
 
 ```bash
-cd ../stage-02
+cd ../02-Encrypt-a-Field
 ```
 
 Next: [2. Encrypting a Field](02-encrypting-a-field.md).
