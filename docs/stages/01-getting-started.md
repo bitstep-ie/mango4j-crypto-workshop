@@ -5,9 +5,10 @@
 
 !!! tip "Follow along"
     ```bash
-    cd stages/01-Getting-Started
+    git clone https://github.com/bitstep-ie/mango4j-crypto-workshop.git
+    cd mango4j-crypto-workshop/stages/01-Getting-Started
     ```
-    Using an IDE instead? Just open `stages/01-Getting-Started` as its own project.
+    Using an IDE instead? Just clone the repository, then open `stages/01-Getting-Started` as its own project.
 
 ## The dependency
 
