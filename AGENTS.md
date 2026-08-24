@@ -60,3 +60,7 @@ It is a Maven multi-module project (`pom.xml`) with three modules:
 mango4j-crypto is a framework for implementing **Application Level Encryption** (data at rest) in Java applications via annotations on entity fields, rather than an encryption provider itself — it lets you plug in your own `CryptoKeyProvider` and encryption service delegates.
 
 When writing workshop steps in this repo, treat `../mango4j-crypto` as read-only reference/dependency source (its own README, javadocs, and `documentation/` folder are the source of truth for API details) rather than something to edit from here.
+
+## Sibling repository: mango4j-examples
+
+A working example application lives in another sibling repository, checked out at `../mango4j-examples`. It's a Maven project (`pom.xml`) with a single module, `mango4j-crypto-example` — a Spring Boot app demonstrating `mango4j-crypto` usage with each HMAC strategy. Like `../mango4j-crypto`, treat it as read-only reference when authoring workshop stages, not something to edit from here.
