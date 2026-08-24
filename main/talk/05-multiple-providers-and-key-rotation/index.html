@@ -14,7 +14,7 @@
         <link rel="prev" href="../04-failure-columns/">
       
       
-        <link rel="next" href="../06-failure-key-rotation/">
+        <link rel="next" href="../06-hmac-search-key-rotation/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>5. Failure: Single HMAC Column - Mango4j Crypto ALE Workshop</title>
+        <title>5. Multiple Providers & Key Rotation - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#5-failure-mode-the-single-hmac-lookup-column" class="md-skip">
+        <a href="#5-encryption-with-multiple-providers-and-key-rotation-support" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5. Failure: Single HMAC Column
+              5. Multiple Providers & Key Rotation
             
           </span>
         </div>
@@ -496,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    3. The Naive Approach
+    3. A Simple Case of ALE
   
 
     
@@ -561,7 +561,7 @@
   <span class="md-ellipsis">
     
   
-    5. Failure: Single HMAC Column
+    5. Multiple Providers & Key Rotation
   
 
     
@@ -579,7 +579,7 @@
   <span class="md-ellipsis">
     
   
-    5. Failure: Single HMAC Column
+    5. Multiple Providers & Key Rotation
   
 
     
@@ -605,10 +605,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-encrypted-values-never-search-match-themselves-ivs" class="md-nav__link">
+  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why encrypted values never search-match themselves (IVs)
+        Hardcoding a KMS/HSM/algorithm choice into application code
       
     </span>
   </a>
@@ -616,10 +616,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-you-need-a-hmac-at-all-for-search-and-for-uniqueness" class="md-nav__link">
+  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why you need a HMAC at all, for search and for uniqueness
+        What happens when a provider changes, is deprecated, or isn't available in a region
       
     </span>
   </a>
@@ -627,10 +627,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-single-column-hmac-design-and-its-hidden-assumptions" class="md-nav__link">
+  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The single-column HMAC design and its hidden assumptions
+        Regulatory-driven algorithm changes
       
     </span>
   </a>
@@ -638,10 +638,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-race-condition-that-silently-breaks-unique-constraints" class="md-nav__link">
+  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The race condition that silently breaks unique constraints
+        The cost of a "big bang" re-encryption project
       
     </span>
   </a>
@@ -649,10 +649,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-search-before-you-write-doesnt-actually-fix-it" class="md-nav__link">
+  <a href="#adding-encryption-key-rotation-support-to-the-demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why "search before you write" doesn't actually fix it
+        Adding encryption key rotation support to the demo
       
     </span>
   </a>
@@ -675,14 +675,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-failure-key-rotation/" class="md-nav__link">
+      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Failure: Key Rotation
+    6. HMAC Search & Key Rotation
   
 
     
@@ -703,14 +703,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-failure-locked-in/" class="md-nav__link">
+      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Failure: Locked-In Provider
+    7. HMAC for Uniqueness
   
 
     
@@ -731,14 +731,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-failure-migration/" class="md-nav__link">
+      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Failure: Migration
+    8. Single vs. List HMAC Strategy
   
 
     
@@ -759,14 +759,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-outages-and-failure/" class="md-nav__link">
+      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. Outages and Application Failure
+    9. Rekeying Encrypted Data
   
 
     
@@ -787,14 +787,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-doing-it-right/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Doing It Right
+    10. Rekeying HMACs
   
 
     
@@ -815,14 +815,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../11-introducing-mango4j-crypto/" class="md-nav__link">
+      <a href="../11-failure-migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    11. Introducing mango4j-crypto
+    11. Failure: Migration
   
 
     
@@ -843,14 +843,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../12-what-were-building-today/" class="md-nav__link">
+      <a href="../12-outages-and-failure/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    12. What We're Building Today
+    12. Outages and Application Failure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-doing-it-right/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Doing It Right
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Introducing mango4j-crypto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-what-were-building-today/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. What We're Building Today
   
 
     
@@ -1040,10 +1124,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-encrypted-values-never-search-match-themselves-ivs" class="md-nav__link">
+  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why encrypted values never search-match themselves (IVs)
+        Hardcoding a KMS/HSM/algorithm choice into application code
       
     </span>
   </a>
@@ -1051,10 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-you-need-a-hmac-at-all-for-search-and-for-uniqueness" class="md-nav__link">
+  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why you need a HMAC at all, for search and for uniqueness
+        What happens when a provider changes, is deprecated, or isn't available in a region
       
     </span>
   </a>
@@ -1062,10 +1146,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-single-column-hmac-design-and-its-hidden-assumptions" class="md-nav__link">
+  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The single-column HMAC design and its hidden assumptions
+        Regulatory-driven algorithm changes
       
     </span>
   </a>
@@ -1073,10 +1157,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-race-condition-that-silently-breaks-unique-constraints" class="md-nav__link">
+  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The race condition that silently breaks unique constraints
+        The cost of a "big bang" re-encryption project
       
     </span>
   </a>
@@ -1084,10 +1168,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-search-before-you-write-doesnt-actually-fix-it" class="md-nav__link">
+  <a href="#adding-encryption-key-rotation-support-to-the-demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why "search before you write" doesn't actually fix it
+        Adding encryption key rotation support to the demo
       
     </span>
   </a>
@@ -1114,16 +1198,16 @@
   
 
 
-<h1 id="5-failure-mode-the-single-hmac-lookup-column">5. Failure Mode: The Single HMAC Lookup Column</h1>
-<h2 id="why-encrypted-values-never-search-match-themselves-ivs">Why encrypted values never search-match themselves (IVs)</h2>
+<h1 id="5-encryption-with-multiple-providers-and-key-rotation-support">5. Encryption With Multiple Providers and Key Rotation Support</h1>
+<h2 id="hardcoding-a-kmshsmalgorithm-choice-into-application-code">Hardcoding a KMS/HSM/algorithm choice into application code</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="why-you-need-a-hmac-at-all-for-search-and-for-uniqueness">Why you need a HMAC at all, for search and for uniqueness</h2>
+<h2 id="what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region">What happens when a provider changes, is deprecated, or isn't available in a region</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="the-single-column-hmac-design-and-its-hidden-assumptions">The single-column HMAC design and its hidden assumptions</h2>
+<h2 id="regulatory-driven-algorithm-changes">Regulatory-driven algorithm changes</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="the-race-condition-that-silently-breaks-unique-constraints">The race condition that silently breaks unique constraints</h2>
+<h2 id="the-cost-of-a-big-bang-re-encryption-project">The cost of a "big bang" re-encryption project</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="why-search-before-you-write-doesnt-actually-fix-it">Why "search before you write" doesn't actually fix it</h2>
+<h2 id="adding-encryption-key-rotation-support-to-the-demo">Adding encryption key rotation support to the demo</h2>
 <p><em>Content coming soon.</em></p>
 
 
@@ -1171,13 +1255,13 @@
         
         
           
-          <a href="../06-failure-key-rotation/" class="md-footer__link md-footer__link--next" aria-label="Next: 6. Failure: Key Rotation">
+          <a href="../06-hmac-search-key-rotation/" class="md-footer__link md-footer__link--next" aria-label="Next: 6. HMAC Search &amp; Key Rotation">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                6. Failure: Key Rotation
+                6. HMAC Search & Key Rotation
               </div>
             </div>
             <div class="md-footer__button md-icon">

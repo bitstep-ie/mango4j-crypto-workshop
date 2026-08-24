@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../06-failure-key-rotation/">
+        <link rel="prev" href="../11-failure-migration/">
       
       
-        <link rel="next" href="../08-failure-migration/">
+        <link rel="next" href="../13-doing-it-right/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>7. Failure: Locked-In Provider - Mango4j Crypto ALE Workshop</title>
+        <title>12. Outages and Application Failure - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#7-failure-mode-locked-into-one-encryption-scheme-or-provider" class="md-skip">
+        <a href="#12-when-it-all-comes-together-outages-and-application-failure" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              7. Failure: Locked-In Provider
+              12. Outages and Application Failure
             
           </span>
         </div>
@@ -496,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    3. The Naive Approach
+    3. A Simple Case of ALE
   
 
     
@@ -545,14 +545,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-failure-single-hmac/" class="md-nav__link">
+      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Failure: Single HMAC Column
+    5. Multiple Providers & Key Rotation
   
 
     
@@ -573,14 +573,154 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-failure-key-rotation/" class="md-nav__link">
+      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Failure: Key Rotation
+    6. HMAC Search & Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. HMAC for Uniqueness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Single vs. List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Rekeying Encrypted Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Rekeying HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-failure-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Failure: Migration
   
 
     
@@ -617,7 +757,7 @@
   <span class="md-ellipsis">
     
   
-    7. Failure: Locked-In Provider
+    12. Outages and Application Failure
   
 
     
@@ -635,7 +775,7 @@
   <span class="md-ellipsis">
     
   
-    7. Failure: Locked-In Provider
+    12. Outages and Application Failure
   
 
     
@@ -661,10 +801,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
+  <a href="#search-functionality-silently-degrading-in-production" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hardcoding a KMS/HSM/algorithm choice into application code
+        Search functionality silently degrading in production
       
     </span>
   </a>
@@ -672,10 +812,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
+  <a href="#duplicate-unique-records-corrupting-business-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What happens when a provider changes, is deprecated, or isn't available in a region
+        Duplicate "unique" records corrupting business data
       
     </span>
   </a>
@@ -683,10 +823,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
+  <a href="#emergency-rollbacks-and-the-risks-they-introduce" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Regulatory-driven algorithm changes
+        Emergency rollbacks and the risks they introduce
       
     </span>
   </a>
@@ -694,10 +834,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
+  <a href="#the-incident-review-nobody-wants-to-present" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The cost of a "big bang" re-encryption project
+        The incident review nobody wants to present
       
     </span>
   </a>
@@ -720,14 +860,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-failure-migration/" class="md-nav__link">
+      <a href="../13-doing-it-right/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Failure: Migration
+    13. Doing It Right
   
 
     
@@ -748,14 +888,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-outages-and-failure/" class="md-nav__link">
+      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. Outages and Application Failure
+    14. Introducing mango4j-crypto
   
 
     
@@ -776,70 +916,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-doing-it-right/" class="md-nav__link">
+      <a href="../15-what-were-building-today/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Doing It Right
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-introducing-mango4j-crypto/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Introducing mango4j-crypto
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-what-were-building-today/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. What We're Building Today
+    15. What We're Building Today
   
 
     
@@ -1029,10 +1113,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
+  <a href="#search-functionality-silently-degrading-in-production" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hardcoding a KMS/HSM/algorithm choice into application code
+        Search functionality silently degrading in production
       
     </span>
   </a>
@@ -1040,10 +1124,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
+  <a href="#duplicate-unique-records-corrupting-business-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What happens when a provider changes, is deprecated, or isn't available in a region
+        Duplicate "unique" records corrupting business data
       
     </span>
   </a>
@@ -1051,10 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
+  <a href="#emergency-rollbacks-and-the-risks-they-introduce" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Regulatory-driven algorithm changes
+        Emergency rollbacks and the risks they introduce
       
     </span>
   </a>
@@ -1062,10 +1146,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
+  <a href="#the-incident-review-nobody-wants-to-present" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The cost of a "big bang" re-encryption project
+        The incident review nobody wants to present
       
     </span>
   </a>
@@ -1092,14 +1176,14 @@
   
 
 
-<h1 id="7-failure-mode-locked-into-one-encryption-scheme-or-provider">7. Failure Mode: Locked Into One Encryption Scheme or Provider</h1>
-<h2 id="hardcoding-a-kmshsmalgorithm-choice-into-application-code">Hardcoding a KMS/HSM/algorithm choice into application code</h2>
+<h1 id="12-when-it-all-comes-together-outages-and-application-failure">12. When It All Comes Together: Outages and Application Failure</h1>
+<h2 id="search-functionality-silently-degrading-in-production">Search functionality silently degrading in production</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region">What happens when a provider changes, is deprecated, or isn't available in a region</h2>
+<h2 id="duplicate-unique-records-corrupting-business-data">Duplicate "unique" records corrupting business data</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="regulatory-driven-algorithm-changes">Regulatory-driven algorithm changes</h2>
+<h2 id="emergency-rollbacks-and-the-risks-they-introduce">Emergency rollbacks and the risks they introduce</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="the-cost-of-a-big-bang-re-encryption-project">The cost of a "big bang" re-encryption project</h2>
+<h2 id="the-incident-review-nobody-wants-to-present">The incident review nobody wants to present</h2>
 <p><em>Content coming soon.</em></p>
 
 
@@ -1130,7 +1214,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-failure-key-rotation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 6. Failure: Key Rotation">
+          <a href="../11-failure-migration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 11. Failure: Migration">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1140,20 +1224,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                6. Failure: Key Rotation
+                11. Failure: Migration
               </div>
             </div>
           </a>
         
         
           
-          <a href="../08-failure-migration/" class="md-footer__link md-footer__link--next" aria-label="Next: 8. Failure: Migration">
+          <a href="../13-doing-it-right/" class="md-footer__link md-footer__link--next" aria-label="Next: 13. Doing It Right">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                8. Failure: Migration
+                13. Doing It Right
               </div>
             </div>
             <div class="md-footer__button md-icon">

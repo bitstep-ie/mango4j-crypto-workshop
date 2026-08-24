@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../08-failure-migration/">
+        <link rel="prev" href="../08-hmac-strategies-single-vs-list/">
       
       
-        <link rel="next" href="../10-doing-it-right/">
+        <link rel="next" href="../10-rekeying-hmacs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>9. Outages and Application Failure - Mango4j Crypto ALE Workshop</title>
+        <title>9. Rekeying Encrypted Data - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#9-when-it-all-comes-together-outages-and-application-failure" class="md-skip">
+        <a href="#9-rekeying-encrypted-data" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              9. Outages and Application Failure
+              9. Rekeying Encrypted Data
             
           </span>
         </div>
@@ -496,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    3. The Naive Approach
+    3. A Simple Case of ALE
   
 
     
@@ -545,14 +545,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-failure-single-hmac/" class="md-nav__link">
+      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Failure: Single HMAC Column
+    5. Multiple Providers & Key Rotation
   
 
     
@@ -573,14 +573,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-failure-key-rotation/" class="md-nav__link">
+      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Failure: Key Rotation
+    6. HMAC Search & Key Rotation
   
 
     
@@ -601,14 +601,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-failure-locked-in/" class="md-nav__link">
+      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Failure: Locked-In Provider
+    7. HMAC for Uniqueness
   
 
     
@@ -629,14 +629,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-failure-migration/" class="md-nav__link">
+      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Failure: Migration
+    8. Single vs. List HMAC Strategy
   
 
     
@@ -673,7 +673,7 @@
   <span class="md-ellipsis">
     
   
-    9. Outages and Application Failure
+    9. Rekeying Encrypted Data
   
 
     
@@ -691,7 +691,7 @@
   <span class="md-ellipsis">
     
   
-    9. Outages and Application Failure
+    9. Rekeying Encrypted Data
   
 
     
@@ -717,10 +717,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#search-functionality-silently-degrading-in-production" class="md-nav__link">
+  <a href="#why-you-need-a-background-rekeying-job" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Search functionality silently degrading in production
+        Why you need a background rekeying job
       
     </span>
   </a>
@@ -728,32 +728,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#duplicate-unique-records-corrupting-business-data" class="md-nav__link">
+  <a href="#rekeying-the-background-job-you-didnt-budget-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Duplicate "unique" records corrupting business data
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emergency-rollbacks-and-the-risks-they-introduce" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency rollbacks and the risks they introduce
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-incident-review-nobody-wants-to-present" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The incident review nobody wants to present
+        Rekeying: the background job you didn't budget for
       
     </span>
   </a>
@@ -776,14 +754,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-doing-it-right/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Doing It Right
+    10. Rekeying HMACs
   
 
     
@@ -804,14 +782,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../11-introducing-mango4j-crypto/" class="md-nav__link">
+      <a href="../11-failure-migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    11. Introducing mango4j-crypto
+    11. Failure: Migration
   
 
     
@@ -832,14 +810,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../12-what-were-building-today/" class="md-nav__link">
+      <a href="../12-outages-and-failure/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    12. What We're Building Today
+    12. Outages and Application Failure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-doing-it-right/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Doing It Right
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Introducing mango4j-crypto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-what-were-building-today/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. What We're Building Today
   
 
     
@@ -1029,10 +1091,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#search-functionality-silently-degrading-in-production" class="md-nav__link">
+  <a href="#why-you-need-a-background-rekeying-job" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Search functionality silently degrading in production
+        Why you need a background rekeying job
       
     </span>
   </a>
@@ -1040,32 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#duplicate-unique-records-corrupting-business-data" class="md-nav__link">
+  <a href="#rekeying-the-background-job-you-didnt-budget-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Duplicate "unique" records corrupting business data
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emergency-rollbacks-and-the-risks-they-introduce" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency rollbacks and the risks they introduce
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-incident-review-nobody-wants-to-present" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The incident review nobody wants to present
+        Rekeying: the background job you didn't budget for
       
     </span>
   </a>
@@ -1092,14 +1132,10 @@
   
 
 
-<h1 id="9-when-it-all-comes-together-outages-and-application-failure">9. When It All Comes Together: Outages and Application Failure</h1>
-<h2 id="search-functionality-silently-degrading-in-production">Search functionality silently degrading in production</h2>
+<h1 id="9-rekeying-encrypted-data">9. Rekeying Encrypted Data</h1>
+<h2 id="why-you-need-a-background-rekeying-job">Why you need a background rekeying job</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="duplicate-unique-records-corrupting-business-data">Duplicate "unique" records corrupting business data</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="emergency-rollbacks-and-the-risks-they-introduce">Emergency rollbacks and the risks they introduce</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="the-incident-review-nobody-wants-to-present">The incident review nobody wants to present</h2>
+<h2 id="rekeying-the-background-job-you-didnt-budget-for">Rekeying: the background job you didn't budget for</h2>
 <p><em>Content coming soon.</em></p>
 
 
@@ -1130,7 +1166,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../08-failure-migration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Failure: Migration">
+          <a href="../08-hmac-strategies-single-vs-list/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Single vs. List HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1140,20 +1176,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                8. Failure: Migration
+                8. Single vs. List HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../10-doing-it-right/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. Doing It Right">
+          <a href="../10-rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. Rekeying HMACs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                10. Doing It Right
+                10. Rekeying HMACs
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../11-introducing-mango4j-crypto/">
+        <link rel="prev" href="../09-rekeying-encrypted-data/">
       
       
-        <link rel="next" href="../../stages/01-getting-started/">
+        <link rel="next" href="../11-failure-migration/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>12. What We're Building Today - Mango4j Crypto ALE Workshop</title>
+        <title>10. Rekeying HMACs - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#12-what-were-building-today" class="md-skip">
+        <a href="#10-rekeying-hmacs" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              12. What We're Building Today
+              10. Rekeying HMACs
             
           </span>
         </div>
@@ -496,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    3. The Naive Approach
+    3. A Simple Case of ALE
   
 
     
@@ -545,14 +545,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-failure-single-hmac/" class="md-nav__link">
+      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Failure: Single HMAC Column
+    5. Multiple Providers & Key Rotation
   
 
     
@@ -573,14 +573,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-failure-key-rotation/" class="md-nav__link">
+      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Failure: Key Rotation
+    6. HMAC Search & Key Rotation
   
 
     
@@ -601,14 +601,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-failure-locked-in/" class="md-nav__link">
+      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Failure: Locked-In Provider
+    7. HMAC for Uniqueness
   
 
     
@@ -629,14 +629,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-failure-migration/" class="md-nav__link">
+      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Failure: Migration
+    8. Single vs. List HMAC Strategy
   
 
     
@@ -657,70 +657,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-outages-and-failure/" class="md-nav__link">
+      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. Outages and Application Failure
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-doing-it-right/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Doing It Right
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-introducing-mango4j-crypto/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Introducing mango4j-crypto
+    9. Rekeying Encrypted Data
   
 
     
@@ -757,7 +701,7 @@
   <span class="md-ellipsis">
     
   
-    12. What We're Building Today
+    10. Rekeying HMACs
   
 
     
@@ -775,7 +719,7 @@
   <span class="md-ellipsis">
     
   
-    12. What We're Building Today
+    10. Rekeying HMACs
   
 
     
@@ -801,10 +745,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-hands-on-stages-in-order" class="md-nav__link">
+  <a href="#why-rekeying-hmacs-is-harder-than-rekeying-encrypted-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The hands-on stages, in order
+        Why rekeying HMACs is harder than rekeying encrypted data
       
     </span>
   </a>
@@ -812,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-each-stage-demonstrates-from-this-talk" class="md-nav__link">
+  <a href="#rekeying-hmacs-when-using-the-list-hmac-strategy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What each stage demonstrates from this talk
+        Rekeying HMACs when using the List HMAC Strategy
       
     </span>
   </a>
@@ -826,6 +770,146 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-failure-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Failure: Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-outages-and-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Outages and Application Failure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-doing-it-right/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Doing It Right
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. Introducing mango4j-crypto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-what-were-building-today/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. What We're Building Today
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1007,10 +1091,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-hands-on-stages-in-order" class="md-nav__link">
+  <a href="#why-rekeying-hmacs-is-harder-than-rekeying-encrypted-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The hands-on stages, in order
+        Why rekeying HMACs is harder than rekeying encrypted data
       
     </span>
   </a>
@@ -1018,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-each-stage-demonstrates-from-this-talk" class="md-nav__link">
+  <a href="#rekeying-hmacs-when-using-the-list-hmac-strategy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What each stage demonstrates from this talk
+        Rekeying HMACs when using the List HMAC Strategy
       
     </span>
   </a>
@@ -1048,10 +1132,10 @@
   
 
 
-<h1 id="12-what-were-building-today">12. What We're Building Today</h1>
-<h2 id="the-hands-on-stages-in-order">The hands-on stages, in order</h2>
+<h1 id="10-rekeying-hmacs">10. Rekeying HMACs</h1>
+<h2 id="why-rekeying-hmacs-is-harder-than-rekeying-encrypted-data">Why rekeying HMACs is harder than rekeying encrypted data</h2>
 <p><em>Content coming soon.</em></p>
-<h2 id="what-each-stage-demonstrates-from-this-talk">What each stage demonstrates from this talk</h2>
+<h2 id="rekeying-hmacs-when-using-the-list-hmac-strategy">Rekeying HMACs when using the List HMAC Strategy</h2>
 <p><em>Content coming soon.</em></p>
 
 
@@ -1082,7 +1166,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../11-introducing-mango4j-crypto/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 11. Introducing mango4j-crypto">
+          <a href="../09-rekeying-encrypted-data/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 9. Rekeying Encrypted Data">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1092,20 +1176,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                11. Introducing mango4j-crypto
+                9. Rekeying Encrypted Data
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../stages/01-getting-started/" class="md-footer__link md-footer__link--next" aria-label="Next: 1. Getting Started">
+          <a href="../11-failure-migration/" class="md-footer__link md-footer__link--next" aria-label="Next: 11. Failure: Migration">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                1. Getting Started
+                11. Failure: Migration
               </div>
             </div>
             <div class="md-footer__button md-icon">
