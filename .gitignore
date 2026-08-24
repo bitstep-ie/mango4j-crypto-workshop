@@ -23,10 +23,8 @@
 hs_err_pid*
 replay_pid*
 
-# MkDocs build output and generated step-branch worktrees
+# MkDocs build output
 site/
-docs/.snippets/
-__pycache__/
 
 # IDE
 .idea/

@@ -8,19 +8,16 @@ This repository is a step-by-step workshop teaching the **mango4j** crypto frame
 
 ## Current status
 
-Docs-site scaffolding (MkDocs) and a `step-01` branch exist; most steps are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, etc.), so workshop code is implemented in Java/Maven.
+Docs-site scaffolding (MkDocs) and a `stages/stage-01/` folder exist; most stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, etc.), so workshop code is implemented in Java/Maven.
 
-## Workshop structure: branch-per-step + MkDocs
+## Workshop structure: folder-per-stage + MkDocs
 
-Each step branch (`step-01`, `step-02`, ...) is a complete, self-contained snapshot of the workshop project at that point — not a diff meant to be merged. Learners progress by checking one out directly (`git checkout step-01`, later `git checkout step-02`, etc.), so at every point they have real, compiling code rather than just prose. There is no per-learner working branch and no merging: switching branches directly means a learner's own exercise edits can never produce a merge conflict against the next step. See [docs/how-it-works.md](docs/how-it-works.md) for the full explanation (also published on the docs site).
+Each stage of the workshop lives in its own folder — `stages/stage-01/`, `stages/stage-02/`, ... — on `main`, all present in the checkout at once. A stage's folder is a complete, standalone, buildable Maven project, not a diff meant to be merged. Learners progress by `cd`-ing into one stage's folder at a time, trying its exercise, then moving to the next stage's folder — there is no git branching, merging, or resetting involved, so a learner's own edits can never conflict with anything: they simply don't exist in the next stage's folder. See [docs/how-it-works.md](docs/how-it-works.md) for the full explanation (also published on the docs site).
 
-Each step asks learners to make some changes themselves as an exercise. Before switching to the next step, they're instructed to discard those changes (`git reset --hard && git clean -fd`) rather than commit them, then `git checkout step-0N` — this keeps the exercise from following them into the next step's branch.
+**Stage folders**
 
-**Step branches**
-
-- Named `step-01`, `step-02`, ... (zero-padded, sorts naturally).
-- Each branch is a linear increment on the previous step — `step-02` should be based on `step-01`, etc. — so it's always a complete, ready-to-build snapshot, and `git diff step-01..step-02` shows exactly what changed between steps (used for authoring, not something learners need to run).
-- Contain only the actual workshop project code (currently a standalone Maven project depending on `mango4j-crypto`) — not `AGENTS.md`/`CLAUDE.md`/docs-site files, which live only on `main`.
+- Named `stages/stage-01/`, `stages/stage-02/`, ... (zero-padded, sorts naturally).
+- Each folder is typically authored by copying the previous stage's folder and adding that stage's changes, so it's always a complete, ready-to-build project, and `diff -r stages/stage-01 stages/stage-02` shows exactly what changed between stages (an authoring detail, not something learners need to run).
 - Mark the region of a file that a docs page should quote with pymdownx.snippets section markers, e.g. in `pom.xml`:
   ```xml
   <!-- --8<-- [start:dependency] -->
@@ -29,23 +26,22 @@ Each step asks learners to make some changes themselves as an exercise. Before s
   ```
   Pick a descriptive label per marker (`dependency`, `encrypt-annotation`, etc.) — labels only need to be unique within one file.
 
-**Docs site (`main` branch)**
+**Docs site**
 
-- `mkdocs.yml` — site config; theme is `material`; `pymdownx.snippets` is configured with `base_path: [docs/.snippets]` and `dedent_subsections: true`.
-- `hooks.py` — an MkDocs build hook (`on_config`) that finds every `step-\d+` branch (local or `origin/`) and materializes each into a `git worktree` at `docs/.snippets/step-NN/`. This directory is build-generated and gitignored — never commit it or edit files inside it.
-- `docs/steps/0N-*.md` — one page per step. Pull code into a page with:
+- `mkdocs.yml` — site config; theme is `material`; `pymdownx.snippets` is configured with `base_path: [stages]` and `dedent_subsections: true` — it reads straight from the `stages/` folders already in the checkout, no build hook or git worktree needed.
+- `docs/stages/0N-*.md` — one page per stage. Pull code into a page with:
   ```
-  --8<-- "step-01/pom.xml:dependency"
+  --8<-- "stage-01/pom.xml:dependency"
   ```
-  (path is relative to `docs/.snippets/`, `:label` selects the marked section; omit `:label` to include a whole file.)
+  (path is relative to `stages/`, `:label` selects the marked section; omit `:label` to include a whole file.)
 - `requirements.txt` — `mkdocs`, `mkdocs-material`, `mike`, `pymdown-extensions`.
-- `.github/workflows/docs.yml` — on push to `main`, fetches all branches (step branches must be fetchable — `fetch-depth: 0` plus an explicit `git fetch` of all remote heads) and deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
+- `.github/workflows/docs.yml` — on push to `main`, deploys via `mike deploy --push --update-aliases main latest` (then `mike set-default --push latest`) to the `gh-pages` branch. `mike` rejects using the same string for both version and alias, hence version `main` / alias `latest` rather than `latest latest`.
 
-**Adding a new step**
+**Adding a new stage**
 
-1. Branch `step-0N` from `step-0(N-1)`, make the code changes for that step, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, commit, push.
-2. Add `docs/steps/0N-*.md` on `main`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
-3. Preview locally with `mkdocs serve` (requires the step branches to exist/be fetchable locally so `hooks.py` can create their worktrees).
+1. Copy `stages/stage-0(N-1)/` to `stages/stage-0N/`, make the code changes for that stage, add/adjust `--8<-- [start:label]`/`[end:label]` markers around anything a docs page will quote, commit.
+2. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes.
+3. Preview locally with `mkdocs serve`.
 
 ## License
 

@@ -27,12 +27,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.snippets:
       base_path:
-        - docs/.snippets
+        - stages
       check_paths: true
       dedent_subsections: true
-
-hooks:
-  - hooks.py
 
 plugins:
   - search
@@ -43,6 +40,6 @@ extra:
 
 nav:
   - Home: index.md
-  - Steps:
-      - "1. Getting Started": steps/01-getting-started.md
+  - Stages:
+      - "1. Getting Started": stages/01-getting-started.md
   - How This Workshop Works: how-it-works.md

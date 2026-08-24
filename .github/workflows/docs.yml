@@ -16,9 +16,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch step branches
-        run: git fetch origin '+refs/heads/*:refs/remotes/origin/*'
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
