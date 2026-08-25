@@ -10,7 +10,7 @@ That gets you *an* opaque blob. But an opaque blob on its own can't answer the q
 - Which provider handled that key? (AWS KMS? An HSM? Something else?)
 - What IV was used? (Needed to reverse the encryption operation, and never safe to reuse.)
 
-Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes key rotation (Chapter 5) and multi-provider support (Chapter 2) painful to retrofit later.
+Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes key rotation (Chapter 5) and multi-provider support (Chapter 2) difficult to retrofit later.
 
 ## The fix: a structured ciphertext format
 

@@ -21,17 +21,17 @@ This additive requirement is exactly why HMAC rekeying, in practice, tends to on
 
 ## Why this is split from the encryption rekey
 
-Encryption rekeying (Chapter 8) is a straight swap: decrypt with the old key, re-encrypt with the new one, done. HMAC rekeying can't be a swap, because — unlike ciphertext, which only ever needs to satisfy "decrypts correctly under its recorded key" — HMACs are load-bearing for search and uniqueness *while the rotation is still in progress*. Replacing a HMAC in place, even briefly, would reopen exactly the search-outage and duplicate-record windows Chapters 5–6 spent so much time on. Keeping the encryption and HMAC rekeys as two distinct steps, each addressing a different failure mode, is what lets them run independently and safely overlap in time.
+Encryption rekeying (Chapter 8) is a straight swap: decrypt with the old key, re-encrypt with the new one, done. HMAC rekeying can't be a swap, because — unlike ciphertext, which only ever needs to satisfy "decrypts correctly under its recorded key" — HMACs are load-bearing for search and uniqueness *while the rotation is still in progress*. Replacing a HMAC in place, even briefly, would reopen the search-outage and duplicate-record problems covered in Chapters 5–6. Keeping the encryption and HMAC rekeys as two distinct steps, each addressing a different failure mode, is what lets them run independently and safely overlap in time.
 
 ## How this interacts with the List HMAC Strategy
 
-This is precisely the process Chapter 7 gestured at when it said the List HMAC Strategy is "the easiest strategy for supporting rekeying with no impact to application functionality." Because every active key's HMAC coexists in the same lookup/unique-value collections, adding a new key's entries and later removing an old key's entries are both just additive/subtractive operations on those collections — never a moment where a record is only findable under one key or the other. It's also the answer to the "list only ever grows" cost flagged at the end of Chapter 7: rekeying is what actually shrinks it back down once a rotation completes.
+This is the mechanism that makes the List HMAC Strategy (Chapter 7) straightforward to rekey with no impact to application functionality. Because every active key's HMAC coexists in the same lookup/unique-value collections, adding a new key's entries and later removing an old key's entries are both just additive/subtractive operations on those collections — never a moment where a record is only findable under one key or the other. It's also the answer to the "list only ever grows" cost flagged at the end of Chapter 7: rekeying is what shrinks it back down once a rotation completes.
 
 ---
 
 ## Closing: what "doing it right" actually requires
 
-Two things, in the end, cover almost everything this talk has walked through:
+Two things cover almost everything this talk has walked through:
 
 - **Decoupling application code from cryptographic providers.** Every mechanism covered — structured ciphertext, the key alias indirection, pluggable providers — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey processes are just what it takes to keep search and uniqueness correct while it happens.
 - **Understanding the unencrypted → encrypted migration path *up front***, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.

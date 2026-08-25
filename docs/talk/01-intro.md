@@ -16,7 +16,7 @@ ALE protects against a much wider threat model, because the plaintext simply nev
 - A backup or replica that ends up somewhere it shouldn't
 - An application bug that logs a raw query
 
-None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — most serious systems use both — but only ALE addresses this category of risk.
+None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — many production systems use both — but only ALE addresses this category of risk.
 
 ## Where ALE sits in the application stack
 
@@ -65,7 +65,7 @@ If your application serves multiple distinct customers or organizations — bank
 
 ### Why "encryption at rest" alone isn't enough
 
-As covered above, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the *application's own access* is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.
+As covered above under [ALE versus TDE / disk encryption](#ale-versus-tde-disk-encryption), TDE only protects against someone stealing the physical media, not against the much more common case of an authenticated connection being misused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.
 
 ## From concepts to practice
 

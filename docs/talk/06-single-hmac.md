@@ -47,4 +47,4 @@ Adding key start time doesn't fix this — it only narrows the window to a race 
 | **Pros** | Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation |
 | **Cons** | Cannot support unique constraint enforcement *and* key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances |
 
-If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually have to walk away from. Chapter 7 covers the strategy that actually solves both problems.
+If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. Chapter 7 covers the strategy that solves both problems.

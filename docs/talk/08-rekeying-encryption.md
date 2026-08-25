@@ -2,7 +2,7 @@ Rekeying: Encryption
 
 ## Rekeying vs. rotation: not the same step
 
-Chapter 5 drew the line already: rotation (phase 1) is switching *new writes* to a new key. Rekeying is the separate background process that goes back over *existing* records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key actually be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.
+Chapter 5 drew the line already: rotation (phase 1) is switching *new writes* to a new key. Rekeying is the separate background process that goes back over *existing* records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.
 
 ## Two directions of rekey
 

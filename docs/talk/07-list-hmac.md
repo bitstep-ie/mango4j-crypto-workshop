@@ -1,8 +1,8 @@
 The List HMAC Strategy
 
-## Two elegant concepts
+## Two core ideas
 
-The List HMAC Strategy is the design generally recommended as the default choice, for applications that can accommodate its trade-offs. It rests on two ideas:
+The List HMAC Strategy is generally the recommended default for applications that can accommodate its trade-offs. It rests on two ideas:
 
 1. **A list of HMAC keys, not a single key.** During a rotation you *add* the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.
 2. **Every write stores HMACs for the entire list of active keys, not just the current one.** Not one HMAC per field — one per field *per active key*.

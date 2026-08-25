@@ -17,7 +17,7 @@ Encrypting a value doesn't need to destroy the working copy — the application 
 
 ## The failure mode this avoids: double encrypt/decrypt
 
-Keeping the two representations distinct — and only ever converting between them at one well-defined boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Requiring that only the working fields hold plaintext and only the designated stored field holds ciphertext removes any state a value can end up in that's ambiguous about which one it currently is.
+Keeping the two representations distinct — and only ever converting between them at one well-defined boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Requiring that only the working fields hold plaintext and only the designated stored field holds ciphertext removes any ambiguity about which representation a value is currently in.
 
 ## What happens without this discipline: encrypting fields directly into their columns
 
