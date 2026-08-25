@@ -15,4 +15,4 @@ Before the hands-on stages, [The Talk](../talk/01-intro.md) goes deeper: what AL
 
 ## How to follow along
 
-Head straight to [Hands on Workshop](01-getting-started.md) to get started.
+Head straight to [Getting Started](01-getting-started.md) to get started.
