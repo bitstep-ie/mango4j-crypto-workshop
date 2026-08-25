@@ -2,12 +2,7 @@
 
 ## The naive approach
 
-The simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column.
-
-```java
-@Encrypt
-private transient String pan;
-```
+The simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one blob of bytes.
 
 That gets you *an* opaque blob. But an opaque blob on its own can't answer the questions your application will inevitably need to ask later:
 
@@ -19,34 +14,20 @@ Naive implementations tend to bolt these on piecemeal and inconsistently: a key 
 
 ## The fix: a structured ciphertext format
 
-mango4j-crypto's `CryptoShield.encrypt()` doesn't write raw ciphertext bytes into your `@EncryptedData` field. It writes a JSON structure:
+The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:
 
-```json
-{
-  "cryptoKeyId": "someKeyId",
-  "iv": "someInitializationVector",
-  "data": {}
-}
-```
+- **key ID** — an identifier for the key that performed the encryption. This is how decryption always knows which key to ask for, even years after a key has stopped being "current."
+- **IV** — the Initialization Vector used for this specific encryption operation (see Chapter 1 — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).
+- **the actual encrypted output** — whatever bytes the underlying cryptographic operation produced. This doesn't need to be a fixed shape, because different providers can return different kinds of output here — an HSM-backed operation's output looks nothing like a password-derived key's.
 
-- **`cryptoKeyId`** — the `CryptoKey.id` (Chapter 2) that performed the encryption. This is how decryption always knows which key to ask `CryptoKeyProvider.getById()` for, even years after a key has stopped being "current."
-- **`iv`** — the Initialization Vector used for this specific encryption operation (see Chapter 1 — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).
-- **`data`** — whatever the Encryption Service Delegate actually returned. This is a `Map`, not a fixed shape, because different delegates need different things here — an AWS KMS delegate's output looks nothing like a PBKDF2 delegate's.
-
-All of your `@Encrypt`-annotated fields on an entity are bundled into a single JSON payload and encrypted together in one operation, with the result — this whole structure — written into the single field marked `@EncryptedData`:
-
-```java
-@Column(name = "ENCRYPTED_DATA")
-@EncryptedData
-private String encryptedData;
-```
+All of an entity's confidential fields can be bundled into a single payload and encrypted together in one operation, with this whole structure — key ID, IV, output — written into a single stored field, rather than encrypting each field independently and scattering key/IV metadata across several columns.
 
 ## Why this structure is the foundation for everything after it
 
 Every capability covered later in this talk depends on the ciphertext carrying its own metadata, rather than living in a bare column with the key/provider/IV tracked (or guessed at) elsewhere:
 
-- **Key rotation (Chapter 5)** — old records keep decrypting correctly after the current key changes, because each one's `cryptoKeyId` says exactly which key to use, permanently.
-- **Multi-provider support (Chapter 2)** — a new key can point at a totally different delegate `type`, and existing ciphertext is unaffected because it already recorded which key (and therefore which delegate) it needs.
-- **Rekeying (Chapters 8–9)** — a rekey job can find every record still on an old key by inspecting `cryptoKeyId` (or the optional `@EncryptionKeyId` field, kept alongside for cheap querying), decrypt with the old key, and re-encrypt with the new one.
+- **Key rotation (Chapter 5)** — old records keep decrypting correctly after the current key changes, because each one's stored key ID says exactly which key to use, permanently.
+- **Multi-provider support (Chapter 2)** — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.
+- **Rekeying (Chapters 8–9)** — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.
 
 One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key did we use back then."

@@ -8,35 +8,9 @@ Chapter 1 introduced the IV: randomness fed into every encryption operation so e
 
 ## The Single HMAC Strategy: one column per HMAC
 
-The simplest possible design: one HMAC column per field, holding a single HMAC value.
+The simplest possible design: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 8–9) needs later to find what's stale.
 
-```java
-@SingleHmacStrategy
-public class UserProfileEntity {
-
-    @Encrypt
-    @Hmac
-    private transient String pan;
-
-    @Encrypt
-    @Hmac
-    private transient String userName;
-
-    @Column(name = "USERNAME_HMAC", unique = true)
-    private String userNameHmac;
-
-    @Column(name = "PAN_HMAC")
-    private String panHmac;
-
-    @HmacKeyId
-    @Column(name = "HMAC_KEY_ID")
-    private String hmacKeyId;
-
-    // ...@EncryptedData, @EncryptionKeyId as in Chapter 3
-}
-```
-
-By convention, the HMAC field is named after the source field with an `Hmac` suffix — `pan` → `panHmac`. `@HmacKeyId` records which HMAC key produced these values, which rekeying (Chapters 8–9) needs to find what's stale. It's the way "many applications (unfortunately) default to using HMACs" — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
+It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
 ## The search problem
 

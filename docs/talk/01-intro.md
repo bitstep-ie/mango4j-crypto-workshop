@@ -28,15 +28,15 @@ Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository
 
 Your business logic still works with plaintext values — a `cardNumber`, an `email` — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.
 
-## Key terms: tenant, CryptoKey, ciphertext, HMAC, IV
+## Key terms: tenant, key, ciphertext, HMAC, IV
 
 A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:
 
 **Tenant**
 :   A logical isolation boundary for a distinct customer or client entity in your system, each with its own encryption/HMAC keys — so a data breach or key compromise affecting one tenant can't expose another's data. If your application doesn't have the concept of multiple customers, you can just think of your whole application as "the tenant."
 
-**CryptoKey**
-:   A key represented as an *object* in your code — not a raw string — carrying the key's identity, what it's used for, and which cryptographic provider/mechanism should handle it. This is what lets you change *how* encryption is actually performed (a different KMS, a different algorithm, a different provider) without touching the application code that calls `encrypt()`.
+**Key**
+:   The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change *how* encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in Chapter 2.
 
 **Ciphertext**
 :   The encrypted output. Irreversible without the correct key — that's the entire point.
@@ -67,15 +67,8 @@ If your application serves multiple distinct customers or organizations — bank
 
 As covered above, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the *application's own access* is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.
 
-## Introducing mango4j-crypto
+## From concepts to practice
 
-*Content coming soon.*
+The rest of this talk works through the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — one at a time, on their own terms, independent of any particular library or language. They're general ALE design problems that any application implementing this pattern has to solve somehow, whether it rolls its own solution or reaches for an existing framework.
 
-The rest of this talk demonstrates the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — as implemented by mango4j-crypto, the framework this workshop is built around:
-
-- Key-driven design: keys as objects, not strings
-- `CryptoShield` and annotations as the single source of truth for what's encrypted
-- Pluggable encryption service delegates
-- Single, Double, and List HMAC strategies
-- Built-in rekeying support
-- `@EnableMigrationSupport` for legacy unencrypted fields
+The hands-on workshop that follows this talk puts these same concepts into practice using mango4j-crypto, a Java framework built around exactly this set of ideas — a key-driven design, pluggable providers, a choice of HMAC strategies, and built-in support for rotation and rekeying. Where the talk stays conceptual, the workshop is where you'll see one concrete implementation of it.

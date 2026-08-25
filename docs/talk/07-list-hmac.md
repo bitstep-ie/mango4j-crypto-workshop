@@ -2,7 +2,7 @@
 
 ## Two elegant concepts
 
-The List HMAC Strategy is the design mango4j-crypto's own authors recommend by default. It rests on two ideas:
+The List HMAC Strategy is the design generally recommended as the default choice, for applications that can accommodate its trade-offs. It rests on two ideas:
 
 1. **A list of HMAC keys, not a single key.** During a rotation you *add* the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.
 2. **Every write stores HMACs for the entire list of active keys, not just the current one.** Not one HMAC per field — one per field *per active key*.
@@ -11,54 +11,25 @@ That second point is what the Single HMAC Strategy (Chapter 6) never did, and it
 
 ## Entity shape: three tables instead of one
 
-This is the trade-off — it forces relational DBs into a multi-table design. Instead of one `USER_PROFILE` row with inline HMAC columns, you get:
+This is the trade-off — it forces relational DBs into a multi-table design. Instead of one record with inline HMAC columns, you get:
 
-- **`USER_PROFILE`** — the encrypted record itself, no HMAC columns at all
-- **`USER_PROFILE_LOOKUPS`** — one row per (field, active HMAC key) pair, used for search
-- **`USER_PROFILE_UNIQUE_VALUES`** — structurally identical to lookups, but with a compound unique constraint on `(tenant, alias, value, hmacKeyId)` — separate purely because that constraint doesn't belong on the lookup table
+- **The record itself** — the encrypted data, with no HMAC columns at all
+- **A lookups table** — one row per (field, active HMAC key) pair, used for search
+- **A unique-values table** — structurally identical to the lookups table, but with a compound unique constraint on (tenant, field, value, key) — separate purely because that constraint doesn't belong on the lookup table
 
-In code, the entity implements `Lookup` and/or `Unique` instead of exposing per-field `*Hmac` columns:
+A field's HMAC is no longer "for lookup" or "for uniqueness" implicitly by which column it's in — each field is explicitly marked for one purpose, the other, or both, and the write path is responsible for populating the right table(s) accordingly. Critically, an update must *replace* the full current set of HMAC entries for a record, not append to it — otherwise stale entries from a previous version of the value would linger and stay matchable.
 
-```java
-@ListHmacStrategy
-@Document(collection = "UserProfile")
-public class UserProfileEntity implements Lookup, Unique {
-
-    @Encrypt
-    @Hmac
-    private transient String pan;
-
-    @Encrypt
-    @Hmac(purposes = {Hmac.Purposes.LOOKUP, Hmac.Purposes.UNIQUE})
-    private transient String userName;
-
-    private Collection<CryptoShieldHmacHolder> lookups;
-    private Collection<CryptoShieldHmacHolder> uniqueValues;
-
-    @Override
-    public void setLookups(Collection<CryptoShieldHmacHolder> lookups) { this.lookups = lookups; }
-    @Override
-    public List<CryptoShieldHmacHolder> getLookups() { return lookups; }
-    @Override
-    public void setUniqueValues(Collection<CryptoShieldHmacHolder> uniqueValues) { this.uniqueValues = uniqueValues; }
-    @Override
-    public List<CryptoShieldHmacHolder> getUniqueValues() { return uniqueValues; }
-}
-```
-
-`@Hmac(purposes = ...)` says whether a field's HMAC is for lookup, uniqueness, or both (defaults to lookup). There's no `@HmacKeyId` here — with a list of HMACs, the key ID lives per-entry inside each `CryptoShieldHmacHolder`, not as a single field on the entity. And notably: **when updating an entity, `setLookups()`/`setUniqueValues()` must completely replace the existing collections, never append to them** — the library expects to own the full current set on every write.
-
-On a document DB like Mongo, `lookups`/`uniqueValues` are just embedded lists on the same document — no extra tables needed, which is why the docs call this "an excellent fit for document DBs." On a relational DB you pay for it with up to three writes and a join on search.
+On a document DB (like MongoDB), the lookups/unique-values lists are just embedded arrays on the same document — no extra tables needed, which is part of why this strategy is a particularly good fit for document databases. On a relational DB you pay for it with up to three writes per update and a join on search.
 
 ## Why this closes both Chapter 6 gaps
 
 - **Search**: a record written under key 2 while key 1 is still active carries lookup HMACs for *both*. Any application instance searching with either key finds it — including the multi-instance/cached-key race from Chapter 6, where one instance still thinks the old key is current.
-- **Uniqueness**: the compound constraint on `(alias, value, hmacKeyId)` means a duplicate username under *any* active key gets caught by the DB, not just the current one — there's no window where a rotated key lets a duplicate slip past.
+- **Uniqueness**: the compound constraint on (field, value, key) means a duplicate username under *any* active key gets caught by the database, not just the current one — there's no window where a rotated key lets a duplicate slip past.
 
 ## Extra capabilities this design unlocks
 
-- **HMAC tokenizers** — `@Hmac(HmacTokenizers = {PanTokenizer.class})` generates *additional* lookup HMACs from derived representations of a value (e.g. last-4 digits, first-6, a normalized form with dashes stripped), stored alongside the full-value HMAC — richer search without weakening the encrypted value itself.
-- **`@UniqueGroup`** — a compound unique constraint spanning multiple fields (some HMAC'd, some cleartext) isn't expressible with a normal column-level constraint once one of those fields is a `@Hmac` field with no fixed column. `@UniqueGroup` lets you name a group and an order number per field so the library computes one combined unique HMAC across them.
+- **Derived-value search terms** — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of *derived* representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.
+- **Compound uniqueness across multiple fields** — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.
 
 ## Verdict
 

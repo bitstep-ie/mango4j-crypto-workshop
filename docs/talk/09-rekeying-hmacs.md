@@ -4,7 +4,7 @@
 
 Chapter 8 covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the List HMAC Strategy (Chapter 7), a record can legitimately have HMACs from *multiple* keys stored simultaneously, and the rekey job has to *add* new entries without disturbing old ones that other in-flight operations might still depend on.
 
-**mango4j-crypto's built-in rekey job currently only supports HMAC rekeying for entities using the List HMAC Strategy.** Encryption-only rekeying (Chapter 8) works for any entity; HMAC rekeying specifically needs the list shape to do this safely.
+This additive requirement is exactly why HMAC rekeying, in practice, tends to only be well-supported for entities using the List HMAC Strategy. Encryption-only rekeying (Chapter 8) doesn't care which HMAC strategy an entity uses — it works regardless; HMAC rekeying specifically needs the list shape to do this safely.
 
 ## The process
 
@@ -33,9 +33,9 @@ This is precisely the process Chapter 7 gestured at when it said the List HMAC S
 
 Two things, in the end, cover almost everything this talk has walked through:
 
-- **Decoupling application code from cryptographic providers.** Every mechanism covered — structured ciphertext, the key alias indirection, pluggable delegates — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey jobs are just what it takes to keep search and uniqueness correct while it happens.
-- **Understanding the unencrypted → encrypted migration path *up front***, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building `@EnableMigrationSupport`-style guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.
+- **Decoupling application code from cryptographic providers.** Every mechanism covered — structured ciphertext, the key alias indirection, pluggable providers — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey processes are just what it takes to keep search and uniqueness correct while it happens.
+- **Understanding the unencrypted → encrypted migration path *up front***, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.
 
 ## What we're building today
 
-The rest of this session moves from theory to hands-on practice, working through the numbered stages in `stages/` in this workshop's repository — starting from a plain project with the `mango4j-crypto` dependency added, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to recognize `@Encrypt`/`@EncryptedData` from Chapters 3–4 first, HMAC strategies from Chapters 6–7 next, and rotation/rekeying from Chapters 5, 8–9 as the workshop progresses.
+The rest of this session moves from theory to hands-on practice, working through the numbered stages in this workshop's repository — starting from a plain project with a crypto framework added as a dependency, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext from Chapters 3–4 first, HMAC strategies from Chapters 6–7 next, and rotation/rekeying from Chapters 5, 8–9 as the workshop progresses.

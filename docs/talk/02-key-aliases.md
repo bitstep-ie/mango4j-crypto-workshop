@@ -2,7 +2,7 @@
 
 ## The limits of representing a key as a string
 
-It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a `String`. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do any of the things mango4j-crypto's **Key Driven Design** is built to handle:
+It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a plain string. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do things like:
 
 - Switch which cryptographic provider a key uses (AWS KMS today, an HSM tomorrow)
 - Run multiple providers side by side (different regions, different regulatory regimes)
@@ -12,9 +12,9 @@ A raw string can't carry any of that. It's just an opaque label — there's noth
 
 ## A key as an object, not a string
 
-mango4j-crypto's answer is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).
+A more durable approach is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).
 
-That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, the library matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.
+That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, something matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.
 
 ## The alias: how application code actually asks for a key
 
