@@ -25,7 +25,7 @@
     
     
       
-        <title>9. Rekeying: HMACs - ALE Workshop</title>
+        <title>Rekeying: HMACs - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#9-rekeying-hmacs" class="md-skip">
+        <a href="#why-hmacs-need-their-own-rekey-process" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              9. Rekeying: HMACs
+              Rekeying: HMACs
             
           </span>
         </div>
@@ -394,7 +394,7 @@
   <span class="md-ellipsis">
     
   
-    1. What Is ALE, and Why?
+    What Is ALE, and Why?
   
 
     
@@ -422,7 +422,7 @@
   <span class="md-ellipsis">
     
   
-    2. Key Aliases & Key Configs
+    Key Aliases & Key Configs
   
 
     
@@ -450,7 +450,7 @@
   <span class="md-ellipsis">
     
   
-    3. Structured Ciphertext
+    Structured Ciphertext
   
 
     
@@ -478,7 +478,7 @@
   <span class="md-ellipsis">
     
   
-    4. Transient vs. Encrypted Blobs
+    Transient vs. Encrypted Blobs
   
 
     
@@ -506,7 +506,7 @@
   <span class="md-ellipsis">
     
   
-    5. Key Rotation
+    Key Rotation
   
 
     
@@ -534,7 +534,7 @@
   <span class="md-ellipsis">
     
   
-    6. Single HMAC Strategy
+    Single HMAC Strategy
   
 
     
@@ -562,7 +562,7 @@
   <span class="md-ellipsis">
     
   
-    7. List HMAC Strategy
+    List HMAC Strategy
   
 
     
@@ -590,7 +590,7 @@
   <span class="md-ellipsis">
     
   
-    8. Rekeying: Encryption
+    Rekeying: Encryption
   
 
     
@@ -617,8 +617,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -627,7 +625,7 @@
   <span class="md-ellipsis">
     
   
-    9. Rekeying: HMACs
+    Rekeying: HMACs
   
 
     
@@ -645,7 +643,7 @@
   <span class="md-ellipsis">
     
   
-    9. Rekeying: HMACs
+    Rekeying: HMACs
   
 
     
@@ -660,8 +658,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -846,7 +842,7 @@
   <span class="md-ellipsis">
     
   
-    1. Getting Started
+    Getting Started
   
 
     
@@ -874,7 +870,7 @@
   <span class="md-ellipsis">
     
   
-    2. Encrypting a Field
+    Encrypting a Field
   
 
     
@@ -938,8 +934,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1034,7 +1028,8 @@
   
 
 
-<h1 id="9-rekeying-hmacs">9. Rekeying: HMACs</h1>
+  <h1>Rekeying: HMACs</h1>
+
 <h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
 <p>Chapter 8 covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the List HMAC Strategy (Chapter 7), a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
 <p>This additive requirement is exactly why HMAC rekeying, in practice, tends to only be well-supported for entities using the List HMAC Strategy. Encryption-only rekeying (Chapter 8) doesn't care which HMAC strategy an entity uses — it works regardless; HMAC rekeying specifically needs the list shape to do this safely.</p>
@@ -1073,6 +1068,9 @@
 
 
 
+  
+  
+
 
 
 
@@ -1095,7 +1093,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../08-rekeying-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Rekeying: Encryption">
+          <a href="../08-rekeying-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Rekeying: Encryption">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1105,7 +1103,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                8. Rekeying: Encryption
+                Rekeying: Encryption
               </div>
             </div>
           </a>

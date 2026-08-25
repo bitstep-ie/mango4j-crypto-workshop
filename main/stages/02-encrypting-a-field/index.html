@@ -25,7 +25,7 @@
     
     
       
-        <title>2. Encrypting a Field - ALE Workshop</title>
+        <title>Encrypting a Field - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#2-encrypting-a-field" class="md-skip">
+        <a href="#the-entity" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              2. Encrypting a Field
+              Encrypting a Field
             
           </span>
         </div>
@@ -389,7 +389,7 @@
   <span class="md-ellipsis">
     
   
-    1. What Is ALE, and Why?
+    What Is ALE, and Why?
   
 
     
@@ -417,7 +417,7 @@
   <span class="md-ellipsis">
     
   
-    2. Key Aliases & Key Configs
+    Key Aliases & Key Configs
   
 
     
@@ -445,7 +445,7 @@
   <span class="md-ellipsis">
     
   
-    3. Structured Ciphertext
+    Structured Ciphertext
   
 
     
@@ -473,7 +473,7 @@
   <span class="md-ellipsis">
     
   
-    4. Transient vs. Encrypted Blobs
+    Transient vs. Encrypted Blobs
   
 
     
@@ -501,7 +501,7 @@
   <span class="md-ellipsis">
     
   
-    5. Key Rotation
+    Key Rotation
   
 
     
@@ -529,7 +529,7 @@
   <span class="md-ellipsis">
     
   
-    6. Single HMAC Strategy
+    Single HMAC Strategy
   
 
     
@@ -557,7 +557,7 @@
   <span class="md-ellipsis">
     
   
-    7. List HMAC Strategy
+    List HMAC Strategy
   
 
     
@@ -585,7 +585,7 @@
   <span class="md-ellipsis">
     
   
-    8. Rekeying: Encryption
+    Rekeying: Encryption
   
 
     
@@ -613,7 +613,7 @@
   <span class="md-ellipsis">
     
   
-    9. Rekeying: HMACs
+    Rekeying: HMACs
   
 
     
@@ -733,7 +733,7 @@
   <span class="md-ellipsis">
     
   
-    1. Getting Started
+    Getting Started
   
 
     
@@ -760,8 +760,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -770,7 +768,7 @@
   <span class="md-ellipsis">
     
   
-    2. Encrypting a Field
+    Encrypting a Field
   
 
     
@@ -788,7 +786,7 @@
   <span class="md-ellipsis">
     
   
-    2. Encrypting a Field
+    Encrypting a Field
   
 
     
@@ -803,8 +801,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -917,8 +913,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -990,7 +984,9 @@
   
 
 
-<h1 id="2-encrypting-a-field">2. Encrypting a Field</h1>
+  <h1>Encrypting a Field</h1>
+
+<p>Encrypting a Field</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
 <p>This is the first stage that actually encrypts something. The goal is the minimum set of moving parts needed to do that: one field marked <code>@Encrypt</code>, one field marked <code>@EncryptedData</code> for the ciphertext to land in, a key source (<code>CryptoKeyProvider</code>), and something to do the actual encrypting (<code>EncryptionServiceDelegate</code>). We deliberately use a fake Base64 "encryption" delegate here so the plumbing is visible without any real cryptography or KMS setup getting in the way — real encryption comes in a later stage.</p>
@@ -1084,7 +1080,7 @@ decrypted cardNumber:         4111111111111111
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../01-getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 1. Getting Started">
+          <a href="../01-getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1094,7 +1090,7 @@ decrypted cardNumber:         4111111111111111
                 Previous
               </span>
               <div class="md-ellipsis">
-                1. Getting Started
+                Getting Started
               </div>
             </div>
           </a>
