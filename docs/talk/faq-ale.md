@@ -12,4 +12,3 @@ Quick answers to questions that come up repeatedly when discussing Application L
 - [If HMACs don't carry a reference to their own key, how does rekeying know what to rekey?](faq/hmac-key-id-rekeying.md)
 - [What is HMAC tokenization / derived-value search?](faq/hmac-tokenization.md)
 - [What's a tenant?](faq/tenant.md)
-- [HMAC is deterministic by definition — does choosing a storage strategy change that?](faq/hmac-determinism.md)
