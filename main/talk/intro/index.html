@@ -11,10 +11,8 @@
       
       
       
-        <link rel="prev" href="../07-single-hmac/">
       
-      
-        <link rel="next" href="../09-rekeying-encryption/">
+        <link rel="next" href="../key-aliases/">
       
       
         
@@ -25,7 +23,7 @@
     
     
       
-        <title>List HMAC Strategy - ALE Workshop</title>
+        <title>What Is ALE, and Why? - ALE Workshop</title>
       
     
     
@@ -76,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#two-core-ideas" class="md-skip">
+        <a href="#ale-versus-tde-disk-encryption" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              List HMAC Strategy
+              What Is ALE, and Why?
             
           </span>
         </div>
@@ -228,7 +226,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -384,10 +382,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Is ALE, and Why?
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -403,6 +426,129 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ALE versus TDE / disk encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where ALE sits in the application stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key terms: tenant, key, ciphertext, HMAC, IV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-do-we-still-need-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do we still need it?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why do we still need it?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regulatory and compliance drivers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducing blast radius when a database or backup leaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tenant / customer data segregation requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why "encryption at rest" alone isn't enough
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-concepts-to-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From concepts to practice
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -415,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -443,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -471,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -499,35 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
+      <a href="../introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -555,7 +673,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
         
   
   
@@ -580,35 +726,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../list-hmac/" class="md-nav__link">
         
   
   
@@ -624,79 +745,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#two-core-ideas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two core ideas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity shape: three tables instead of one
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-closes-both-chapter-7-gaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why this closes both Chapter 7 gaps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extra capabilities this design unlocks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verdict
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -709,7 +757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
+      <a href="../rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -737,7 +785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -960,10 +1008,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-core-ideas" class="md-nav__link">
+  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two core ideas
+        ALE versus TDE / disk encryption
       
     </span>
   </a>
@@ -971,10 +1019,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
+  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity shape: three tables instead of one
+        Where ALE sits in the application stack
       
     </span>
   </a>
@@ -982,10 +1030,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-closes-both-chapter-7-gaps" class="md-nav__link">
+  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this closes both Chapter 7 gaps
+        Key terms: tenant, key, ciphertext, HMAC, IV
       
     </span>
   </a>
@@ -993,21 +1041,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
+  <a href="#why-do-we-still-need-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Extra capabilities this design unlocks
+        Why do we still need it?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why do we still need it?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regulatory and compliance drivers
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verdict
+        Reducing blast radius when a database or backup leaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tenant / customer data segregation requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why "encryption at rest" alone isn't enough
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-concepts-to-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From concepts to practice
       
     </span>
   </a>
@@ -1034,55 +1132,54 @@
   
 
 
-  <h1>List HMAC Strategy</h1>
+  <h1>What Is ALE, and Why?</h1>
 
-<p>The List HMAC Strategy</p>
-<h2 id="two-core-ideas">Two core ideas</h2>
-<p>The List HMAC Strategy is generally the recommended default for applications that can accommodate its trade-offs. It rests on two ideas:</p>
-<ol>
-<li><strong>A list of HMAC keys, not a single key.</strong> During a rotation you <em>add</em> the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.</li>
-<li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
-</ol>
-<p>That second point is what the Single HMAC Strategy (Chapter 7) never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.</p>
-<h2 id="entity-shape-three-tables-instead-of-one">Entity shape: three tables instead of one</h2>
-<p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one record with inline HMAC columns, you get:</p>
+<p>What Is ALE, and Why Do We Still Need It?</p>
+<p>Application Level Encryption (ALE) means your <strong>application code</strong> encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.</p>
+<p>This is a deliberate contrast with encryption that happens <em>underneath</em> your application, at the infrastructure layer.</p>
+<h2 id="ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</h2>
+<p>Transparent Data Encryption (TDE) and disk/volume encryption protect data <strong>at rest</strong> — the bytes sitting on a physical or virtual disk. They're valuable, but they solve a narrow problem: someone stealing a disk, a decommissioned drive, or an unencrypted backup file. The moment there's an authenticated connection to the database — a valid DB credential, a live query, a DBA doing routine maintenance — TDE decrypts everything transparently and hands back plaintext. That's the point of the "T" in TDE.</p>
+<p>ALE protects against a much wider threat model, because the plaintext simply never reaches the database layer at all:</p>
 <ul>
-<li><strong>The record itself</strong> — the encrypted data, with no HMAC columns at all</li>
-<li><strong>A lookups table</strong> — one row per (field, active HMAC key) pair, used for search</li>
-<li><strong>A unique-values table</strong> — structurally identical to the lookups table, but with a compound unique constraint on (tenant, field, value, key) — separate purely because that constraint doesn't belong on the lookup table</li>
+<li>A leaked or overly broad database credential</li>
+<li>A SQL injection vulnerability</li>
+<li>A well-meaning DBA (or a compromised one) running an ad hoc query</li>
+<li>A backup or replica that ends up somewhere it shouldn't</li>
+<li>An application bug that logs a raw query</li>
 </ul>
-<p>A field's HMAC is no longer "for lookup" or "for uniqueness" implicitly by which column it's in — each field is explicitly marked for one purpose, the other, or both, and the write path is responsible for populating the right table(s) accordingly. Critically, an update must <em>replace</em> the full current set of HMAC entries for a record, not append to it — otherwise stale entries from a previous version of the value would linger and stay matchable.</p>
-<p>On a document DB (like MongoDB), the lookups/unique-values lists are just embedded arrays on the same document — no extra tables needed, which is part of why this strategy is a particularly good fit for document databases. On a relational DB you pay for it with up to three writes per update and a join on search.</p>
-<h2 id="why-this-closes-both-chapter-7-gaps">Why this closes both Chapter 7 gaps</h2>
-<ul>
-<li><strong>Search</strong>: a record written under key 2 while key 1 is still active carries lookup HMACs for <em>both</em>. Any application instance searching with either key finds it — including the multi-instance/cached-key race from Chapter 7, where one instance still thinks the old key is current.</li>
-<li><strong>Uniqueness</strong>: the compound constraint on (field, value, key) means a duplicate username under <em>any</em> active key gets caught by the database, not just the current one — there's no window where a rotated key lets a duplicate slip past.</li>
-</ul>
-<h2 id="extra-capabilities-this-design-unlocks">Extra capabilities this design unlocks</h2>
-<ul>
-<li><strong>Derived-value search terms</strong> — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of <em>derived</em> representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.</li>
-<li><strong>Compound uniqueness across multiple fields</strong> — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.</li>
-</ul>
-<h2 id="verdict">Verdict</h2>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Pros</strong></td>
-<td>Correct under all combinations of requirements; the only design supporting passive key rotation for long-lived uniqueness data; standardized, cleaner search code; strong fit for document DBs; zero-outage search; guaranteed unique-constraint integrity; works correctly even with cached keys; easiest to rekey with no functional impact; supports as many HMAC keys as needed, added at any time</td>
-</tr>
-<tr>
-<td><strong>Cons</strong></td>
-<td>Forces relational DBs into a multi-table design; every write costs N HMACs (N = number of active keys), so a growing key list has a real performance cost until old keys are rekeyed away</td>
-</tr>
-</tbody>
-</table>
-<p>That last con is exactly why rekeying (Chapters 9–10) isn't optional infrastructure — without it, the "list" in List HMAC only ever grows.</p>
+<p>None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — many production systems use both — but only ALE addresses this category of risk.</p>
+<h2 id="where-ale-sits-in-the-application-stack">Where ALE sits in the application stack</h2>
+<p>ALE lives in the application/service layer, as close as possible to the boundary where data crosses from your business logic into persistence:</p>
+<div class="highlight"><pre><span></span><code>Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository → Database
+</code></pre></div>
+<p>Your business logic still works with plaintext values — a <code>cardNumber</code>, an <code>email</code> — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.</p>
+<h2 id="key-terms-tenant-key-ciphertext-hmac-iv">Key terms: tenant, key, ciphertext, HMAC, IV</h2>
+<p>A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:</p>
+<dl>
+<dt><strong>Tenant</strong></dt>
+<dd>A logical isolation boundary for a distinct customer or client entity in your system, each with its own encryption/HMAC keys — so a data breach or key compromise affecting one tenant can't expose another's data. If your application doesn't have the concept of multiple customers, you can just think of your whole application as "the tenant."</dd>
+<dt><strong>Key</strong></dt>
+<dd>The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change <em>how</em> encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in <a href="../key-aliases/">Key Aliases &amp; Key Configs</a>.</dd>
+<dt><strong>Ciphertext</strong></dt>
+<dd>The encrypted output. Irreversible without the correct key — that's the entire point.</dd>
+<dt><strong>HMAC</strong></dt>
+<dd>A hash computed using a secret key. Unlike encryption, a HMAC is <em>deterministic</em>: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. More on why in a later chapter.</dd>
+<dt><strong>IV (Initialization Vector)</strong></dt>
+<dd>Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time. That's exactly the gap HMACs exist to fill.</dd>
+</dl>
+<h2 id="why-do-we-still-need-it">Why do we still need it?</h2>
+<p>Encrypting things is extra engineering effort, so it's fair to ask why it's worth doing. The short answer: because most real-world data breaches don't involve anyone stealing a physical disk — they involve someone getting access to a live, running system, and the database sitting right there in plaintext.</p>
+<h3 id="regulatory-and-compliance-drivers">Regulatory and compliance drivers</h3>
+<p>Plenty of regulations and standards effectively require it for certain categories of data: PCI-DSS for card numbers (like the <code>cardNumber</code> field this workshop encrypts), HIPAA for health information, GDPR and similar privacy laws for personal data more broadly. These frameworks don't always say "you must implement Application Level Encryption" in those exact words, but they require controls that are, in practice, very hard to satisfy without it — data minimization, breach notification thresholds that change based on whether exposed data was encrypted, and demonstrable protection of data even from your own staff. Auditors increasingly ask specifically whether confidential fields are encrypted <em>before</em> they reach the database, not just whether the disk is encrypted.</p>
+<h3 id="reducing-blast-radius-when-a-database-or-backup-leaks">Reducing blast radius when a database or backup leaks</h3>
+<p>Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise have exposed every customer's data becomes a non-event, because the thing that leaked was never usable on its own.</p>
+<h3 id="tenant-customer-data-segregation-requirements">Tenant / customer data segregation requirements</h3>
+<p>If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a <strong>tenant</strong>, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all.</p>
+<h3 id="why-encryption-at-rest-alone-isnt-enough">Why "encryption at rest" alone isn't enough</h3>
+<p>As covered above under <a href="#ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</a>, TDE only protects against someone stealing the physical media, not against the much more common case of an authenticated connection being misused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.</p>
+<h2 id="from-concepts-to-practice">From concepts to practice</h2>
+<p>The rest of this talk works through the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — one at a time, on their own terms, independent of any particular library or language. They're general ALE design problems that any application implementing this pattern has to solve somehow, whether it rolls its own solution or reaches for an existing framework.</p>
+<p>The hands-on workshop that follows this talk puts these same concepts into practice using mango4j-crypto, a Java framework built around exactly this set of ideas — a key-driven design, pluggable providers, a choice of HMAC strategies, and built-in support for rotation and rekeying. Where the talk stays conceptual, the workshop is where you'll see one concrete implementation of it.</p>
 
 
 
@@ -1111,31 +1208,15 @@
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
-          
-          <a href="../07-single-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Single HMAC Strategy">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Single HMAC Strategy
-              </div>
-            </div>
-          </a>
-        
         
           
-          <a href="../09-rekeying-encryption/" class="md-footer__link md-footer__link--next" aria-label="Next: Rekeying: Encryption">
+          <a href="../key-aliases/" class="md-footer__link md-footer__link--next" aria-label="Next: Key Aliases &amp; Key Configs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Rekeying: Encryption
+                Key Aliases & Key Configs
               </div>
             </div>
             <div class="md-footer__button md-icon">

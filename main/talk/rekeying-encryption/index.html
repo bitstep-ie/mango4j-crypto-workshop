@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../03-structured-ciphertext/">
+        <link rel="prev" href="../list-hmac/">
       
       
-        <link rel="next" href="../05-key-rotation/">
+        <link rel="next" href="../rekeying-hmacs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Transient vs. Encrypted Blobs - ALE Workshop</title>
+        <title>Rekeying: Encryption - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#two-representations-of-the-same-value" class="md-skip">
+        <a href="#rekeying-vs-rotation-not-the-same-step" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Transient vs. Encrypted Blobs
+              Rekeying: Encryption
             
           </span>
         </div>
@@ -228,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -387,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -415,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -443,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -451,6 +451,146 @@
     
   
     Structured Ciphertext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List HMAC Strategy
   
 
     
@@ -485,7 +625,7 @@
   <span class="md-ellipsis">
     
   
-    Transient vs. Encrypted Blobs
+    Rekeying: Encryption
   
 
     
@@ -503,7 +643,7 @@
   <span class="md-ellipsis">
     
   
-    Transient vs. Encrypted Blobs
+    Rekeying: Encryption
   
 
     
@@ -527,10 +667,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-representations-of-the-same-value" class="md-nav__link">
+  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two representations of the same value
+        Rekeying vs. rotation: not the same step
       
     </span>
   </a>
@@ -538,10 +678,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-separation-matters" class="md-nav__link">
+  <a href="#two-directions-of-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this separation matters
+        Two directions of rekey
       
     </span>
   </a>
@@ -549,10 +689,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-failure-mode-this-avoids-double-encryptdecrypt" class="md-nav__link">
+  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The failure mode this avoids: double encrypt/decrypt
+        How it actually finds and re-encrypts records
       
     </span>
   </a>
@@ -560,10 +700,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-happens-without-this-discipline-encrypting-fields-directly-into-their-columns" class="md-nav__link">
+  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What happens without this discipline: encrypting fields directly into their columns
+        Why this is a distinct step from the HMAC rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-completes-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this completes rotation
       
     </span>
   </a>
@@ -586,147 +737,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Introducing HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rekeying: Encryption
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -949,10 +960,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-representations-of-the-same-value" class="md-nav__link">
+  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two representations of the same value
+        Rekeying vs. rotation: not the same step
       
     </span>
   </a>
@@ -960,10 +971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-separation-matters" class="md-nav__link">
+  <a href="#two-directions-of-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this separation matters
+        Two directions of rekey
       
     </span>
   </a>
@@ -971,10 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-failure-mode-this-avoids-double-encryptdecrypt" class="md-nav__link">
+  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The failure mode this avoids: double encrypt/decrypt
+        How it actually finds and re-encrypts records
       
     </span>
   </a>
@@ -982,10 +993,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-happens-without-this-discipline-encrypting-fields-directly-into-their-columns" class="md-nav__link">
+  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What happens without this discipline: encrypting fields directly into their columns
+        Why this is a distinct step from the HMAC rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-completes-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this completes rotation
       
     </span>
   </a>
@@ -1012,36 +1034,43 @@
   
 
 
-  <h1>Transient vs. Encrypted Blobs</h1>
+  <h1>Rekeying: Encryption</h1>
 
-<p>Transient vs. Encrypted Blobs</p>
-<h2 id="two-representations-of-the-same-value">Two representations of the same value</h2>
-<p>Every confidential field an entity carries actually has two lives:</p>
+<h2 id="rekeying-vs-rotation-not-the-same-step">Rekeying vs. rotation: not the same step</h2>
+<p><a href="../key-rotation/">Key Rotation</a> drew the line already: rotation (phase 1) is switching <em>new writes</em> to a new key. Rekeying is the separate background process that goes back over <em>existing</em> records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.</p>
+<h2 id="two-directions-of-rekey">Two directions of rekey</h2>
+<p>A rekey process typically needs to support two directions, both driven by which key a given record was written under:</p>
 <ul>
-<li>A <strong>transient</strong> (working, in-memory) representation — the plaintext value your business logic actually works with (validates, compares, displays)</li>
-<li>An <strong>encrypted-blob</strong> representation — the structured ciphertext (Chapter 3) that's what actually gets persisted</li>
+<li><strong>Retiring one specific key</strong> — moving everything currently on that key onto whatever key is current, so the old one can eventually be deleted.</li>
+<li><strong>Consolidating everything onto one key</strong> — moving everything currently on <em>any other</em> key onto a single target key. This has a much broader scope than retiring a single key: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it.</li>
 </ul>
-<p>A sound ALE design keeps these strictly separate: the plaintext value exists only for as long as it's needed in memory, and the only thing that ever gets written to storage is the encrypted blob. The two are never the same field, and nothing is expected to hold both at once.</p>
-<h2 id="why-this-separation-matters">Why this separation matters</h2>
-<p>If a field can hold either plaintext or ciphertext depending on when you look at it, nothing in the code guarantees which one it currently holds — every reader and writer has to know by convention, and that convention eventually gets it wrong. Keeping the working value and the persisted value as genuinely separate representations means whatever serializes data out to storage can only ever see the encrypted form; the plaintext simply isn't reachable from that path. This is usually enforced by whatever mechanism controls what a serialization layer (an ORM, a JSON mapper, whatever writes to storage) is allowed to touch — excluding the working field from that path entirely, so a plaintext value can never be accidentally flushed to disk.</p>
-<p>Encrypting a value doesn't need to destroy the working copy — the application can keep using the plaintext for the rest of its current operation. Decrypting, likewise, just repopulates the working representation from the stored blob; it doesn't need to touch the blob itself.</p>
-<h2 id="the-failure-mode-this-avoids-double-encryptdecrypt">The failure mode this avoids: double encrypt/decrypt</h2>
-<p>Keeping the two representations distinct — and only ever converting between them at one well-defined boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Requiring that only the working fields hold plaintext and only the designated stored field holds ciphertext removes any ambiguity about which representation a value is currently in.</p>
-<h2 id="what-happens-without-this-discipline-encrypting-fields-directly-into-their-columns">What happens without this discipline: encrypting fields directly into their columns</h2>
-<p>The failure mode this design specifically guards against is the naive alternative: encrypting values directly in place, in their own columns, with no separate transient/blob distinction at all — hand-rolling encrypt/decrypt calls around a column that's sometimes plaintext and sometimes ciphertext depending on when you look at it. This tends to produce:</p>
-<ul>
-<li><strong>No single source of truth for "what's encrypted"</strong> — you have to go read the code (or worse, ask around) to know whether a given column currently holds plaintext or ciphertext.</li>
-<li><strong>Schema churn every time a new field needs protecting</strong> — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of following one consistent pattern.</li>
-<li><strong>No consistent record of which key encrypted what</strong> — without a structured ciphertext (Chapter 3), there's nowhere obvious to put that metadata, so it either doesn't exist or gets tracked out-of-band.</li>
-<li><strong>Every query/repository touching that column needs bespoke logic</strong> — because the column's meaning (plaintext or cipher) isn't guaranteed by the type system, every caller has to know the current state by convention.</li>
-</ul>
-<p>The transient/encrypted-blob split is what makes all four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens.</p>
+<h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
+<p>The rekey process needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. This is why it's worth storing the key ID that encrypted a record in its own queryable column (see <a href="../structured-ciphertext/">Structured Ciphertext</a>), even though it's not strictly required for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the process find "all records not on the current key" cheaply, instead of decrypting every row just to check.</p>
+<p>For each batch of matching records, the process:</p>
+<ol>
+<li>Decrypts the record with its current (old) key</li>
+<li>Re-encrypts it with the current encryption key</li>
+<li>Saves it back, with the stored ciphertext and key-ID column now reflecting the new key</li>
+</ol>
+<p>This runs as a background process, working through matching entities in batches and pausing between batches to limit load on the database and any external cryptographic provider (calls to an external key-management service aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
+<h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
+<p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. <a href="../rekeying-hmacs/">Rekeying: HMACs</a> covers that half.</p>
+<h2 id="how-this-completes-rotation">How this completes rotation</h2>
+<p>Put together with <a href="../key-rotation/">Key Rotation</a>'s phase 1, the full rotation lifecycle looks like:</p>
+<ol>
+<li><strong>Phase 1</strong> — new key becomes current; new writes use it; old key still decrypts.</li>
+<li><strong>Phase 2 / this chapter</strong> — a rekey process (retiring the old key, or consolidating onto the new one) works through existing records, re-encrypting each from old key to new key.</li>
+<li>Once no records remain on the old key, it can finally be deleted from the system — decryption no longer needs it, and leaving unused key material around is its own security liability.</li>
+</ol>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1065,7 +1094,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../03-structured-ciphertext/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Structured Ciphertext">
+          <a href="../list-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: List HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1075,20 +1104,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Structured Ciphertext
+                List HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../05-key-rotation/" class="md-footer__link md-footer__link--next" aria-label="Next: Key Rotation">
+          <a href="../rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Rekeying: HMACs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Key Rotation
+                Rekeying: HMACs
               </div>
             </div>
             <div class="md-footer__button md-icon">

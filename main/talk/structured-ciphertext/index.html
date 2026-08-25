@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../09-rekeying-encryption/">
+        <link rel="prev" href="../key-aliases/">
       
       
-        <link rel="next" href="../../stages/00-intro/">
+        <link rel="next" href="../transient-vs-encrypted-blobs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Rekeying: HMACs - ALE Workshop</title>
+        <title>Structured Ciphertext - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#why-hmacs-need-their-own-rekey-process" class="md-skip">
+        <a href="#the-naive-approach" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rekeying: HMACs
+              Structured Ciphertext
             
           </span>
         </div>
@@ -228,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -387,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -415,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -423,202 +423,6 @@
     
   
     Key Aliases & Key Configs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Structured Ciphertext
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Transient vs. Encrypted Blobs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Introducing HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rekeying: Encryption
   
 
     
@@ -653,7 +457,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: HMACs
+    Structured Ciphertext
   
 
     
@@ -671,7 +475,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: HMACs
+    Structured Ciphertext
   
 
     
@@ -695,10 +499,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
+  <a href="#the-naive-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why HMACs need their own rekey process
+        The naive approach
       
     </span>
   </a>
@@ -706,10 +510,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-process" class="md-nav__link">
+  <a href="#the-fix-a-structured-ciphertext-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The process
+        The fix: a structured ciphertext format
       
     </span>
   </a>
@@ -717,43 +521,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
+  <a href="#why-this-structure-is-the-foundation-for-everything-after-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is split from the encryption rekey
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How this interacts with the List HMAC Strategy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Closing: what "doing it right" actually requires
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-were-building-today" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What we're building today
+        Why this structure is the foundation for everything after it
       
     </span>
   </a>
@@ -764,6 +535,202 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rekeying-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -971,10 +938,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
+  <a href="#the-naive-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why HMACs need their own rekey process
+        The naive approach
       
     </span>
   </a>
@@ -982,10 +949,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-process" class="md-nav__link">
+  <a href="#the-fix-a-structured-ciphertext-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The process
+        The fix: a structured ciphertext format
       
     </span>
   </a>
@@ -993,43 +960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
+  <a href="#why-this-structure-is-the-foundation-for-everything-after-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is split from the encryption rekey
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How this interacts with the List HMAC Strategy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Closing: what "doing it right" actually requires
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-were-building-today" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What we're building today
+        Why this structure is the foundation for everything after it
       
     </span>
   </a>
@@ -1056,48 +990,40 @@
   
 
 
-  <h1>Rekeying: HMACs</h1>
+  <h1>Structured Ciphertext</h1>
 
-<h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
-<p>Chapter 9 covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the List HMAC Strategy (Chapter 8), a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
-<p>This additive requirement is exactly why HMAC rekeying, in practice, tends to only be well-supported for entities using the List HMAC Strategy. Encryption-only rekeying (Chapter 9) doesn't care which HMAC strategy an entity uses — it works regardless; HMAC rekeying specifically needs the list shape to do this safely.</p>
-<h2 id="the-process">The process</h2>
-<ol>
-<li><strong>Add the new HMAC key</strong> to the active key list — this is rotation phase 1 from Chapter 5, nothing new here.</li>
-<li><strong>Wait for the key cache expiry</strong> to pass, so every application instance is actually using the new key for writes (the same caching hazard Chapter 7 described for the multi-instance search race).</li>
-<li><strong>Kick off the rekey job.</strong> It selects records by one of two criteria, depending on why you're rekeying:<ul>
-<li>Any record <em>missing</em> HMACs for the new key — the common case for a full sweep after adding a key.</li>
-<li>Any record that <em>has</em> HMACs for a key you're trying to remove but <em>lacks</em> them for the new key — the common case for a targeted, passive rotation.</li>
-</ul>
-</li>
-<li><strong>For each matching record</strong>: decrypt it, compute HMAC(s) under the new key, and <em>add</em> those entries to the lookup/unique-value collections. Existing HMAC entries for other keys are left completely untouched — this is strictly additive, never a replace.</li>
-<li><strong>Wait for the sweep to finish</strong>, then remove the old key from the active key list.</li>
-<li><strong>Wait for cache expiry again</strong>, so no instance is still generating HMACs — or worse, still trying to <em>validate</em> against — the old key.</li>
-<li><strong>Clean up</strong>: remove the now-orphaned old-key HMAC entries from the lookup/unique-value tables. Leaving them doesn't break anything functionally, but stale HMAC material sitting in your database is itself a security exposure worth avoiding, especially for long-lived data.</li>
-<li><strong>Only now</strong> delete the old HMAC key from wherever key material is stored.</li>
-</ol>
-<h2 id="why-this-is-split-from-the-encryption-rekey">Why this is split from the encryption rekey</h2>
-<p>Encryption rekeying (Chapter 9) is a straight swap: decrypt with the old key, re-encrypt with the new one, done. HMAC rekeying can't be a swap, because — unlike ciphertext, which only ever needs to satisfy "decrypts correctly under its recorded key" — HMACs are load-bearing for search and uniqueness <em>while the rotation is still in progress</em>. Replacing a HMAC in place, even briefly, would reopen the search-outage and duplicate-record problems covered in Chapters 5 and 7. Keeping the encryption and HMAC rekeys as two distinct steps, each addressing a different failure mode, is what lets them run independently and safely overlap in time.</p>
-<h2 id="how-this-interacts-with-the-list-hmac-strategy">How this interacts with the List HMAC Strategy</h2>
-<p>This is the mechanism that makes the List HMAC Strategy (Chapter 8) straightforward to rekey with no impact to application functionality. Because every active key's HMAC coexists in the same lookup/unique-value collections, adding a new key's entries and later removing an old key's entries are both just additive/subtractive operations on those collections — never a moment where a record is only findable under one key or the other. It's also the answer to the "list only ever grows" cost flagged at the end of Chapter 8: rekeying is what shrinks it back down once a rotation completes.</p>
-<hr />
-<h2 id="closing-what-doing-it-right-actually-requires">Closing: what "doing it right" actually requires</h2>
-<p>Two things cover almost everything this talk has walked through:</p>
+<p>Plain Ciphertext → Structured Ciphertext</p>
+<h2 id="the-naive-approach">The naive approach</h2>
+<p>The simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one blob of bytes.</p>
+<p>That gets you <em>an</em> opaque blob. But an opaque blob on its own can't answer the questions your application will inevitably need to ask later:</p>
 <ul>
-<li><strong>Decoupling application code from cryptographic providers.</strong> Every mechanism covered — structured ciphertext, the key alias indirection, pluggable providers — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey processes are just what it takes to keep search and uniqueness correct while it happens.</li>
-<li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.</li>
+<li>Which key encrypted this? (You need to know, in order to decrypt it.)</li>
+<li>Which provider handled that key? (AWS KMS? An HSM? Something else?)</li>
+<li>What IV was used? (Needed to reverse the encryption operation, and never safe to reuse.)</li>
 </ul>
-<h2 id="what-were-building-today">What we're building today</h2>
-<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in this workshop's repository — starting from a plain project with a crypto framework added as a dependency, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext from Chapters 3–4 first, HMAC strategies from Chapters 6–8 next, and rotation/rekeying from Chapters 5, 9–10 as the workshop progresses.</p>
+<p>Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes <a href="../key-rotation/">key rotation</a> and <a href="../key-aliases/">multi-provider support</a> difficult to retrofit later.</p>
+<h2 id="the-fix-a-structured-ciphertext-format">The fix: a structured ciphertext format</h2>
+<p>The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:</p>
+<ul>
+<li><strong>key ID</strong> — an identifier for the key that performed the encryption. This is how decryption always knows which key to ask for, even years after a key has stopped being "current."</li>
+<li><strong>IV</strong> — the Initialization Vector used for this specific encryption operation (see <a href="../intro/">What Is ALE, and Why Do We Still Need It?</a> — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).</li>
+<li><strong>the actual encrypted output</strong> — whatever bytes the underlying cryptographic operation produced. This doesn't need to be a fixed shape, because different providers can return different kinds of output here — an HSM-backed operation's output looks nothing like a password-derived key's.</li>
+</ul>
+<p>All of an entity's confidential fields can be bundled into a single payload and encrypted together in one operation, with this whole structure — key ID, IV, output — written into a single stored field, rather than encrypting each field independently and scattering key/IV metadata across several columns.</p>
+<h2 id="why-this-structure-is-the-foundation-for-everything-after-it">Why this structure is the foundation for everything after it</h2>
+<p>Every capability covered later in this talk depends on the ciphertext carrying its own metadata, rather than living in a bare column with the key/provider/IV tracked (or guessed at) elsewhere:</p>
+<ul>
+<li><strong><a href="../key-rotation/">Key rotation</a></strong> — old records keep decrypting correctly after the current key changes, because each one's stored key ID says exactly which key to use, permanently.</li>
+<li><strong><a href="../key-aliases/">Multi-provider support</a></strong> — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.</li>
+<li><strong>Rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>)</strong> — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.</li>
+</ul>
+<p>One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key did we use back then."</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -1121,7 +1047,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../09-rekeying-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Rekeying: Encryption">
+          <a href="../key-aliases/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Aliases &amp; Key Configs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1131,20 +1057,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Rekeying: Encryption
+                Key Aliases & Key Configs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../stages/00-intro/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
+          <a href="../transient-vs-encrypted-blobs/" class="md-footer__link md-footer__link--next" aria-label="Next: Transient vs. Encrypted Blobs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Introduction
+                Transient vs. Encrypted Blobs
               </div>
             </div>
             <div class="md-footer__button md-icon">

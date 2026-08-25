@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../08-list-hmac/">
+        <link rel="prev" href="../introducing-hmacs/">
       
       
-        <link rel="next" href="../10-rekeying-hmacs/">
+        <link rel="next" href="../single-hmac/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Rekeying: Encryption - ALE Workshop</title>
+        <title>Key Rotation - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rekeying-vs-rotation-not-the-same-step" class="md-skip">
+        <a href="#why-keys-rotate" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rekeying: Encryption
+              Key Rotation
             
           </span>
         </div>
@@ -228,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -387,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -415,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -443,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -471,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -499,35 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
+      <a href="../introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -535,62 +507,6 @@
     
   
     Introducing HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    List HMAC Strategy
   
 
     
@@ -625,7 +541,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: Encryption
+    Key Rotation
   
 
     
@@ -643,7 +559,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: Encryption
+    Key Rotation
   
 
     
@@ -667,10 +583,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+  <a href="#why-keys-rotate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rekeying vs. rotation: not the same step
+        Why keys rotate
       
     </span>
   </a>
@@ -678,10 +594,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-directions-of-rekey" class="md-nav__link">
+  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two directions of rekey
+        Phase 1: switching new writes to a new key
       
     </span>
   </a>
@@ -689,10 +605,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it actually finds and re-encrypts records
+        Phase 2: migrating old data to the new key
       
     </span>
   </a>
@@ -700,10 +616,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is a distinct step from the HMAC rekey
+        The same shape of problem: migrating an unencrypted field to encrypted
       
     </span>
   </a>
@@ -711,10 +627,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-this-completes-rotation" class="md-nav__link">
+  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How this completes rotation
+        Production impact of single-key, single-HMAC designs
       
     </span>
   </a>
@@ -737,7 +653,91 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../single-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rekeying-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -960,10 +960,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+  <a href="#why-keys-rotate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rekeying vs. rotation: not the same step
+        Why keys rotate
       
     </span>
   </a>
@@ -971,10 +971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-directions-of-rekey" class="md-nav__link">
+  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two directions of rekey
+        Phase 1: switching new writes to a new key
       
     </span>
   </a>
@@ -982,10 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it actually finds and re-encrypts records
+        Phase 2: migrating old data to the new key
       
     </span>
   </a>
@@ -993,10 +993,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is a distinct step from the HMAC rekey
+        The same shape of problem: migrating an unencrypted field to encrypted
       
     </span>
   </a>
@@ -1004,10 +1004,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-this-completes-rotation" class="md-nav__link">
+  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How this completes rotation
+        Production impact of single-key, single-HMAC designs
       
     </span>
   </a>
@@ -1034,43 +1034,48 @@
   
 
 
-  <h1>Rekeying: Encryption</h1>
+  <h1>Key Rotation</h1>
 
-<h2 id="rekeying-vs-rotation-not-the-same-step">Rekeying vs. rotation: not the same step</h2>
-<p>Chapter 5 drew the line already: rotation (phase 1) is switching <em>new writes</em> to a new key. Rekeying is the separate background process that goes back over <em>existing</em> records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.</p>
-<h2 id="two-directions-of-rekey">Two directions of rekey</h2>
-<p>A rekey process typically needs to support two directions, both driven by which key a given record was written under:</p>
+<p>Encryption Key Rotation</p>
+<h2 id="why-keys-rotate">Why keys rotate</h2>
+<p>Keys don't stay valid forever. A key ages out under a compliance schedule, a provider gets deprecated or migrated away from, or a key is suspected compromised and needs to stop being trusted. Whatever the trigger, the design goal worth aiming for is that <strong>a key rotation should be something an application can do at short notice, on the fly</strong> — not something that requires a maintenance window.</p>
+<h2 id="phase-1-switching-new-writes-to-a-new-key">Phase 1: switching new writes to a new key</h2>
+<p>Changing an encryption key is, by itself, straightforward: add the new key to your system and start using it for all writes going forward. Concretely, that means changing what "the current encryption key" resolves to (see <a href="../key-aliases/">Key Aliases &amp; Key Configs</a>) — nothing else in your application code changes.</p>
 <ul>
-<li><strong>Retiring one specific key</strong> — moving everything currently on that key onto whatever key is current, so the old one can eventually be deleted.</li>
-<li><strong>Consolidating everything onto one key</strong> — moving everything currently on <em>any other</em> key onto a single target key. This has a much broader scope than retiring a single key: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it.</li>
+<li>The new key can be from a completely different provider than the old one. The <a href="../structured-ciphertext/">structured ciphertext format</a> records which key encrypted each record, and the <a href="../key-aliases/">alias indirection</a> means nothing in application code ever hardcoded a specific provider — so swapping providers is just a different key configuration, not a code change.</li>
+<li>Old keys keep working for <strong>decryption</strong>. Resolving a key by ID still works for any key the application has ever used, so every record written under the old key keeps reading back correctly. Nothing needs to migrate yet — you just need to keep the old key around until nothing references it any more.</li>
 </ul>
-<h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
-<p>The rekey process needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. This is why it's worth storing the key ID that encrypted a record in its own queryable column (Chapter 3), even though it's not strictly required for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the process find "all records not on the current key" cheaply, instead of decrypting every row just to check.</p>
-<p>For each batch of matching records, the process:</p>
-<ol>
-<li>Decrypts the record with its current (old) key</li>
-<li>Re-encrypts it with the current encryption key</li>
-<li>Saves it back, with the stored ciphertext and key-ID column now reflecting the new key</li>
-</ol>
-<p>This runs as a background process, working through matching entities in batches and pausing between batches to limit load on the database and any external cryptographic provider (calls to an external key-management service aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
-<h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
-<p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. Chapter 10 covers that half.</p>
-<h2 id="how-this-completes-rotation">How this completes rotation</h2>
-<p>Put together with Chapter 5's phase 1, the full rotation lifecycle looks like:</p>
-<ol>
-<li><strong>Phase 1</strong> — new key becomes current; new writes use it; old key still decrypts.</li>
-<li><strong>Phase 2 / this chapter</strong> — a rekey process (retiring the old key, or consolidating onto the new one) works through existing records, re-encrypting each from old key to new key.</li>
-<li>Once no records remain on the old key, it can finally be deleted from the system — decryption no longer needs it, and leaving unused key material around is its own security liability.</li>
-</ol>
+<h2 id="phase-2-migrating-old-data-to-the-new-key">Phase 2: migrating old data to the new key</h2>
+<p>Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: <strong>rekeying</strong>, covered in full in <a href="../rekeying-encryption/">Rekeying: Encryption</a> and <a href="../rekeying-hmacs/">Rekeying: HMACs</a>. It's a deliberately separate phase, not a single atomic switch, because:</p>
+<ul>
+<li>Rekeying potentially touches every record in the system, which takes time and costs performance/throughput you don't want to pay synchronously with the rotation itself.</li>
+<li>The old key has to remain valid and available for decryption for as long as any unrekeyed data still depends on it.</li>
+</ul>
+<p><strong>A data retention window doesn't remove the need for this.</strong> It's tempting to reason that if the key period is 10 years but data retention is only 5, rekey support is unnecessary — the key could just be swapped every 10 years. Consider what happens in year 11: the key changes, and 5 years of records (years 6–10) are still sitting on the old key. Search doesn't actually break here — those records stay findable as long as every search hashes the term with every key still known, old and new (see <a href="../introducing-hmacs/">Introducing HMACs</a>) — but that only works by retaining, and searching against, a list of old keys that never stops growing. Unique constraints fare worse: under the <a href="../single-hmac/">Single HMAC Strategy</a>, a duplicate can slip in under any of those years' keys at any point, and no amount of searching with old keys closes that gap — only rekeying does. Rekey support is needed regardless of how long data is retained, not only when retention exceeds the key period.</p>
+<h2 id="the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted">The same shape of problem: migrating an <em>unencrypted</em> field to encrypted</h2>
+<p>Everything above assumes the field was already encrypted, just under an old key. But the very first time a field becomes confidential, you're migrating from <em>no</em> encryption at all — and the mechanics are similar to phase 2 above, with a few additional considerations:</p>
+<ul>
+<li><strong>Encryption for an existing column can't just be switched on.</strong> Every existing row is plaintext; there's no ciphertext yet to decrypt, so the migration has to write encrypted values for the first time, not just re-key existing ones.</li>
+<li><strong>Backfilling millions of rows without downtime</strong> is the same operational problem as any large-scale rekey, just with no prior art in the table to compare against as you go.</li>
+<li><strong>Dual-read/dual-write periods introduce their own complexity</strong> — while some rows are encrypted and some aren't, application code has to correctly read/write both shapes at once, and that temporary complexity can persist longer than planned if the migration stalls.</li>
+<li><strong>Pausing other work on the table for the duration of the migration</strong> is often unpopular, so teams sometimes rush the backfill instead (risking the issues above) or let it run indefinitely in the background.</li>
+</ul>
+<p>This transitional state deserves explicit support rather than being handled ad hoc. A field mid-migration is deliberately <em>not yet</em> meeting the normal rule that a confidential field only ever exists as a <a href="../transient-vs-encrypted-blobs/">working</a> value — it's still readable and writable in its old, unencrypted, persisted form while the backfill completes. Treating that as a tracked, temporary exception — with an owner, a justification, and a target date by which it should be gone — rather than a silent gap in the data model, is what keeps a migration from quietly becoming permanent. Making the exception loud (a startup warning that escalates to an error past the target date, for example) is what turns the deadline into an actual forcing function rather than a comment nobody revisits.</p>
+<h2 id="production-impact-of-single-key-single-hmac-designs">Production impact of single-key, single-HMAC designs</h2>
+<p>Rotation and migration are where the limitations of single-key, single-HMAC designs (<a href="../single-hmac/">Single HMAC Strategy</a>) become visible in production:</p>
+<ul>
+<li><strong>Search functionality degrades gradually</strong> — with only one HMAC key active at a time, a rotation makes every existing record's HMAC stop matching new search HMACs until it's rekeyed.</li>
+<li><strong>Duplicate records can appear in fields meant to be unique</strong> — the unique-constraint failure mode covered in <a href="../single-hmac/">Single HMAC Strategy</a>: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.</li>
+<li><strong>Rolling back a rotation doesn't undo its effects</strong> — writes that already went out under the new key stay as they are, so a rollback adds a second inconsistency rather than removing the first.</li>
+<li><strong>These failures tend to be gradual rather than immediate</strong> — they're rarely a hard crash, which means they're often identified well after the rotation, during a later investigation, rather than at the time it happened.</li>
+</ul>
+<p>This is the practical case for the <a href="../list-hmac/">List HMAC Strategy</a> and for treating rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -1094,7 +1099,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../08-list-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: List HMAC Strategy">
+          <a href="../introducing-hmacs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introducing HMACs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1104,20 +1109,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                List HMAC Strategy
+                Introducing HMACs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../10-rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Rekeying: HMACs">
+          <a href="../single-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: Single HMAC Strategy">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Rekeying: HMACs
+                Single HMAC Strategy
               </div>
             </div>
             <div class="md-footer__button md-icon">

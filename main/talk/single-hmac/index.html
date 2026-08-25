@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../04-transient-vs-encrypted-blobs/">
+        <link rel="prev" href="../key-rotation/">
       
       
-        <link rel="next" href="../06-introducing-hmacs/">
+        <link rel="next" href="../list-hmac/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Key Rotation - ALE Workshop</title>
+        <title>Single HMAC Strategy - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#why-keys-rotate" class="md-skip">
+        <a href="#one-column-per-hmac" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Key Rotation
+              Single HMAC Strategy
             
           </span>
         </div>
@@ -228,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -387,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -415,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -443,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -471,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -479,6 +479,62 @@
     
   
     Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
   
 
     
@@ -513,7 +569,7 @@
   <span class="md-ellipsis">
     
   
-    Key Rotation
+    Single HMAC Strategy
   
 
     
@@ -531,7 +587,7 @@
   <span class="md-ellipsis">
     
   
-    Key Rotation
+    Single HMAC Strategy
   
 
     
@@ -555,10 +611,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-keys-rotate" class="md-nav__link">
+  <a href="#one-column-per-hmac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why keys rotate
+        One column per HMAC
       
     </span>
   </a>
@@ -566,10 +622,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
+  <a href="#the-search-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: switching new writes to a new key
+        The search problem
       
     </span>
   </a>
@@ -577,10 +633,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
+  <a href="#the-unique-constraint-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: migrating old data to the new key
+        The unique constraint problem
       
     </span>
   </a>
@@ -588,21 +644,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
+  <a href="#verdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The same shape of problem: migrating an unencrypted field to encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Production impact of single-key, single-HMAC designs
+        Verdict
       
     </span>
   </a>
@@ -625,63 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Introducing HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
+      <a href="../list-hmac/" class="md-nav__link">
         
   
   
@@ -709,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
+      <a href="../rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -737,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -960,10 +949,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-keys-rotate" class="md-nav__link">
+  <a href="#one-column-per-hmac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why keys rotate
+        One column per HMAC
       
     </span>
   </a>
@@ -971,10 +960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
+  <a href="#the-search-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: switching new writes to a new key
+        The search problem
       
     </span>
   </a>
@@ -982,10 +971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
+  <a href="#the-unique-constraint-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: migrating old data to the new key
+        The unique constraint problem
       
     </span>
   </a>
@@ -993,21 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
+  <a href="#verdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The same shape of problem: migrating an unencrypted field to encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Production impact of single-key, single-HMAC designs
+        Verdict
       
     </span>
   </a>
@@ -1034,42 +1012,55 @@
   
 
 
-  <h1>Key Rotation</h1>
+  <h1>Single HMAC Strategy</h1>
 
-<p>Encryption Key Rotation</p>
-<h2 id="why-keys-rotate">Why keys rotate</h2>
-<p>Keys don't stay valid forever. A key ages out under a compliance schedule, a provider gets deprecated or migrated away from, or a key is suspected compromised and needs to stop being trusted. Whatever the trigger, the design goal worth aiming for is that <strong>a key rotation should be something an application can do at short notice, on the fly</strong> — not something that requires a maintenance window.</p>
-<h2 id="phase-1-switching-new-writes-to-a-new-key">Phase 1: switching new writes to a new key</h2>
-<p>Changing an encryption key is, by itself, straightforward: add the new key to your system and start using it for all writes going forward. Concretely, that means changing what "the current encryption key" resolves to (Chapter 2) — nothing else in your application code changes.</p>
-<ul>
-<li>The new key can be from a completely different provider than the old one. The structured ciphertext format (Chapter 3) records which key encrypted each record, and the alias indirection (Chapter 2) means nothing in application code ever hardcoded a specific provider — so swapping providers is just a different key configuration, not a code change.</li>
-<li>Old keys keep working for <strong>decryption</strong>. Resolving a key by ID still works for any key the application has ever used, so every record written under the old key keeps reading back correctly. Nothing needs to migrate yet — you just need to keep the old key around until nothing references it any more.</li>
-</ul>
-<h2 id="phase-2-migrating-old-data-to-the-new-key">Phase 2: migrating old data to the new key</h2>
-<p>Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: <strong>rekeying</strong>, covered in full in Chapters 9–10. It's a deliberately separate phase, not a single atomic switch, because:</p>
-<ul>
-<li>Rekeying potentially touches every record in the system, which takes time and costs performance/throughput you don't want to pay synchronously with the rotation itself.</li>
-<li>The old key has to remain valid and available for decryption for as long as any unrekeyed data still depends on it.</li>
-</ul>
-<p><strong>A data retention window doesn't remove the need for this.</strong> It's tempting to reason that if the key period is 10 years but data retention is only 5, rekey support is unnecessary — the key could just be swapped every 10 years. Consider what happens in year 11: the key changes, and 5 years of records (years 6–10) are still sitting on the old key. Those records are no longer findable by search, and if any of those fields have unique constraints, that many years of records are exposed to potential duplication (see below). Rekey support is needed regardless of how long data is retained, not only when retention exceeds the key period.</p>
-<h2 id="the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted">The same shape of problem: migrating an <em>unencrypted</em> field to encrypted</h2>
-<p>Everything above assumes the field was already encrypted, just under an old key. But the very first time a field becomes confidential, you're migrating from <em>no</em> encryption at all — and the mechanics are similar to phase 2 above, with a few additional considerations:</p>
-<ul>
-<li><strong>Encryption for an existing column can't just be switched on.</strong> Every existing row is plaintext; there's no ciphertext yet to decrypt, so the migration has to write encrypted values for the first time, not just re-key existing ones.</li>
-<li><strong>Backfilling millions of rows without downtime</strong> is the same operational problem as any large-scale rekey, just with no prior art in the table to compare against as you go.</li>
-<li><strong>Dual-read/dual-write periods introduce their own complexity</strong> — while some rows are encrypted and some aren't, application code has to correctly read/write both shapes at once, and that temporary complexity can persist longer than planned if the migration stalls.</li>
-<li><strong>Pausing other work on the table for the duration of the migration</strong> is often unpopular, so teams sometimes rush the backfill instead (risking the issues above) or let it run indefinitely in the background.</li>
-</ul>
-<p>This transitional state deserves explicit support rather than being handled ad hoc. A field mid-migration is deliberately <em>not yet</em> meeting the normal rule that a confidential field only ever exists as a working (Chapter 4) value — it's still readable and writable in its old, unencrypted, persisted form while the backfill completes. Treating that as a tracked, temporary exception — with an owner, a justification, and a target date by which it should be gone — rather than a silent gap in the data model, is what keeps a migration from quietly becoming permanent. Making the exception loud (a startup warning that escalates to an error past the target date, for example) is what turns the deadline into an actual forcing function rather than a comment nobody revisits.</p>
-<h2 id="production-impact-of-single-key-single-hmac-designs">Production impact of single-key, single-HMAC designs</h2>
-<p>Rotation and migration are where the limitations of single-key, single-HMAC designs (Chapter 7) become visible in production:</p>
-<ul>
-<li><strong>Search functionality degrades gradually</strong> — with only one HMAC key active at a time, a rotation makes every existing record's HMAC stop matching new search HMACs until it's rekeyed.</li>
-<li><strong>Duplicate records can appear in fields meant to be unique</strong> — the unique-constraint failure mode covered in Chapter 7: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.</li>
-<li><strong>Rolling back a rotation doesn't undo its effects</strong> — writes that already went out under the new key stay as they are, so a rollback adds a second inconsistency rather than removing the first.</li>
-<li><strong>These failures tend to be gradual rather than immediate</strong> — they're rarely a hard crash, which means they're often identified well after the rotation, during a later investigation, rather than at the time it happened.</li>
-</ul>
-<p>This is the practical case for the List HMAC Strategy (Chapter 8) and for treating rekeying (Chapters 9–10) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.</p>
+<p>The Single HMAC Strategy</p>
+<h2 id="one-column-per-hmac">One column per HMAC</h2>
+<p><a href="../introducing-hmacs/">Introducing HMACs</a> covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a <code>USERNAME_HMAC</code> column next to the <code>userName</code> ciphertext, a <code>PAN_HMAC</code> column next to the <code>pan</code> ciphertext, and typically a column recording which HMAC key produced them, which rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>) needs later to find what's stale.</p>
+<p>It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
+<h2 id="the-search-problem">The search problem</h2>
+<p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
+<ol>
+<li>You change the HMAC key.</li>
+<li>All searches going forward use the new key.</li>
+<li>Immediately, none of your existing records are findable — their HMACs were all computed with the old key.</li>
+<li>A background job starts rekeying record by record.</li>
+<li>Search results gradually improve as the job progresses.</li>
+<li>Only once the job finishes is search fully back online.</li>
+</ol>
+<p>A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.</p>
+<p>A partial fix exists: a <strong>key start time</strong>. Application instances typically cache their key configuration rather than reloading it on every request, so a newly introduced key doesn't reach every instance at once — it only takes effect, instance by instance, as each one's cache refreshes. A key start time accounts for this by setting the new key's start time to "now + the key cache duration," and holding off using it for <em>writes</em> until that time passes — guaranteeing every instance has picked it up before any of them relies on it. Searches, meanwhile, don't need to wait: as soon as an instance reloads its config and sees the new key, it starts hashing search terms with every known key, old and new, immediately. Because no record gets written with the new key until every instance is guaranteed to know about it, every record — old or freshly written — stays findable throughout.</p>
+<h2 id="the-unique-constraint-problem">The unique constraint problem</h2>
+<p>This is the more consequential of the two. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
+<ol>
+<li>A user exists with username <code>john.doe@test.com</code>, HMAC'd under the old key.</li>
+<li>The HMAC key changes.</li>
+<li>A request comes in to create a <em>new</em> user with the same username, <code>john.doe@test.com</code>.</li>
+<li>Its HMAC is computed under the new key — a different value than the existing record's HMAC.</li>
+<li>The unique constraint doesn't fire, because the two HMAC values genuinely differ.</li>
+<li>Two users now exist with the same username.</li>
+</ol>
+<p>Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key <em>before every write</em>, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.</p>
+<h2 id="verdict">Verdict</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pros</strong></td>
+<td>Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation</td>
+</tr>
+<tr>
+<td><strong>Cons</strong></td>
+<td>Cannot support unique constraint enforcement <em>and</em> key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances</td>
+</tr>
+</tbody>
+</table>
+<p>If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. <a href="../list-hmac/">List HMAC Strategy</a> covers the strategy that solves both problems.</p>
 
 
 
@@ -1099,7 +1090,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../04-transient-vs-encrypted-blobs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Transient vs. Encrypted Blobs">
+          <a href="../key-rotation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Rotation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1109,20 +1100,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Transient vs. Encrypted Blobs
+                Key Rotation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../06-introducing-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Introducing HMACs">
+          <a href="../list-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: List HMAC Strategy">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Introducing HMACs
+                List HMAC Strategy
               </div>
             </div>
             <div class="md-footer__button md-icon">

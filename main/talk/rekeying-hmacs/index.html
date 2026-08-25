@@ -11,8 +11,10 @@
       
       
       
+        <link rel="prev" href="../rekeying-encryption/">
       
-        <link rel="next" href="../02-key-aliases/">
+      
+        <link rel="next" href="../../stages/00-intro/">
       
       
         
@@ -23,7 +25,7 @@
     
     
       
-        <title>What Is ALE, and Why? - ALE Workshop</title>
+        <title>Rekeying: HMACs - ALE Workshop</title>
       
     
     
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ale-versus-tde-disk-encryption" class="md-skip">
+        <a href="#why-hmacs-need-their-own-rekey-process" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              What Is ALE, and Why?
+              Rekeying: HMACs
             
           </span>
         </div>
@@ -226,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -382,35 +384,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What Is ALE, and Why?
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -426,129 +403,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ALE versus TDE / disk encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where ALE sits in the application stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key terms: tenant, key, ciphertext, HMAC, IV
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-do-we-still-need-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why do we still need it?
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Why do we still need it?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#from-concepts-to-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        From concepts to practice
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -561,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../key-aliases/" class="md-nav__link">
         
   
   
@@ -589,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -617,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -645,35 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
+      <a href="../introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -701,7 +527,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-single-hmac/" class="md-nav__link">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
         
   
   
@@ -729,7 +583,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
+      <a href="../list-hmac/" class="md-nav__link">
         
   
   
@@ -757,7 +611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
+      <a href="../rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -782,10 +636,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: HMACs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -801,6 +680,90 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why HMACs need their own rekey process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is split from the encryption rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this interacts with the List HMAC Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closing: what "doing it right" actually requires
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-were-building-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we're building today
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1008,10 +971,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
+  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ALE versus TDE / disk encryption
+        Why HMACs need their own rekey process
       
     </span>
   </a>
@@ -1019,10 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
+  <a href="#the-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where ALE sits in the application stack
+        The process
       
     </span>
   </a>
@@ -1030,10 +993,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
+  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key terms: tenant, key, ciphertext, HMAC, IV
+        Why this is split from the encryption rekey
       
     </span>
   </a>
@@ -1041,71 +1004,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-do-we-still-need-it" class="md-nav__link">
+  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why do we still need it?
+        How this interacts with the List HMAC Strategy
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Why do we still need it?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#from-concepts-to-practice" class="md-nav__link">
+  <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From concepts to practice
+        Closing: what "doing it right" actually requires
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-were-building-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we're building today
       
     </span>
   </a>
@@ -1132,60 +1056,48 @@
   
 
 
-  <h1>What Is ALE, and Why?</h1>
+  <h1>Rekeying: HMACs</h1>
 
-<p>What Is ALE, and Why Do We Still Need It?</p>
-<p>Application Level Encryption (ALE) means your <strong>application code</strong> encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.</p>
-<p>This is a deliberate contrast with encryption that happens <em>underneath</em> your application, at the infrastructure layer.</p>
-<h2 id="ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</h2>
-<p>Transparent Data Encryption (TDE) and disk/volume encryption protect data <strong>at rest</strong> — the bytes sitting on a physical or virtual disk. They're valuable, but they solve a narrow problem: someone stealing a disk, a decommissioned drive, or an unencrypted backup file. The moment there's an authenticated connection to the database — a valid DB credential, a live query, a DBA doing routine maintenance — TDE decrypts everything transparently and hands back plaintext. That's the point of the "T" in TDE.</p>
-<p>ALE protects against a much wider threat model, because the plaintext simply never reaches the database layer at all:</p>
-<ul>
-<li>A leaked or overly broad database credential</li>
-<li>A SQL injection vulnerability</li>
-<li>A well-meaning DBA (or a compromised one) running an ad hoc query</li>
-<li>A backup or replica that ends up somewhere it shouldn't</li>
-<li>An application bug that logs a raw query</li>
+<h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
+<p><a href="../rekeying-encryption/">Rekeying: Encryption</a> covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the <a href="../list-hmac/">List HMAC Strategy</a>, a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
+<p>This additive requirement is exactly why HMAC rekeying, in practice, tends to only be well-supported for entities using the List HMAC Strategy. Encryption-only rekeying (<a href="../rekeying-encryption/">Rekeying: Encryption</a>) doesn't care which HMAC strategy an entity uses — it works regardless; HMAC rekeying specifically needs the list shape to do this safely.</p>
+<h2 id="the-process">The process</h2>
+<ol>
+<li><strong>Add the new HMAC key</strong> to the active key list — this is rotation phase 1 from <a href="../key-rotation/">Key Rotation</a>, nothing new here.</li>
+<li><strong>Wait for the key cache expiry</strong> to pass, so every application instance is actually using the new key for writes (the same caching hazard <a href="../single-hmac/">Single HMAC Strategy</a> described for the multi-instance search race).</li>
+<li><strong>Kick off the rekey job.</strong> It selects records by one of two criteria, depending on why you're rekeying:<ul>
+<li>Any record <em>missing</em> HMACs for the new key — the common case for a full sweep after adding a key.</li>
+<li>Any record that <em>has</em> HMACs for a key you're trying to remove but <em>lacks</em> them for the new key — the common case for a targeted, passive rotation.</li>
 </ul>
-<p>None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — many production systems use both — but only ALE addresses this category of risk.</p>
-<h2 id="where-ale-sits-in-the-application-stack">Where ALE sits in the application stack</h2>
-<p>ALE lives in the application/service layer, as close as possible to the boundary where data crosses from your business logic into persistence:</p>
-<div class="highlight"><pre><span></span><code>Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository → Database
-</code></pre></div>
-<p>Your business logic still works with plaintext values — a <code>cardNumber</code>, an <code>email</code> — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.</p>
-<h2 id="key-terms-tenant-key-ciphertext-hmac-iv">Key terms: tenant, key, ciphertext, HMAC, IV</h2>
-<p>A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:</p>
-<dl>
-<dt><strong>Tenant</strong></dt>
-<dd>A logical isolation boundary for a distinct customer or client entity in your system, each with its own encryption/HMAC keys — so a data breach or key compromise affecting one tenant can't expose another's data. If your application doesn't have the concept of multiple customers, you can just think of your whole application as "the tenant."</dd>
-<dt><strong>Key</strong></dt>
-<dd>The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change <em>how</em> encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in Chapter 2.</dd>
-<dt><strong>Ciphertext</strong></dt>
-<dd>The encrypted output. Irreversible without the correct key — that's the entire point.</dd>
-<dt><strong>HMAC</strong></dt>
-<dd>A hash computed using a secret key. Unlike encryption, a HMAC is <em>deterministic</em>: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. More on why in a later chapter.</dd>
-<dt><strong>IV (Initialization Vector)</strong></dt>
-<dd>Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time. That's exactly the gap HMACs exist to fill.</dd>
-</dl>
-<h2 id="why-do-we-still-need-it">Why do we still need it?</h2>
-<p>Encrypting things is extra engineering effort, so it's fair to ask why it's worth doing. The short answer: because most real-world data breaches don't involve anyone stealing a physical disk — they involve someone getting access to a live, running system, and the database sitting right there in plaintext.</p>
-<h3 id="regulatory-and-compliance-drivers">Regulatory and compliance drivers</h3>
-<p>Plenty of regulations and standards effectively require it for certain categories of data: PCI-DSS for card numbers (like the <code>cardNumber</code> field this workshop encrypts), HIPAA for health information, GDPR and similar privacy laws for personal data more broadly. These frameworks don't always say "you must implement Application Level Encryption" in those exact words, but they require controls that are, in practice, very hard to satisfy without it — data minimization, breach notification thresholds that change based on whether exposed data was encrypted, and demonstrable protection of data even from your own staff. Auditors increasingly ask specifically whether confidential fields are encrypted <em>before</em> they reach the database, not just whether the disk is encrypted.</p>
-<h3 id="reducing-blast-radius-when-a-database-or-backup-leaks">Reducing blast radius when a database or backup leaks</h3>
-<p>Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise have exposed every customer's data becomes a non-event, because the thing that leaked was never usable on its own.</p>
-<h3 id="tenant-customer-data-segregation-requirements">Tenant / customer data segregation requirements</h3>
-<p>If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a <strong>tenant</strong>, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all.</p>
-<h3 id="why-encryption-at-rest-alone-isnt-enough">Why "encryption at rest" alone isn't enough</h3>
-<p>As covered above under <a href="#ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</a>, TDE only protects against someone stealing the physical media, not against the much more common case of an authenticated connection being misused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.</p>
-<h2 id="from-concepts-to-practice">From concepts to practice</h2>
-<p>The rest of this talk works through the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — one at a time, on their own terms, independent of any particular library or language. They're general ALE design problems that any application implementing this pattern has to solve somehow, whether it rolls its own solution or reaches for an existing framework.</p>
-<p>The hands-on workshop that follows this talk puts these same concepts into practice using mango4j-crypto, a Java framework built around exactly this set of ideas — a key-driven design, pluggable providers, a choice of HMAC strategies, and built-in support for rotation and rekeying. Where the talk stays conceptual, the workshop is where you'll see one concrete implementation of it.</p>
+</li>
+<li><strong>For each matching record</strong>: decrypt it, compute HMAC(s) under the new key, and <em>add</em> those entries to the lookup/unique-value collections. Existing HMAC entries for other keys are left completely untouched — this is strictly additive, never a replace.</li>
+<li><strong>Wait for the sweep to finish</strong>, then remove the old key from the active key list.</li>
+<li><strong>Wait for cache expiry again</strong>, so no instance is still generating HMACs — or worse, still trying to <em>validate</em> against — the old key.</li>
+<li><strong>Clean up</strong>: remove the now-orphaned old-key HMAC entries from the lookup/unique-value tables. Leaving them doesn't break anything functionally, but stale HMAC material sitting in your database is itself a security exposure worth avoiding, especially for long-lived data.</li>
+<li><strong>Only now</strong> delete the old HMAC key from wherever key material is stored.</li>
+</ol>
+<h2 id="why-this-is-split-from-the-encryption-rekey">Why this is split from the encryption rekey</h2>
+<p>Encryption rekeying (<a href="../rekeying-encryption/">Rekeying: Encryption</a>) is a straight swap: decrypt with the old key, re-encrypt with the new one, done. HMAC rekeying can't be a swap, because — unlike ciphertext, which only ever needs to satisfy "decrypts correctly under its recorded key" — HMACs are load-bearing for search and uniqueness <em>while the rotation is still in progress</em>. Replacing a HMAC in place, even briefly, would reopen the search-outage and duplicate-record problems covered in <a href="../key-rotation/">Key Rotation</a> and <a href="../single-hmac/">Single HMAC Strategy</a>. Keeping the encryption and HMAC rekeys as two distinct steps, each addressing a different failure mode, is what lets them run independently and safely overlap in time.</p>
+<h2 id="how-this-interacts-with-the-list-hmac-strategy">How this interacts with the List HMAC Strategy</h2>
+<p>This is the mechanism that makes the <a href="../list-hmac/">List HMAC Strategy</a> straightforward to rekey with no impact to application functionality. Because every active key's HMAC coexists in the same lookup/unique-value collections, adding a new key's entries and later removing an old key's entries are both just additive/subtractive operations on those collections — never a moment where a record is only findable under one key or the other. It's also the answer to the "list only ever grows" cost flagged at the end of <a href="../list-hmac/">List HMAC Strategy</a>: rekeying is what shrinks it back down once a rotation completes.</p>
+<hr />
+<h2 id="closing-what-doing-it-right-actually-requires">Closing: what "doing it right" actually requires</h2>
+<p>Two things cover almost everything this talk has walked through:</p>
+<ul>
+<li><strong>Decoupling application code from cryptographic providers.</strong> Every mechanism covered — structured ciphertext, the key alias indirection, pluggable providers — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey processes are just what it takes to keep search and uniqueness correct while it happens.</li>
+<li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. <a href="../key-rotation/">Key Rotation</a> covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.</li>
+</ul>
+<h2 id="what-were-building-today">What we're building today</h2>
+<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in this workshop's repository — starting from a plain project with a crypto framework added as a dependency, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext first, HMAC strategies and key rotation next, and rekeying as the workshop progresses.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1208,15 +1120,31 @@
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../rekeying-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Rekeying: Encryption">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Rekeying: Encryption
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="../02-key-aliases/" class="md-footer__link md-footer__link--next" aria-label="Next: Key Aliases &amp; Key Configs">
+          <a href="../../stages/00-intro/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Key Aliases & Key Configs
+                Introduction
               </div>
             </div>
             <div class="md-footer__button md-icon">

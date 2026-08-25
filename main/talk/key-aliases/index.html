@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../06-introducing-hmacs/">
+        <link rel="prev" href="../intro/">
       
       
-        <link rel="next" href="../08-list-hmac/">
+        <link rel="next" href="../structured-ciphertext/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Single HMAC Strategy - ALE Workshop</title>
+        <title>Key Aliases & Key Configs - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#one-column-per-hmac" class="md-skip">
+        <a href="#the-limits-of-representing-a-key-as-a-string" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Single HMAC Strategy
+              Key Aliases & Key Configs
             
           </span>
         </div>
@@ -228,7 +228,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-intro/" class="md-tabs__link">
+        <a href="../intro/" class="md-tabs__link">
           
   
   
@@ -387,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-intro/" class="md-nav__link">
+      <a href="../intro/" class="md-nav__link">
         
   
   
@@ -395,146 +395,6 @@
     
   
     What Is ALE, and Why?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Aliases & Key Configs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Structured Ciphertext
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Transient vs. Encrypted Blobs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-introducing-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Introducing HMACs
   
 
     
@@ -569,7 +429,7 @@
   <span class="md-ellipsis">
     
   
-    Single HMAC Strategy
+    Key Aliases & Key Configs
   
 
     
@@ -587,7 +447,7 @@
   <span class="md-ellipsis">
     
   
-    Single HMAC Strategy
+    Key Aliases & Key Configs
   
 
     
@@ -611,10 +471,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#one-column-per-hmac" class="md-nav__link">
+  <a href="#the-limits-of-representing-a-key-as-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        One column per HMAC
+        The limits of representing a key as a string
       
     </span>
   </a>
@@ -622,10 +482,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-search-problem" class="md-nav__link">
+  <a href="#a-key-as-an-object-not-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The search problem
+        A key as an object, not a string
       
     </span>
   </a>
@@ -633,10 +493,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-unique-constraint-problem" class="md-nav__link">
+  <a href="#the-alias-how-application-code-actually-asks-for-a-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The unique constraint problem
+        The alias: how application code actually asks for a key
       
     </span>
   </a>
@@ -644,10 +504,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
+  <a href="#why-this-is-the-foundation-for-everything-that-follows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verdict
+        Why this is the foundation for everything that follows
       
     </span>
   </a>
@@ -670,7 +530,147 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-list-hmac/" class="md-nav__link">
+      <a href="../structured-ciphertext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Ciphertext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-rotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list-hmac/" class="md-nav__link">
         
   
   
@@ -698,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encryption/" class="md-nav__link">
+      <a href="../rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -726,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -949,10 +949,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#one-column-per-hmac" class="md-nav__link">
+  <a href="#the-limits-of-representing-a-key-as-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        One column per HMAC
+        The limits of representing a key as a string
       
     </span>
   </a>
@@ -960,10 +960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-search-problem" class="md-nav__link">
+  <a href="#a-key-as-an-object-not-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The search problem
+        A key as an object, not a string
       
     </span>
   </a>
@@ -971,10 +971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-unique-constraint-problem" class="md-nav__link">
+  <a href="#the-alias-how-application-code-actually-asks-for-a-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The unique constraint problem
+        The alias: how application code actually asks for a key
       
     </span>
   </a>
@@ -982,10 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
+  <a href="#why-this-is-the-foundation-for-everything-that-follows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verdict
+        Why this is the foundation for everything that follows
       
     </span>
   </a>
@@ -1012,55 +1012,30 @@
   
 
 
-  <h1>Single HMAC Strategy</h1>
+  <h1>Key Aliases & Key Configs</h1>
 
-<p>The Single HMAC Strategy</p>
-<h2 id="one-column-per-hmac">One column per HMAC</h2>
-<p>Chapter 6 covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a <code>USERNAME_HMAC</code> column next to the <code>userName</code> ciphertext, a <code>PAN_HMAC</code> column next to the <code>pan</code> ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 9–10) needs later to find what's stale.</p>
-<p>It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
-<h2 id="the-search-problem">The search problem</h2>
-<p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
-<ol>
-<li>You change the HMAC key.</li>
-<li>All searches going forward use the new key.</li>
-<li>Immediately, none of your existing records are findable — their HMACs were all computed with the old key.</li>
-<li>A background job starts rekeying record by record.</li>
-<li>Search results gradually improve as the job progresses.</li>
-<li>Only once the job finishes is search fully back online.</li>
-</ol>
-<p>A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.</p>
-<p>A partial fix exists: a <strong>key start time</strong>. Application instances typically cache their key configuration rather than reloading it on every request, so a newly introduced key doesn't reach every instance at once — it only takes effect, instance by instance, as each one's cache refreshes. A key start time accounts for this by setting the new key's start time to "now + the key cache duration," and holding off using it for <em>writes</em> until that time passes — guaranteeing every instance has picked it up before any of them relies on it. Searches, meanwhile, don't need to wait: as soon as an instance reloads its config and sees the new key, it starts hashing search terms with every known key, old and new, immediately. Because no record gets written with the new key until every instance is guaranteed to know about it, every record — old or freshly written — stays findable throughout.</p>
-<h2 id="the-unique-constraint-problem">The unique constraint problem</h2>
-<p>This is the more consequential of the two. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
-<ol>
-<li>A user exists with username <code>john.doe@test.com</code>, HMAC'd under the old key.</li>
-<li>The HMAC key changes.</li>
-<li>A request comes in to create a <em>new</em> user with the same username, <code>john.doe@test.com</code>.</li>
-<li>Its HMAC is computed under the new key — a different value than the existing record's HMAC.</li>
-<li>The unique constraint doesn't fire, because the two HMAC values genuinely differ.</li>
-<li>Two users now exist with the same username.</li>
-</ol>
-<p>Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key <em>before every write</em>, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.</p>
-<h2 id="verdict">Verdict</h2>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Pros</strong></td>
-<td>Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation</td>
-</tr>
-<tr>
-<td><strong>Cons</strong></td>
-<td>Cannot support unique constraint enforcement <em>and</em> key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances</td>
-</tr>
-</tbody>
-</table>
-<p>If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. Chapter 8 covers the strategy that solves both problems.</p>
+<p>Key Aliases → Crypto Key Configs</p>
+<h2 id="the-limits-of-representing-a-key-as-a-string">The limits of representing a key as a string</h2>
+<p>It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a plain string. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do things like:</p>
+<ul>
+<li>Switch which cryptographic provider a key uses (AWS KMS today, an HSM tomorrow)</li>
+<li>Run multiple providers side by side (different regions, different regulatory regimes)</li>
+<li>Rotate a key without touching a single line of application code</li>
+</ul>
+<p>A raw string can't carry any of that. It's just an opaque label — there's nothing in it saying <em>how</em> to use it.</p>
+<h2 id="a-key-as-an-object-not-a-string">A key as an object, not a string</h2>
+<p>A more durable approach is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).</p>
+<p>That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, something matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.</p>
+<h2 id="the-alias-how-application-code-actually-asks-for-a-key">The alias: how application code actually asks for a key</h2>
+<p>Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of <em>role</em>-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in <a href="../single-hmac/">Single HMAC Strategy</a> and <a href="../list-hmac/">List HMAC Strategy</a>), and how to resolve any key by ID regardless of whether it's still "current."</p>
+<p>This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.</p>
+<h2 id="why-this-is-the-foundation-for-everything-that-follows">Why this is the foundation for everything that follows</h2>
+<p>This indirection — alias in, concrete key config out — is what makes the rest of the talk possible:</p>
+<ul>
+<li>A <a href="../structured-ciphertext/">structured ciphertext</a> can record <em>which</em> key encrypted it, and that alias resolution is what turns that record back into a usable key at decrypt time.</li>
+<li><a href="../key-rotation/">Key rotation</a> is just changing what "the current key" resolves to. Old ciphertext still decrypts correctly, because the resolution mechanism still knows about old keys, not just the current one.</li>
+<li>The new key can be a completely different provider from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly — only the alias.</li>
+</ul>
 
 
 
@@ -1090,7 +1065,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-introducing-hmacs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introducing HMACs">
+          <a href="../intro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: What Is ALE, and Why?">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1100,20 +1075,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Introducing HMACs
+                What Is ALE, and Why?
               </div>
             </div>
           </a>
         
         
           
-          <a href="../08-list-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: List HMAC Strategy">
+          <a href="../structured-ciphertext/" class="md-footer__link md-footer__link--next" aria-label="Next: Structured Ciphertext">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                List HMAC Strategy
+                Structured Ciphertext
               </div>
             </div>
             <div class="md-footer__button md-icon">
