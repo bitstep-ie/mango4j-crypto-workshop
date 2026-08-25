@@ -717,6 +717,50 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why HMACs need their own rekey process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is split from the encryption rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this interacts with the List HMAC Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -923,6 +967,50 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#why-hmacs-need-their-own-rekey-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why HMACs need their own rekey process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-is-split-from-the-encryption-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is split from the encryption rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-interacts-with-the-list-hmac-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this interacts with the List HMAC Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#closing-what-doing-it-right-actually-requires" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -965,22 +1053,37 @@
 
 
 <h1 id="9-rekeying-hmacs">9. Rekeying: HMACs</h1>
-<p><em>Content coming soon.</em></p>
-<ul>
-<li>The HMAC half of a rekey operation: regenerating each row's HMAC(s) under the new key</li>
-<li>Why this is split out from the encryption rekey (Chapter 8) as its own step</li>
-<li>How this interacts with the list HMAC strategy (Chapter 7) — old HMACs can be dropped from the list once the rekey completes and rotation is done</li>
+<h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
+<p>Chapter 8 covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the List HMAC Strategy (Chapter 7), a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
+<p><strong>mango4j-crypto's built-in rekey job currently only supports HMAC rekeying for entities using the List HMAC Strategy.</strong> Encryption-only rekeying (Chapter 8) works for any entity; HMAC rekeying specifically needs the list shape to do this safely.</p>
+<h2 id="the-process">The process</h2>
+<ol>
+<li><strong>Add the new HMAC key</strong> to the active key list — this is rotation phase 1 from Chapter 5, nothing new here.</li>
+<li><strong>Wait for the key cache expiry</strong> to pass, so every application instance is actually using the new key for writes (the same caching hazard Chapter 6 described for the multi-instance search race).</li>
+<li><strong>Kick off the rekey job.</strong> It selects records by one of two criteria, depending on why you're rekeying:<ul>
+<li>Any record <em>missing</em> HMACs for the new key — the common case for a full sweep after adding a key.</li>
+<li>Any record that <em>has</em> HMACs for a key you're trying to remove but <em>lacks</em> them for the new key — the common case for a targeted, passive rotation.</li>
 </ul>
+</li>
+<li><strong>For each matching record</strong>: decrypt it, compute HMAC(s) under the new key, and <em>add</em> those entries to the lookup/unique-value collections. Existing HMAC entries for other keys are left completely untouched — this is strictly additive, never a replace.</li>
+<li><strong>Wait for the sweep to finish</strong>, then remove the old key from the active key list.</li>
+<li><strong>Wait for cache expiry again</strong>, so no instance is still generating HMACs — or worse, still trying to <em>validate</em> against — the old key.</li>
+<li><strong>Clean up</strong>: remove the now-orphaned old-key HMAC entries from the lookup/unique-value tables. Leaving them doesn't break anything functionally, but stale HMAC material sitting in your database is itself a security exposure worth avoiding, especially for long-lived data.</li>
+<li><strong>Only now</strong> delete the old HMAC key from wherever key material is stored.</li>
+</ol>
+<h2 id="why-this-is-split-from-the-encryption-rekey">Why this is split from the encryption rekey</h2>
+<p>Encryption rekeying (Chapter 8) is a straight swap: decrypt with the old key, re-encrypt with the new one, done. HMAC rekeying can't be a swap, because — unlike ciphertext, which only ever needs to satisfy "decrypts correctly under its recorded key" — HMACs are load-bearing for search and uniqueness <em>while the rotation is still in progress</em>. Replacing a HMAC in place, even briefly, would reopen exactly the search-outage and duplicate-record windows Chapters 5–6 spent so much time on. Keeping the encryption and HMAC rekeys as two distinct steps, each addressing a different failure mode, is what lets them run independently and safely overlap in time.</p>
+<h2 id="how-this-interacts-with-the-list-hmac-strategy">How this interacts with the List HMAC Strategy</h2>
+<p>This is precisely the process Chapter 7 gestured at when it said the List HMAC Strategy is "the easiest strategy for supporting rekeying with no impact to application functionality." Because every active key's HMAC coexists in the same lookup/unique-value collections, adding a new key's entries and later removing an old key's entries are both just additive/subtractive operations on those collections — never a moment where a record is only findable under one key or the other. It's also the answer to the "list only ever grows" cost flagged at the end of Chapter 7: rekeying is what actually shrinks it back down once a rotation completes.</p>
+<hr />
 <h2 id="closing-what-doing-it-right-actually-requires">Closing: what "doing it right" actually requires</h2>
+<p>Two things, in the end, cover almost everything this talk has walked through:</p>
 <ul>
-<li>Decoupling application code from cryptographic providers</li>
-<li>Understanding the unencrypted → encrypted migration path up front, before you need it</li>
+<li><strong>Decoupling application code from cryptographic providers.</strong> Every mechanism covered — structured ciphertext, the key alias indirection, pluggable delegates — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey jobs are just what it takes to keep search and uniqueness correct while it happens.</li>
+<li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. Chapter 5 covered why bolting this on after the fact is painful — dual-read/dual-write periods, unannounced feature freezes, the works. Deciding early how a field moves from plaintext to encrypted, and building <code>@EnableMigrationSupport</code>-style guardrails into your process from day one, is far cheaper than retrofitting it under pressure later.</li>
 </ul>
 <h2 id="what-were-building-today">What we're building today</h2>
-<ul>
-<li>The hands-on stages, in order</li>
-<li>What each stage demonstrates from this talk</li>
-</ul>
+<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in <code>stages/</code> in this workshop's repository — starting from a plain project with the <code>mango4j-crypto</code> dependency added, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to recognize <code>@Encrypt</code>/<code>@EncryptedData</code> from Chapters 3–4 first, HMAC strategies from Chapters 6–7 next, and rotation/rekeying from Chapters 5, 8–9 as the workshop progresses.</p>
 
 
 
