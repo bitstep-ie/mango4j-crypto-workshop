@@ -532,10 +532,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cryptokey-a-key-as-an-object-not-a-string" class="md-nav__link">
+  <a href="#a-key-as-an-object-not-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CryptoKey: a key as an object, not a string
+        A key as an object, not a string
       
     </span>
   </a>
@@ -956,10 +956,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cryptokey-a-key-as-an-object-not-a-string" class="md-nav__link">
+  <a href="#a-key-as-an-object-not-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CryptoKey: a key as an object, not a string
+        A key as an object, not a string
       
     </span>
   </a>
@@ -1017,58 +1017,18 @@
 <li>Rotate a key without touching a single line of application code</li>
 </ul>
 <p>A raw string can't carry any of that. It's just an opaque label — there's nothing in it saying <em>how</em> to use it.</p>
-<h2 id="cryptokey-a-key-as-an-object-not-a-string">CryptoKey: a key as an object, not a string</h2>
-<p>mango4j-crypto represents every key as a <code>CryptoKey</code> object:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CryptoKey</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">CryptoKeyUsage</span><span class="w"> </span><span class="n">usage</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">configuration</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Instant</span><span class="w"> </span><span class="n">keyStartTime</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">RekeyMode</span><span class="w"> </span><span class="n">rekeyMode</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Instant</span><span class="w"> </span><span class="n">createdDate</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Instant</span><span class="w"> </span><span class="n">lastModifiedDate</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<ul>
-<li><strong><code>id</code></strong> — a plain random GUID identifying this key</li>
-<li><strong><code>usage</code></strong> — what the key is for: <code>ENCRYPTION</code> or <code>HMAC</code></li>
-<li><strong><code>type</code></strong> — which Encryption Service Delegate should handle this key's cryptographic operations (must match that delegate's <code>supportedCryptoKeyType()</code>)</li>
-<li><strong><code>configuration</code></strong> — a <code>Map</code> of whatever information the delegate needs to do its job (e.g. an AWS KMS key ARN under a <code>keyArn</code> entry) — never the raw key bytes themselves, just a reference to where the key lives</li>
-<li><strong><code>keyStartTime</code></strong> — optional, HMAC keys only; used to smooth over a caching gap in the Single HMAC Strategy (Chapter 6)</li>
-<li><strong><code>rekeyMode</code></strong> — drives the built-in rekey job (Chapters 8–9)</li>
-</ul>
-<p>The <code>type</code>/<code>configuration</code> split is the whole point: application code never says "call AWS KMS." It says "encrypt with this <code>CryptoKey</code>," and the library looks up the matching <strong>Encryption Service Delegate</strong> by <code>type</code> to do the actual cryptographic work. Swap the delegate, or introduce a new one, and no application code changes at all.</p>
+<h2 id="a-key-as-an-object-not-a-string">A key as an object, not a string</h2>
+<p>mango4j-crypto's answer is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).</p>
+<p>That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, the library matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.</p>
 <h2 id="the-alias-how-application-code-actually-asks-for-a-key">The alias: how application code actually asks for a key</h2>
-<p>Application code doesn't hardcode a <code>CryptoKey.id</code> either — that would just move the stringly-typed problem up one layer. Instead, you implement <code>CryptoKeyProvider</code>, and mango4j-crypto asks <em>it</em> for whichever key it needs by role, not by ID:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ApplicationCryptoKeyProvider</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">CryptoKeyProvider</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CryptoKey</span><span class="w"> </span><span class="nf">getById</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CryptoKey</span><span class="w"> </span><span class="nf">getCurrentEncryptionKey</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoKey</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getCurrentHmacKeys</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoKey</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getAllCryptoKeys</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<ul>
-<li><code>getCurrentEncryptionKey()</code> — the key <code>CryptoShield.encrypt()</code> should use <em>right now</em> for new writes</li>
-<li><code>getCurrentHmacKeys()</code> — every HMAC key currently in use (plural — more on why in Chapters 6–7)</li>
-<li><code>getById(id)</code> — resolves any key, by ID, regardless of whether it's still "current" — this is what makes decryption of old data work after a rotation</li>
-</ul>
-<p>This is the alias indirection: "the current encryption key" is a question your <code>CryptoKeyProvider</code> answers dynamically, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically.</p>
+<p>Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of <em>role</em>-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 6–7), and how to resolve any key by ID regardless of whether it's still "current."</p>
+<p>This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.</p>
 <h2 id="why-this-is-the-foundation-for-everything-that-follows">Why this is the foundation for everything that follows</h2>
-<p>This indirection — alias in, <code>CryptoKey</code> config out — is what makes the rest of the talk possible:</p>
+<p>This indirection — alias in, concrete key config out — is what makes the rest of the talk possible:</p>
 <ul>
-<li>A structured ciphertext (Chapter 3) can record <em>which</em> key ID encrypted it, and <code>getById()</code> resolves it back to a concrete config at decrypt time</li>
-<li>Key rotation (Chapter 5) is just changing what <code>getCurrentEncryptionKey()</code> returns — old ciphertext still decrypts because <code>getById()</code> still knows about the old key</li>
-<li>The new key can be a completely different provider (<code>type</code>) from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly</li>
+<li>A structured ciphertext (Chapter 3) can record <em>which</em> key encrypted it, and that alias resolution is what turns that record back into a usable key at decrypt time.</li>
+<li>Key rotation (Chapter 5) is just changing what "the current key" resolves to. Old ciphertext still decrypts correctly, because the resolution mechanism still knows about old keys, not just the current one.</li>
+<li>The new key can be a completely different provider from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly — only the alias.</li>
 </ul>
 
 
