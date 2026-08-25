@@ -1,8 +1,8 @@
 # 2. Key Aliases → Crypto Key Configs
 
-## Strings are a trap
+## The limits of representing a key as a string
 
-It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a `String`. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. It works, right up until you need to do any of the things mango4j-crypto's **Key Driven Design** is built to handle:
+It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a `String`. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do any of the things mango4j-crypto's **Key Driven Design** is built to handle:
 
 - Switch which cryptographic provider a key uses (AWS KMS today, an HSM tomorrow)
 - Run multiple providers side by side (different regions, different regulatory regimes)

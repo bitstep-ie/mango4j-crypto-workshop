@@ -38,7 +38,7 @@ public class UserProfileEntity {
 
 By convention, the HMAC field is named after the source field with an `Hmac` suffix — `pan` → `panHmac`. `@HmacKeyId` records which HMAC key produced these values, which rekeying (Chapters 8–9) needs to find what's stale. It's the way "many applications (unfortunately) default to using HMACs" — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
-## Where it breaks: search
+## The search problem
 
 Rotate the HMAC key and every existing record's HMAC was computed with the *old* key. A search hashes the term with the *new* key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:
 
@@ -49,13 +49,13 @@ Rotate the HMAC key and every existing record's HMAC was computed with the *old*
 5. Search results gradually improve as the job progresses.
 6. Only once the job finishes is search fully back online.
 
-A single HMAC key per tenant means a rotation is a functional search outage for however long the rekey takes — unacceptable for most production systems, and unavoidable with only one active key.
+A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.
 
 A partial fix exists: a **key start time**. When a new key is introduced, its start time is set to "now + the key cache duration," and writes never use it before that time — but *searches* immediately start hashing with every known key, old and new. Since nothing writes with the new key until every application instance has it cached, every record — old or freshly written — stays findable throughout.
 
-## Where it breaks worse: unique constraints
+## The unique constraint problem
 
-This is the more serious problem. Say `userName` has a DB-level unique constraint on its HMAC column. Walk through it:
+This is the more consequential of the two. Say `userName` has a DB-level unique constraint on its HMAC column. Walk through it:
 
 1. A user exists with username `john.doe@test.com`, HMAC'd under the old key.
 2. The HMAC key changes.

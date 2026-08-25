@@ -57,7 +57,7 @@ Plenty of regulations and standards effectively require it for certain categorie
 
 ### Reducing blast radius when a database or backup leaks
 
-Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise be catastrophic (every customer's data, exposed) becomes a non-event, because the thing that leaked was never usable on its own.
+Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise have exposed every customer's data becomes a non-event, because the thing that leaked was never usable on its own.
 
 ### Tenant / customer data segregation requirements
 

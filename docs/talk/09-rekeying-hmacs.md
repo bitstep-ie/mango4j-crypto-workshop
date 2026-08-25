@@ -34,7 +34,7 @@ This is precisely the process Chapter 7 gestured at when it said the List HMAC S
 Two things, in the end, cover almost everything this talk has walked through:
 
 - **Decoupling application code from cryptographic providers.** Every mechanism covered — structured ciphertext, the key alias indirection, pluggable delegates — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey jobs are just what it takes to keep search and uniqueness correct while it happens.
-- **Understanding the unencrypted → encrypted migration path *up front***, before you need it. Chapter 5 covered why bolting this on after the fact is painful — dual-read/dual-write periods, unannounced feature freezes, the works. Deciding early how a field moves from plaintext to encrypted, and building `@EnableMigrationSupport`-style guardrails into your process from day one, is far cheaper than retrofitting it under pressure later.
+- **Understanding the unencrypted → encrypted migration path *up front***, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building `@EnableMigrationSupport`-style guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.
 
 ## What we're building today
 

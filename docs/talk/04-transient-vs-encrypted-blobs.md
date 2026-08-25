@@ -31,7 +31,7 @@ Calling `cryptoShield.encrypt(entity)` doesn't clear the transient fields either
 
 ## The failure mode this avoids: double encrypt/decrypt
 
-Keeping the two representations distinct — and only ever converting between them at the `CryptoShield.encrypt()`/`decrypt()` boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext were smeared across the same field, or an application accidentally called `encrypt()` twice on data that was already ciphertext, you'd get redundant (and in the worst case, silently corrupting) encrypt/decrypt passes on the same data as it moves through the system. Because mango4j-crypto insists that only the transient fields ever hold plaintext and only `@EncryptedData` ever holds ciphertext, there's no state a value can end up in that's ambiguous about which one it currently is.
+Keeping the two representations distinct — and only ever converting between them at the `CryptoShield.encrypt()`/`decrypt()` boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an application called `encrypt()` twice on data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Because mango4j-crypto requires that only the transient fields hold plaintext and only `@EncryptedData` holds ciphertext, there's no state a value can end up in that's ambiguous about which one it currently is.
 
 ## What happens without this discipline: encrypting fields directly into their columns
 
