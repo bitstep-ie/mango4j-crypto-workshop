@@ -10,64 +10,22 @@ It's tempting to represent an encryption key in your code the way you'd represen
 
 A raw string can't carry any of that. It's just an opaque label — there's nothing in it saying *how* to use it.
 
-## CryptoKey: a key as an object, not a string
+## A key as an object, not a string
 
-mango4j-crypto represents every key as a `CryptoKey` object:
+mango4j-crypto's answer is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).
 
-```java
-public class CryptoKey {
-    private String id;
-    private CryptoKeyUsage usage;
-    private String type;
-    private Map<String, Object> configuration;
-    private Instant keyStartTime;
-    private RekeyMode rekeyMode;
-    private Instant createdDate;
-    private Instant lastModifiedDate;
-}
-```
-
-- **`id`** — a plain random GUID identifying this key
-- **`usage`** — what the key is for: `ENCRYPTION` or `HMAC`
-- **`type`** — which Encryption Service Delegate should handle this key's cryptographic operations (must match that delegate's `supportedCryptoKeyType()`)
-- **`configuration`** — a `Map` of whatever information the delegate needs to do its job (e.g. an AWS KMS key ARN under a `keyArn` entry) — never the raw key bytes themselves, just a reference to where the key lives
-- **`keyStartTime`** — optional, HMAC keys only; used to smooth over a caching gap in the Single HMAC Strategy (Chapter 6)
-- **`rekeyMode`** — drives the built-in rekey job (Chapters 8–9)
-
-The `type`/`configuration` split is the whole point: application code never says "call AWS KMS." It says "encrypt with this `CryptoKey`," and the library looks up the matching **Encryption Service Delegate** by `type` to do the actual cryptographic work. Swap the delegate, or introduce a new one, and no application code changes at all.
+That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, the library matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.
 
 ## The alias: how application code actually asks for a key
 
-Application code doesn't hardcode a `CryptoKey.id` either — that would just move the stringly-typed problem up one layer. Instead, you implement `CryptoKeyProvider`, and mango4j-crypto asks *it* for whichever key it needs by role, not by ID:
+Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of *role*-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 6–7), and how to resolve any key by ID regardless of whether it's still "current."
 
-```java
-@Component
-public class ApplicationCryptoKeyProvider implements CryptoKeyProvider {
-
-    @Override
-    public CryptoKey getById(String id) { ... }
-
-    @Override
-    public CryptoKey getCurrentEncryptionKey() { ... }
-
-    @Override
-    public List<CryptoKey> getCurrentHmacKeys() { ... }
-
-    @Override
-    public List<CryptoKey> getAllCryptoKeys() { ... }
-}
-```
-
-- `getCurrentEncryptionKey()` — the key `CryptoShield.encrypt()` should use *right now* for new writes
-- `getCurrentHmacKeys()` — every HMAC key currently in use (plural — more on why in Chapters 6–7)
-- `getById(id)` — resolves any key, by ID, regardless of whether it's still "current" — this is what makes decryption of old data work after a rotation
-
-This is the alias indirection: "the current encryption key" is a question your `CryptoKeyProvider` answers dynamically, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically.
+This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.
 
 ## Why this is the foundation for everything that follows
 
-This indirection — alias in, `CryptoKey` config out — is what makes the rest of the talk possible:
+This indirection — alias in, concrete key config out — is what makes the rest of the talk possible:
 
-- A structured ciphertext (Chapter 3) can record *which* key ID encrypted it, and `getById()` resolves it back to a concrete config at decrypt time
-- Key rotation (Chapter 5) is just changing what `getCurrentEncryptionKey()` returns — old ciphertext still decrypts because `getById()` still knows about the old key
-- The new key can be a completely different provider (`type`) from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly
+- A structured ciphertext (Chapter 3) can record *which* key encrypted it, and that alias resolution is what turns that record back into a usable key at decrypt time.
+- Key rotation (Chapter 5) is just changing what "the current key" resolves to. Old ciphertext still decrypts correctly, because the resolution mechanism still knows about old keys, not just the current one.
+- The new key can be a completely different provider from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly — only the alias.
