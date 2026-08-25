@@ -28,6 +28,6 @@ Every capability covered later in this talk depends on the ciphertext carrying i
 
 - **Key rotation (Chapter 5)** — old records keep decrypting correctly after the current key changes, because each one's stored key ID says exactly which key to use, permanently.
 - **Multi-provider support (Chapter 2)** — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.
-- **Rekeying (Chapters 8–9)** — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.
+- **Rekeying (Chapters 9–10)** — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.
 
 One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key did we use back then."

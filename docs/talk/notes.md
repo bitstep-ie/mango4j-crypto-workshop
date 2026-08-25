@@ -53,3 +53,9 @@ Every chapter from the original 15-chapter talk now has a home in the new 9-chap
 
 All merged-in content is still outline-stub bullets/headings, not full prose (except chapter 1's original content, which was already written).
 
+## 2026-08-26+ (chapter numbering has since moved on from the table above)
+
+- Split "Introducing HMACs" out of the old chapter 6 (single HMAC strategy) into its own chapter: what a HMAC is, why you'd want one (search, unique constraints), independent of any specific storage strategy. The strategy-specific chapters (single HMAC, list HMAC) now assume that grounding instead of re-explaining it.
+- Current order: 1 Intro, 2 Key Aliases, 3 Structured Ciphertext, 4 Transient vs. Encrypted Blobs, 5 Key Rotation, 6 Introducing HMACs, 7 Single HMAC Strategy, 8 List HMAC Strategy, 9 Rekeying: Encryption, 10 Rekeying: HMACs.
+- Nav/heading numbering was later removed entirely (see mkdocs.yml) — file prefixes (`01-`, `02-`, ...) still exist purely to control ordering.
+

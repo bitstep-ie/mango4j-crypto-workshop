@@ -13,7 +13,7 @@ Changing an encryption key is, by itself, straightforward: add the new key to yo
 
 ## Phase 2: migrating old data to the new key
 
-Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: **rekeying**, covered in full in Chapters 8–9. It's a deliberately separate phase, not a single atomic switch, because:
+Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: **rekeying**, covered in full in Chapters 9–10. It's a deliberately separate phase, not a single atomic switch, because:
 
 - Rekeying potentially touches every record in the system, which takes time and costs performance/throughput you don't want to pay synchronously with the rotation itself.
 - The old key has to remain valid and available for decryption for as long as any unrekeyed data still depends on it.
@@ -33,11 +33,11 @@ This transitional state deserves explicit support rather than being handled ad h
 
 ## Production impact of single-key, single-HMAC designs
 
-Rotation and migration are where the limitations of single-key, single-HMAC designs (Chapter 6) become visible in production:
+Rotation and migration are where the limitations of single-key, single-HMAC designs (Chapter 7) become visible in production:
 
 - **Search functionality degrades gradually** — with only one HMAC key active at a time, a rotation makes every existing record's HMAC stop matching new search HMACs until it's rekeyed.
-- **Duplicate records can appear in fields meant to be unique** — the unique-constraint failure mode covered in Chapter 6: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.
+- **Duplicate records can appear in fields meant to be unique** — the unique-constraint failure mode covered in Chapter 7: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.
 - **Rolling back a rotation doesn't undo its effects** — writes that already went out under the new key stay as they are, so a rollback adds a second inconsistency rather than removing the first.
 - **These failures tend to be gradual rather than immediate** — they're rarely a hard crash, which means they're often identified well after the rotation, during a later investigation, rather than at the time it happened.
 
-This is the practical case for the List HMAC Strategy (Chapter 7) and for treating rekeying (Chapters 8–9) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.
+This is the practical case for the List HMAC Strategy (Chapter 8) and for treating rekeying (Chapters 9–10) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.

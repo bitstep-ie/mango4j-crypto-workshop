@@ -1,14 +1,8 @@
-Introducing HMACs: The Single HMAC Strategy
+The Single HMAC Strategy
 
-## Why you can't search or constrain on the ciphertext itself
+## One column per HMAC
 
-Chapter 1 introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input.
-
-**HMAC** fills that gap. Unlike encryption, an HMAC (a hash computed using a secret key) is *deterministic*: the same input with the same key always produces the same output. That determinism is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on.
-
-## The Single HMAC Strategy: one column per HMAC
-
-The simplest possible design: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 8–9) needs later to find what's stale.
+Chapter 6 covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 9–10) needs later to find what's stale.
 
 It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
@@ -47,4 +41,4 @@ Adding key start time doesn't fix this — it only narrows the window to a race 
 | **Pros** | Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation |
 | **Cons** | Cannot support unique constraint enforcement *and* key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances |
 
-If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. Chapter 7 covers the strategy that solves both problems.
+If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. Chapter 8 covers the strategy that solves both problems.
