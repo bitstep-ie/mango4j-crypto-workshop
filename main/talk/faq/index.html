@@ -11,10 +11,8 @@
       
       
       
-        <link rel="prev" href="../key-rotation/">
+        <link rel="prev" href="../../how-it-works/">
       
-      
-        <link rel="next" href="../list-hmac/">
       
       
         
@@ -25,7 +23,7 @@
     
     
       
-        <title>Single HMAC Strategy - ALE Workshop</title>
+        <title>FAQ - ALE Workshop</title>
       
     
     
@@ -76,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#one-column-per-hmac" class="md-skip">
+        <a href="#whats-a-hash-and-how-is-that-different-from-encryption" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Single HMAC Strategy
+              FAQ
             
           </span>
         </div>
@@ -222,12 +220,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../intro/" class="md-tabs__link">
           
   
@@ -283,9 +279,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../faq/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -346,31 +344,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
             
   
   
@@ -388,7 +381,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -571,35 +564,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../single-hmac/" class="md-nav__link">
         
   
   
@@ -615,68 +583,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#one-column-per-hmac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        One column per HMAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-search-problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The search problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-unique-constraint-problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The unique constraint problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verdict
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -947,10 +853,35 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -966,6 +897,134 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#whats-a-hash-and-how-is-that-different-from-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's a hash, and how is that different from encryption?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-an-iv-and-why-does-it-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's an IV, and why does it matter?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-do-i-need-to-hmac-data-to-make-it-searchable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do I need to HMAC data to make it searchable?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-do-i-need-to-hmac-data-to-enforce-a-unique-constraint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do I need to HMAC data to enforce a unique constraint?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-the-difference-between-key-rotation-and-rekeying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between key rotation and rekeying?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-would-a-key-ever-need-to-rotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why would a key ever need to rotate?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-can-there-be-only-one-active-encryption-key-at-a-time-but-potentially-many-active-hmac-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can there be only one active encryption key at a time, but potentially many active HMAC keys?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#if-hmacs-dont-carry-a-reference-to-their-own-key-how-does-rekeying-know-what-to-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If HMACs don't carry a reference to their own key, how does rekeying know what to rekey?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-hmac-tokenization-derived-value-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is HMAC tokenization / derived-value search?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-a-tenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's a tenant?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -995,10 +1054,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#one-column-per-hmac" class="md-nav__link">
+  <a href="#whats-a-hash-and-how-is-that-different-from-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        One column per HMAC
+        What's a hash, and how is that different from encryption?
       
     </span>
   </a>
@@ -1006,10 +1065,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-search-problem" class="md-nav__link">
+  <a href="#whats-an-iv-and-why-does-it-matter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The search problem
+        What's an IV, and why does it matter?
       
     </span>
   </a>
@@ -1017,10 +1076,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-unique-constraint-problem" class="md-nav__link">
+  <a href="#why-do-i-need-to-hmac-data-to-make-it-searchable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The unique constraint problem
+        Why do I need to HMAC data to make it searchable?
       
     </span>
   </a>
@@ -1028,10 +1087,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verdict" class="md-nav__link">
+  <a href="#why-do-i-need-to-hmac-data-to-enforce-a-unique-constraint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verdict
+        Why do I need to HMAC data to enforce a unique constraint?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-the-difference-between-key-rotation-and-rekeying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between key rotation and rekeying?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-would-a-key-ever-need-to-rotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why would a key ever need to rotate?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-can-there-be-only-one-active-encryption-key-at-a-time-but-potentially-many-active-hmac-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can there be only one active encryption key at a time, but potentially many active HMAC keys?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#if-hmacs-dont-carry-a-reference-to-their-own-key-how-does-rekeying-know-what-to-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If HMACs don't carry a reference to their own key, how does rekeying know what to rekey?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-hmac-tokenization-derived-value-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is HMAC tokenization / derived-value search?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-a-tenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's a tenant?
       
     </span>
   </a>
@@ -1058,55 +1183,30 @@
   
 
 
-  <h1>Single HMAC Strategy</h1>
+  <h1>FAQ</h1>
 
-<p>The Single HMAC Strategy</p>
-<h2 id="one-column-per-hmac">One column per HMAC</h2>
-<p><a href="../introducing-hmacs/">Introducing HMACs</a> covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a <code>USERNAME_HMAC</code> column next to the <code>userName</code> ciphertext, a <code>PAN_HMAC</code> column next to the <code>pan</code> ciphertext, and typically a column recording which HMAC key produced them, which rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>) needs later to find what's stale.</p>
-<p>It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
-<h2 id="the-search-problem">The search problem</h2>
-<p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
-<ol>
-<li>You change the HMAC key.</li>
-<li>All searches going forward use the new key.</li>
-<li>Immediately, none of your existing records are findable — their HMACs were all computed with the old key.</li>
-<li>A background job starts rekeying record by record.</li>
-<li>Search results gradually improve as the job progresses.</li>
-<li>Only once the job finishes is search fully back online.</li>
-</ol>
-<p>A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.</p>
-<p>A partial fix exists: a <strong>key start time</strong>. Application instances typically cache their key configuration rather than reloading it on every request, so a newly introduced key doesn't reach every instance at once — it only takes effect, instance by instance, as each one's cache refreshes. A key start time accounts for this by setting the new key's start time to "now + the key cache duration," and holding off using it for <em>writes</em> until that time passes — guaranteeing every instance has picked it up before any of them relies on it. Searches, meanwhile, don't need to wait: as soon as an instance reloads its config and sees the new key, it starts hashing search terms with every known key, old and new, immediately. Because no record gets written with the new key until every instance is guaranteed to know about it, every record — old or freshly written — stays findable throughout.</p>
-<h2 id="the-unique-constraint-problem">The unique constraint problem</h2>
-<p>This is the more consequential of the two. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
-<ol>
-<li>A user exists with username <code>john.doe@test.com</code>, HMAC'd under the old key.</li>
-<li>The HMAC key changes.</li>
-<li>A request comes in to create a <em>new</em> user with the same username, <code>john.doe@test.com</code>.</li>
-<li>Its HMAC is computed under the new key — a different value than the existing record's HMAC.</li>
-<li>The unique constraint doesn't fire, because the two HMAC values genuinely differ.</li>
-<li>Two users now exist with the same username.</li>
-</ol>
-<p>Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key <em>before every write</em>, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.</p>
-<h2 id="verdict">Verdict</h2>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Pros</strong></td>
-<td>Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation</td>
-</tr>
-<tr>
-<td><strong>Cons</strong></td>
-<td>Cannot support unique constraint enforcement <em>and</em> key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances</td>
-</tr>
-</tbody>
-</table>
-<p>If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. <a href="../list-hmac/">List HMAC Strategy</a> covers the strategy that solves both problems.</p>
+<p>Frequently Asked Questions</p>
+<p>Quick answers to questions that come up repeatedly when discussing ALE. Each one links to the chapter that covers the full reasoning.</p>
+<h2 id="whats-a-hash-and-how-is-that-different-from-encryption">What's a hash, and how is that different from encryption?</h2>
+<p>A hash is one-way: given a value, hashing it produces an output, but that output can never be reversed back into the original value — there's no key that decrypts it, because it was never "encrypted" in the first place. Encryption is two-way: the same key that produced the ciphertext can also recover the original plaintext from it. A <strong>HMAC</strong> (Hash-based Message Authentication Code) is a hash computed with a secret key added into the mix — still one-way, but only someone with that key can compute the correct HMAC for a given value. See <a href="../introducing-hmacs/">Introducing HMACs</a>.</p>
+<h2 id="whats-an-iv-and-why-does-it-matter">What's an IV, and why does it matter?</h2>
+<p>An IV (Initialization Vector) is randomness mixed into an encryption operation so that encrypting the same value twice never produces the same ciphertext, even with the same key. It travels alongside the ciphertext (in the clear — it isn't secret) so decryption can reverse the operation. This is good for security, but it has a direct consequence: you can't search for a record by re-encrypting a search term and comparing ciphertext, because the ciphertext is different every time. See <a href="../intro/">What Is ALE, and Why Do We Still Need It?</a> and <a href="../structured-ciphertext/">Structured Ciphertext</a>.</p>
+<h2 id="why-do-i-need-to-hmac-data-to-make-it-searchable">Why do I need to HMAC data to make it searchable?</h2>
+<p>Because ciphertext is never the same twice (see the IV question above), you can't search on it directly. A HMAC of the same value, computed with the same key, is always the same — so you store a HMAC alongside the ciphertext, and search by hashing the search term and matching against stored HMACs, the same way you'd match against a regular indexed column. See <a href="../introducing-hmacs/">Introducing HMACs</a>.</p>
+<h2 id="why-do-i-need-to-hmac-data-to-enforce-a-unique-constraint">Why do I need to HMAC data to enforce a unique constraint?</h2>
+<p>Same root cause: a database unique constraint on a ciphertext column is useless, because two records holding the identical plaintext value never produce identical ciphertext. Put the constraint on a HMAC column instead — the same plaintext always produces the same HMAC, so a real duplicate produces a real HMAC collision the database can catch. See <a href="../introducing-hmacs/">Introducing HMACs</a>.</p>
+<h2 id="whats-the-difference-between-key-rotation-and-rekeying">What's the difference between key rotation and rekeying?</h2>
+<p>Rotation is switching which key gets used for <em>new</em> writes going forward — it doesn't touch anything already written. Rekeying is the separate background process that goes back and moves <em>existing</em> records off an old key onto the new one, which is what eventually lets the old key be deleted. Rotation is quick and low-risk; rekeying is the slower, higher-effort part. See <a href="../key-rotation/">Key Rotation</a>, <a href="../rekeying-encryption/">Rekeying: Encryption</a>, and <a href="../rekeying-hmacs/">Rekeying: HMACs</a>.</p>
+<h2 id="why-would-a-key-ever-need-to-rotate">Why would a key ever need to rotate?</h2>
+<p>Common triggers: a compliance schedule requiring keys to age out after a fixed period, a cryptographic provider being deprecated or becoming unavailable in some region, or — the urgent case — a key suspected of being compromised, which needs to stop being trusted immediately rather than on a schedule. See <a href="../key-rotation/">Key Rotation</a>.</p>
+<h2 id="why-can-there-be-only-one-active-encryption-key-at-a-time-but-potentially-many-active-hmac-keys">Why can there be only one active encryption key at a time, but potentially many active HMAC keys?</h2>
+<p>Decrypting a record is only possible once you already have that record — its ciphertext carries the ID of the key that encrypted it, so decryption always knows exactly which key to use, regardless of how many keys have existed over time. Searching is the opposite problem: you don't have the record yet, that's what you're trying to find, so you don't know in advance which key was used to HMAC it. The only way to find it is to try every key that might have been used — which means every key still holding un-rekeyed data has to stay active for search, not just the newest one. See <a href="../introducing-hmacs/">Introducing HMACs</a> and <a href="../list-hmac/">List HMAC Strategy</a>.</p>
+<h2 id="if-hmacs-dont-carry-a-reference-to-their-own-key-how-does-rekeying-know-what-to-rekey">If HMACs don't carry a reference to their own key, how does rekeying know what to rekey?</h2>
+<p>By the time you've found a record via search, you already know which row it is — so a stored key reference on the HMAC itself wouldn't help you find it any faster. But it's still useful for a different reason: a rekey process needs to efficiently ask "which records still have a HMAC from this old key?" without decrypting everything to check. Storing the HMAC key ID alongside each HMAC (purely as a rekeying convenience, not something search itself depends on) is what makes that query cheap. See <a href="../rekeying-hmacs/">Rekeying: HMACs</a>.</p>
+<h2 id="what-is-hmac-tokenization-derived-value-search">What is HMAC tokenization / derived-value search?</h2>
+<p>Alongside the HMAC of a full value, you can also store HMACs of <em>derived</em> representations of it — the last four digits of a card number, a normalized form with punctuation stripped — enabling partial-match search without ever weakening or exposing the underlying encrypted value. See <a href="../list-hmac/">List HMAC Strategy</a>.</p>
+<h2 id="whats-a-tenant">What's a tenant?</h2>
+<p>A logical isolation boundary for a distinct customer or client entity in a system, each with its own encryption and HMAC keys, so a breach or key compromise affecting one tenant can't expose another's data. If an application doesn't have the concept of multiple customers, the whole application can just be thought of as a single tenant. See <a href="../intro/">What Is ALE, and Why Do We Still Need It?</a>.</p>
 
 
 
@@ -1136,7 +1236,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../key-rotation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Rotation">
+          <a href="../../how-it-works/" class="md-footer__link md-footer__link--prev" aria-label="Previous: How This Workshop Works">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1146,27 +1246,11 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Key Rotation
+                How This Workshop Works
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../list-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: List HMAC Strategy">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                List HMAC Strategy
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     
