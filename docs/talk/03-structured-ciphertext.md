@@ -1,4 +1,4 @@
-# 3. Plain Ciphertext → Structured Ciphertext
+Plain Ciphertext → Structured Ciphertext
 
 ## The naive approach
 

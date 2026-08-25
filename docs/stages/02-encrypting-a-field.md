@@ -1,4 +1,4 @@
-# 2. Encrypting a Field
+Encrypting a Field
 
 !!! abstract "Overview"
     This is the first stage that actually encrypts something. The goal is the minimum set of moving parts needed to do that: one field marked `@Encrypt`, one field marked `@EncryptedData` for the ciphertext to land in, a key source (`CryptoKeyProvider`), and something to do the actual encrypting (`EncryptionServiceDelegate`). We deliberately use a fake Base64 "encryption" delegate here so the plumbing is visible without any real cryptography or KMS setup getting in the way — real encryption comes in a later stage.

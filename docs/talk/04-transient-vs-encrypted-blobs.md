@@ -1,4 +1,4 @@
-# 4. Transient vs. Encrypted Blobs
+Transient vs. Encrypted Blobs
 
 ## Two representations of the same value
 

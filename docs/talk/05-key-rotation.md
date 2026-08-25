@@ -1,4 +1,4 @@
-# 5. Encryption Key Rotation
+Encryption Key Rotation
 
 ## Why keys rotate
 

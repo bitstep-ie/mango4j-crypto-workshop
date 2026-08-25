@@ -1,4 +1,4 @@
-# 1. What Is ALE, and Why Do We Still Need It?
+What Is ALE, and Why Do We Still Need It?
 
 Application Level Encryption (ALE) means your **application code** encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.
 

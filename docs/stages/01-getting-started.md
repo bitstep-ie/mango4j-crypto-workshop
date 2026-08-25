@@ -1,4 +1,4 @@
-# 1. Getting Started
+Getting Started
 
 !!! abstract "Overview"
     To use `mango4j-crypto`, add the dependency to your project, then (from the next stage on) annotate the entity fields you want encrypted. This stage doesn't do anything on its own — it's just the starting point: a bare Maven project with the dependency already wired up, so everyone begins from the same place before we start adding the annotations that actually do the work.

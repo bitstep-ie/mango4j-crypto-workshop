@@ -1,4 +1,4 @@
-# 9. Rekeying: HMACs
+Rekeying: HMACs
 
 ## Why HMACs need their own rekey process
 

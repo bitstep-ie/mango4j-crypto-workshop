@@ -1,4 +1,4 @@
-# 7. The List HMAC Strategy
+The List HMAC Strategy
 
 ## Two elegant concepts
 

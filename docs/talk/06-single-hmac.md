@@ -1,4 +1,4 @@
-# 6. Introducing HMACs: The Single HMAC Strategy
+Introducing HMACs: The Single HMAC Strategy
 
 ## Why you can't search or constrain on the ciphertext itself
 

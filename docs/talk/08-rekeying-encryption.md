@@ -1,4 +1,4 @@
-# 8. Rekeying: Encryption
+Rekeying: Encryption
 
 ## Rekeying vs. rotation: not the same step
 

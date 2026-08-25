@@ -1,4 +1,4 @@
-# 2. Key Aliases → Crypto Key Configs
+Key Aliases → Crypto Key Configs
 
 ## The limits of representing a key as a string
 
