@@ -1,4 +1,4 @@
-# 8. Introducing HMACs: The Single HMAC Strategy
+# 6. Introducing HMACs: The Single HMAC Strategy
 
 *Content coming soon.*
 

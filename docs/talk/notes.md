@@ -23,19 +23,31 @@ Building a new talk instead — starting fresh rather than continuing to fill ou
 - Rekeying: migrating to a new key re-encrypts the data AND regenerates the HMACs (not just the ciphertext). (Carries over from old chapters 9–10.)
   - Split into two separate rekey operations/topics: encryption rekey and HMAC rekey — treat them as distinct steps, not one combined step.
 
-## New talk — chapter order (regenerated as docs/talk/01–11 on 2026-08-25)
+## New talk — chapter order (regenerated as docs/talk/01–09 on 2026-08-25)
 
 1. `01-intro.md` — What is ALE, and why do we still need it (merged old chapters 1+2)
 2. `02-key-aliases.md` — Key aliases → crypto key configs
 3. `03-structured-ciphertext.md` — Plain ciphertext → structured ciphertext
 4. `04-transient-vs-encrypted-blobs.md` — Transient vs. encrypted blobs, avoiding double encrypt/decrypt
-5. `05-key-rotation-intro.md` — Encryption key rotation, introducing the concept
-6. `06-key-rotation-phase1.md` — Phase 1: switch new writes to the new key; new key can be a different provider; old keys still decrypt
-7. `07-key-rotation-phase2.md` — Phase 2: migrate old data to the new key
-8. `08-single-hmac.md` — Introducing HMACs, single HMAC strategy: search and unique-constraint issues, why they break, especially unique constraints
-9. `09-list-hmac.md` — List HMAC strategy: why it fits search and unique keys better than single HMAC
-10. `10-rekeying-encryption.md` — Rekeying: encryption — re-encrypting data to the new key
-11. `11-rekeying-hmacs.md` — Rekeying: HMACs — regenerating HMACs separately from the encryption rekey
+5. `05-key-rotation.md` — Encryption key rotation as a single chapter (phase 1: switch new writes to the new key, new key can be a different provider, old keys still decrypt; phase 2: migrate old data to the new key) — originally split into 3 chapters (intro/phase1/phase2), merged into one per explicit request, no split
+6. `06-single-hmac.md` — Introducing HMACs, single HMAC strategy: search and unique-constraint issues, why they break, especially unique constraints
+7. `07-list-hmac.md` — List HMAC strategy: why it fits search and unique keys better than single HMAC
+8. `08-rekeying-encryption.md` — Rekeying: encryption — re-encrypting data to the new key
+9. `09-rekeying-hmacs.md` — Rekeying: HMACs — regenerating HMACs separately from the encryption rekey
 
-All chapters except 1 are currently outline stubs ("Content coming soon.") with bullet points capturing what each should cover. `mkdocs.yml` nav updated to match; old chapters 3–15 (naive approach, failure columns, outages, doing-it-right, mango4j-crypto intro, what-we're-building-today) deleted rather than folded in — revisit if any of that material is still needed.
+All chapters except 1 are currently outline stubs ("Content coming soon.") with bullet points capturing what each should cover. `mkdocs.yml` nav updated to match.
+
+### Chapters dropped from the original 15-chapter talk (docs/talk, pre-2026-08-25)
+
+Not carried into the new outline in any form — set aside along with the rest of the old talk, not folded into a new chapter:
+
+- 3. The Naive Approach: A Simple Case of Implementing ALE
+- 4. Failure Mode: Encrypting Fields Directly Into Their Columns
+- 11. Failure Mode: Migrating an Unencrypted Field to Encrypted
+- 12. When It All Comes Together: Outages and Application Failure
+- 13. What "Doing It Right" Actually Requires
+- 14. Introducing mango4j-crypto
+- 15. What We're Building Today
+
+Old chapters 1 and 2 were merged into new chapter 1 (not dropped). Old chapters 5–10 were absorbed into the new outline's chapters 2–3, 5–9 (not dropped, restructured). Revisit the dropped list above if any of that material turns out to still be needed (e.g. a workshop-intro chapter like old 14/15, or the failure-mode narratives).
 
