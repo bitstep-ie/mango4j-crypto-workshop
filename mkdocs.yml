@@ -48,16 +48,16 @@ extra:
 
 nav:
   - The Talk:
-      - "What Is ALE, and Why?": talk/01-intro.md
-      - "Key Aliases & Key Configs": talk/02-key-aliases.md
-      - "Structured Ciphertext": talk/03-structured-ciphertext.md
-      - "Transient vs. Encrypted Blobs": talk/04-transient-vs-encrypted-blobs.md
-      - "Key Rotation": talk/05-key-rotation.md
-      - "Introducing HMACs": talk/06-introducing-hmacs.md
-      - "Single HMAC Strategy": talk/07-single-hmac.md
-      - "List HMAC Strategy": talk/08-list-hmac.md
-      - "Rekeying: Encryption": talk/09-rekeying-encryption.md
-      - "Rekeying: HMACs": talk/10-rekeying-hmacs.md
+      - "What Is ALE, and Why?": talk/intro.md
+      - "Key Aliases & Key Configs": talk/key-aliases.md
+      - "Structured Ciphertext": talk/structured-ciphertext.md
+      - "Transient vs. Encrypted Blobs": talk/transient-vs-encrypted-blobs.md
+      - "Introducing HMACs": talk/introducing-hmacs.md
+      - "Key Rotation": talk/key-rotation.md
+      - "Single HMAC Strategy": talk/single-hmac.md
+      - "List HMAC Strategy": talk/list-hmac.md
+      - "Rekeying: Encryption": talk/rekeying-encryption.md
+      - "Rekeying: HMACs": talk/rekeying-hmacs.md
   - The Workshop:
       - Introduction: stages/00-intro.md
       - "Getting Started": stages/01-getting-started.md

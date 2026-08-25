@@ -18,7 +18,7 @@ That last split — provider type separate from provider-specific configuration 
 
 ## The alias: how application code actually asks for a key
 
-Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of *role*-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 7–8), and how to resolve any key by ID regardless of whether it's still "current."
+Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of *role*-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in [Single HMAC Strategy](single-hmac.md) and [List HMAC Strategy](list-hmac.md)), and how to resolve any key by ID regardless of whether it's still "current."
 
 This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.
 
@@ -26,6 +26,6 @@ This is the alias indirection: "the current encryption key" is a question answer
 
 This indirection — alias in, concrete key config out — is what makes the rest of the talk possible:
 
-- A structured ciphertext (Chapter 3) can record *which* key encrypted it, and that alias resolution is what turns that record back into a usable key at decrypt time.
-- Key rotation (Chapter 5) is just changing what "the current key" resolves to. Old ciphertext still decrypts correctly, because the resolution mechanism still knows about old keys, not just the current one.
+- A [structured ciphertext](structured-ciphertext.md) can record *which* key encrypted it, and that alias resolution is what turns that record back into a usable key at decrypt time.
+- [Key rotation](key-rotation.md) is just changing what "the current key" resolves to. Old ciphertext still decrypts correctly, because the resolution mechanism still knows about old keys, not just the current one.
 - The new key can be a completely different provider from the old one, with zero application code changes, because nothing in the application ever referenced the provider directly — only the alias.

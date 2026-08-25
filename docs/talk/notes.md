@@ -56,6 +56,8 @@ All merged-in content is still outline-stub bullets/headings, not full prose (ex
 ## 2026-08-26+ (chapter numbering has since moved on from the table above)
 
 - Split "Introducing HMACs" out of the old chapter 6 (single HMAC strategy) into its own chapter: what a HMAC is, why you'd want one (search, unique constraints), independent of any specific storage strategy. The strategy-specific chapters (single HMAC, list HMAC) now assume that grounding instead of re-explaining it.
-- Current order: 1 Intro, 2 Key Aliases, 3 Structured Ciphertext, 4 Transient vs. Encrypted Blobs, 5 Key Rotation, 6 Introducing HMACs, 7 Single HMAC Strategy, 8 List HMAC Strategy, 9 Rekeying: Encryption, 10 Rekeying: HMACs.
-- Nav/heading numbering was later removed entirely (see mkdocs.yml) — file prefixes (`01-`, `02-`, ...) still exist purely to control ordering.
+- Nav/heading numbering was later removed entirely (see mkdocs.yml). Numeric file prefixes were then dropped too — filenames are now plain descriptive slugs (`intro.md`, `key-aliases.md`, ...); order is controlled purely by nav order in mkdocs.yml.
+- Reordered "Key Rotation" to come after "Introducing HMACs": Key Rotation's discussion of search/findability during a rotation depends on HMAC concepts (search, uniqueness) that hadn't been introduced yet when it came first. Current order: Intro, Key Aliases, Structured Ciphertext, Transient vs. Encrypted Blobs, Introducing HMACs, Key Rotation, Single HMAC Strategy, List HMAC Strategy, Rekeying: Encryption, Rekeying: HMACs.
+- Content fix in Key Rotation's data-retention paragraph: search does NOT actually break when old HMAC keys stay in the known-keys list — a search hashing the term with every known key (old and new) still finds old records. What actually breaks under the Single HMAC Strategy is unique-constraint enforcement (a duplicate can slip in under a different key), not search. Corrected the paragraph to stop conflating the two.
+- All "Chapter N" prose references replaced with markdown links to the target chapter by name (no numbers), consistent with numbering being fully removed from the talk.
 

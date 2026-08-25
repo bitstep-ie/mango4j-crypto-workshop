@@ -36,7 +36,7 @@ A handful of terms come up constantly when discussing ALE — worth having a sha
 :   A logical isolation boundary for a distinct customer or client entity in your system, each with its own encryption/HMAC keys — so a data breach or key compromise affecting one tenant can't expose another's data. If your application doesn't have the concept of multiple customers, you can just think of your whole application as "the tenant."
 
 **Key**
-:   The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change *how* encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in Chapter 2.
+:   The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change *how* encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in [Key Aliases & Key Configs](key-aliases.md).
 
 **Ciphertext**
 :   The encrypted output. Irreversible without the correct key — that's the entire point.

@@ -6,7 +6,7 @@ Welcome to the workshop for **mango4j-crypto**, an Application Level Encryption 
 
 [mango4j-crypto](https://github.com/bitstep-ie/mango4j-crypto) is built specifically to avoid those traps. Keys are objects, not hardcoded strings, so swapping or rotating a cryptographic provider needs zero application code changes. `@Encrypt`/`@EncryptedData` annotations give you one consistent way to mark confidential fields, instead of ad hoc code scattered across the codebase. It ships multiple HMAC strategies so you can actually get searchability *and* unique constraints right, built-in rekeying support so key rotation doesn't mean a search outage or duplicate data, and `@EnableMigrationSupport` for safely moving an existing unencrypted field to encrypted. This workshop is a hands-on, step-by-step introduction to using it.
 
-Before the hands-on stages, [The Talk](../talk/01-intro.md) goes deeper: what ALE is, why it's needed, and the numerous ways the typical/naive approach fails in production.
+Before the hands-on stages, [The Talk](../talk/intro.md) goes deeper: what ALE is, why it's needed, and the numerous ways the typical/naive approach fails in production.
 
 ## Prerequisites
 

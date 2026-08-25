@@ -2,7 +2,7 @@ Introducing HMACs
 
 ## Why you can't search or constrain on the ciphertext itself
 
-Chapter 1 introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input. The same problem applies to uniqueness: you can't put a database constraint directly on a ciphertext column, because two records holding the identical plaintext value will never produce identical ciphertext.
+[What Is ALE, and Why Do We Still Need It?](intro.md) introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input. The same problem applies to uniqueness: you can't put a database constraint directly on a ciphertext column, because two records holding the identical plaintext value will never produce identical ciphertext.
 
 ## What a HMAC is
 
@@ -18,4 +18,4 @@ The same determinism solves a second, related problem: enforcing uniqueness on a
 
 ## Choosing a strategy
 
-Storing HMACs sounds simple in isolation, but *how* they're stored and managed matters a great deal once key rotation (Chapter 5) enters the picture — the same HMAC key can't stay in use forever, and what happens to search and uniqueness while it changes depends heavily on the design chosen. The next two chapters cover the two main strategies: a single HMAC per field (Chapter 7), and a list of HMACs per field (Chapter 8).
+Storing HMACs sounds simple in isolation, but *how* they're stored and managed matters a great deal once [key rotation](key-rotation.md) enters the picture — the same HMAC key can't stay in use forever, and what happens to search and uniqueness while it changes depends heavily on the design chosen. The next chapter covers that; after it, the two main storage strategies: a single HMAC per field ([Single HMAC Strategy](single-hmac.md)), and a list of HMACs per field ([List HMAC Strategy](list-hmac.md)).

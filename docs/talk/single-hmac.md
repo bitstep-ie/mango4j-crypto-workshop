@@ -2,7 +2,7 @@ The Single HMAC Strategy
 
 ## One column per HMAC
 
-Chapter 6 covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 9–10) needs later to find what's stale.
+[Introducing HMACs](introducing-hmacs.md) covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying ([encryption](rekeying-encryption.md), [HMACs](rekeying-hmacs.md)) needs later to find what's stale.
 
 It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
@@ -41,4 +41,4 @@ Adding key start time doesn't fix this — it only narrows the window to a race 
 | **Pros** | Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation |
 | **Cons** | Cannot support unique constraint enforcement *and* key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances |
 
-If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. Chapter 8 covers the strategy that solves both problems.
+If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually need to move away from. [List HMAC Strategy](list-hmac.md) covers the strategy that solves both problems.
