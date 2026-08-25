@@ -1037,7 +1037,7 @@
 <p>mango4j-crypto's built-in rekey job drives this off a <code>rekeyMode</code> field on the <code>CryptoKey</code> itself (Chapter 2), with two modes:</p>
 <ul>
 <li><strong><code>KEY_OFF</code></strong> — rekey everything <em>off</em> this specific key and onto the current key. Used when you want to retire one particular old key. (Setting it on the <em>current</em> key is a no-op — it doesn't make sense to key something off itself.)</li>
-<li><strong><code>KEY_ON</code></strong> — rekey everything currently on <em>any other</em> key onto this one. A much bigger hammer: it can touch a large fraction of your entities at once, so it needs real consideration of the performance and provider-traffic impact before triggering it. (Also a no-op if set on a key that isn't current.)</li>
+<li><strong><code>KEY_ON</code></strong> — rekey everything currently on <em>any other</em> key onto this one. This has a much broader scope than <code>KEY_OFF</code>: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it. (Also a no-op if set on a key that isn't current.)</li>
 </ul>
 <h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
 <p>The rekey job needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. That's why <code>@EncryptionKeyId</code> (Chapter 3) is worth having even though it's optional for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the job find "all records where <code>encryptionKeyId != currentKey</code>" cheaply, instead of decrypting every row just to check.</p>
@@ -1047,7 +1047,7 @@
 <li>Re-encrypts it with the current encryption key</li>
 <li>Saves it back, with <code>@EncryptedData</code> and <code>@EncryptionKeyId</code> now reflecting the new key</li>
 </ol>
-<p>This runs as a background process the application configures once — a scheduler that periodically checks for keys marked <code>KEY_ON</code>/<code>KEY_OFF</code> and works through matching entities in batches, pausing between batches to avoid hammering the database or an external cryptographic provider (KMS calls aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey is exactly the kind of thing that can trip a provider's own rate limits).</p>
+<p>This runs as a background process the application configures once — a scheduler that periodically checks for keys marked <code>KEY_ON</code>/<code>KEY_OFF</code> and works through matching entities in batches, pausing between batches to limit load on the database and any external cryptographic provider (KMS calls aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
 <h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
 <p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. Chapter 9 covers that half.</p>
 <h2 id="how-this-completes-rotation">How this completes rotation</h2>

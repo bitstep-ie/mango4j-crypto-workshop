@@ -655,10 +655,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-breaks-search" class="md-nav__link">
+  <a href="#the-search-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where it breaks: search
+        The search problem
       
     </span>
   </a>
@@ -666,10 +666,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-breaks-worse-unique-constraints" class="md-nav__link">
+  <a href="#the-unique-constraint-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where it breaks worse: unique constraints
+        The unique constraint problem
       
     </span>
   </a>
@@ -978,10 +978,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-breaks-search" class="md-nav__link">
+  <a href="#the-search-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where it breaks: search
+        The search problem
       
     </span>
   </a>
@@ -989,10 +989,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-breaks-worse-unique-constraints" class="md-nav__link">
+  <a href="#the-unique-constraint-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where it breaks worse: unique constraints
+        The unique constraint problem
       
     </span>
   </a>
@@ -1061,7 +1061,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>By convention, the HMAC field is named after the source field with an <code>Hmac</code> suffix — <code>pan</code> → <code>panHmac</code>. <code>@HmacKeyId</code> records which HMAC key produced these values, which rekeying (Chapters 8–9) needs to find what's stale. It's the way "many applications (unfortunately) default to using HMACs" — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
-<h2 id="where-it-breaks-search">Where it breaks: search</h2>
+<h2 id="the-search-problem">The search problem</h2>
 <p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
 <ol>
 <li>You change the HMAC key.</li>
@@ -1071,10 +1071,10 @@
 <li>Search results gradually improve as the job progresses.</li>
 <li>Only once the job finishes is search fully back online.</li>
 </ol>
-<p>A single HMAC key per tenant means a rotation is a functional search outage for however long the rekey takes — unacceptable for most production systems, and unavoidable with only one active key.</p>
+<p>A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.</p>
 <p>A partial fix exists: a <strong>key start time</strong>. When a new key is introduced, its start time is set to "now + the key cache duration," and writes never use it before that time — but <em>searches</em> immediately start hashing with every known key, old and new. Since nothing writes with the new key until every application instance has it cached, every record — old or freshly written — stays findable throughout.</p>
-<h2 id="where-it-breaks-worse-unique-constraints">Where it breaks worse: unique constraints</h2>
-<p>This is the more serious problem. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
+<h2 id="the-unique-constraint-problem">The unique constraint problem</h2>
+<p>This is the more consequential of the two. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
 <ol>
 <li>A user exists with username <code>john.doe@test.com</code>, HMAC'd under the old key.</li>
 <li>The HMAC key changes.</li>

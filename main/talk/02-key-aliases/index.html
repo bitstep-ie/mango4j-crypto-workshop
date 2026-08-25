@@ -521,10 +521,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#strings-are-a-trap" class="md-nav__link">
+  <a href="#the-limits-of-representing-a-key-as-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strings are a trap
+        The limits of representing a key as a string
       
     </span>
   </a>
@@ -945,10 +945,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#strings-are-a-trap" class="md-nav__link">
+  <a href="#the-limits-of-representing-a-key-as-a-string" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strings are a trap
+        The limits of representing a key as a string
       
     </span>
   </a>
@@ -1009,8 +1009,8 @@
 
 
 <h1 id="2-key-aliases-crypto-key-configs">2. Key Aliases → Crypto Key Configs</h1>
-<h2 id="strings-are-a-trap">Strings are a trap</h2>
-<p>It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a <code>String</code>. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. It works, right up until you need to do any of the things mango4j-crypto's <strong>Key Driven Design</strong> is built to handle:</p>
+<h2 id="the-limits-of-representing-a-key-as-a-string">The limits of representing a key as a string</h2>
+<p>It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a <code>String</code>. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do any of the things mango4j-crypto's <strong>Key Driven Design</strong> is built to handle:</p>
 <ul>
 <li>Switch which cryptographic provider a key uses (AWS KMS today, an HSM tomorrow)</li>
 <li>Run multiple providers side by side (different regions, different regulatory regimes)</li>
