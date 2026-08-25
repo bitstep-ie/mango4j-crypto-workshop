@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#two-elegant-concepts" class="md-skip">
+        <a href="#two-core-ideas" class="md-skip">
           Skip to content
         </a>
       
@@ -611,10 +611,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-elegant-concepts" class="md-nav__link">
+  <a href="#two-core-ideas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two elegant concepts
+        Two core ideas
       
     </span>
   </a>
@@ -932,10 +932,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-elegant-concepts" class="md-nav__link">
+  <a href="#two-core-ideas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two elegant concepts
+        Two core ideas
       
     </span>
   </a>
@@ -1009,8 +1009,8 @@
   <h1>List HMAC Strategy</h1>
 
 <p>The List HMAC Strategy</p>
-<h2 id="two-elegant-concepts">Two elegant concepts</h2>
-<p>The List HMAC Strategy is the design generally recommended as the default choice, for applications that can accommodate its trade-offs. It rests on two ideas:</p>
+<h2 id="two-core-ideas">Two core ideas</h2>
+<p>The List HMAC Strategy is generally the recommended default for applications that can accommodate its trade-offs. It rests on two ideas:</p>
 <ol>
 <li><strong>A list of HMAC keys, not a single key.</strong> During a rotation you <em>add</em> the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.</li>
 <li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
