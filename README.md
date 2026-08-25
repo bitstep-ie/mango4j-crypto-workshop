@@ -1,4 +1,4 @@
-# Mango4j Crypto ALE Workshop
+# ALE Workshop
 
 A hands-on, step-by-step workshop for [mango4j-crypto](https://github.com/bitstep-ie/mango4j-crypto) — a framework for implementing Application Level Encryption in Java applications.
 

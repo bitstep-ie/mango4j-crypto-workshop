@@ -1,4 +1,4 @@
-# Mango4j Crypto ALE Workshop
+# ALE Workshop
 
 Welcome to the workshop for **mango4j-crypto**, an Application Level Encryption framework for Java applications. It supports pluggable encryption providers (AWS KMS, PBKDF2, wrapped keys, or your own), multiple HMAC strategies for searching and enforcing uniqueness on encrypted fields, automatic key rotation and rekeying, multi-tenant key segregation, and migrating existing unencrypted fields to encrypted ones.
 
