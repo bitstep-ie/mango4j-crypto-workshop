@@ -11,28 +11,24 @@
       
       
       
-        <link rel="prev" href="../introducing-hmacs/">
-      
-      
-        <link rel="next" href="../single-hmac/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.ico">
+      <link rel="icon" href="../../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Key Rotation - ALE Workshop</title>
+        <title>Hash vs encryption - ALE Workshop</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +47,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,11 +71,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#why-keys-rotate" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -94,9 +85,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../../.." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="../../assets/mango-black.png" alt="logo">
+  <img src="../../../assets/mango-black.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Key Rotation
+              Hash vs encryption
             
           </span>
         </div>
@@ -222,13 +213,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../intro/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../intro/" class="md-tabs__link">
           
   
   
@@ -248,7 +237,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../stages/00-intro/" class="md-tabs__link">
+        <a href="../../../stages/00-intro/" class="md-tabs__link">
           
   
   
@@ -266,7 +255,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../how-it-works/" class="md-tabs__link">
+      <a href="../../../how-it-works/" class="md-tabs__link">
         
   
   
@@ -287,7 +276,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../faq-ale/" class="md-tabs__link">
+        <a href="../../faq-ale/" class="md-tabs__link">
           
   
   
@@ -321,9 +310,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../../.." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="../../assets/mango-black.png" alt="logo">
+  <img src="../../../assets/mango-black.png" alt="logo">
 
     </a>
     ALE Workshop
@@ -347,31 +336,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
             
   
   
@@ -389,7 +373,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -407,7 +391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../intro/" class="md-nav__link">
+      <a href="../../intro/" class="md-nav__link">
         
   
   
@@ -435,7 +419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../key-aliases/" class="md-nav__link">
+      <a href="../../key-aliases/" class="md-nav__link">
         
   
   
@@ -463,7 +447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../structured-ciphertext/" class="md-nav__link">
+      <a href="../../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -491,7 +475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../../transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -519,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../introducing-hmacs/" class="md-nav__link">
+      <a href="../../introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -544,35 +528,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../key-rotation/" class="md-nav__link">
         
   
   
@@ -588,79 +547,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#why-keys-rotate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why keys rotate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: switching new writes to a new key
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: migrating old data to the new key
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The same shape of problem: migrating an unencrypted field to encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Production impact of single-key, single-HMAC designs
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -673,7 +559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../single-hmac/" class="md-nav__link">
+      <a href="../../single-hmac/" class="md-nav__link">
         
   
   
@@ -701,7 +587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../list-hmac/" class="md-nav__link">
+      <a href="../../list-hmac/" class="md-nav__link">
         
   
   
@@ -729,7 +615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rekeying-encryption/" class="md-nav__link">
+      <a href="../../rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -757,7 +643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rekeying-hmacs/" class="md-nav__link">
+      <a href="../../rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -844,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stages/00-intro/" class="md-nav__link">
+      <a href="../../../stages/00-intro/" class="md-nav__link">
         
   
   
@@ -872,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stages/01-getting-started/" class="md-nav__link">
+      <a href="../../../stages/01-getting-started/" class="md-nav__link">
         
   
   
@@ -900,7 +786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stages/02-encrypting-a-field/" class="md-nav__link">
+      <a href="../../../stages/02-encrypting-a-field/" class="md-nav__link">
         
   
   
@@ -935,7 +821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-it-works/" class="md-nav__link">
+      <a href="../../../how-it-works/" class="md-nav__link">
         
   
   
@@ -1014,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq-ale/" class="md-nav__link">
+      <a href="../../faq-ale/" class="md-nav__link">
         
   
   
@@ -1042,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq-mango4j/" class="md-nav__link">
+      <a href="../../faq-mango4j/" class="md-nav__link">
         
   
   
@@ -1088,69 +974,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#why-keys-rotate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why keys rotate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-1-switching-new-writes-to-a-new-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: switching new writes to a new key
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-2-migrating-old-data-to-the-new-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: migrating old data to the new key
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The same shape of problem: migrating an unencrypted field to encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#production-impact-of-single-key-single-hmac-designs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Production impact of single-key, single-HMAC designs
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1169,42 +992,10 @@
   
 
 
-  <h1>Key Rotation</h1>
+  <h1>Hash vs encryption</h1>
 
-<p>Encryption Key Rotation</p>
-<h2 id="why-keys-rotate">Why keys rotate</h2>
-<p>Keys don't stay valid forever. A key ages out under a compliance schedule, a provider gets deprecated or migrated away from, or a key is suspected compromised and needs to stop being trusted. Whatever the trigger, the design goal worth aiming for is that <strong>a key rotation should be something an application can do at short notice, on the fly</strong> — not something that requires a maintenance window.</p>
-<h2 id="phase-1-switching-new-writes-to-a-new-key">Phase 1: switching new writes to a new key</h2>
-<p>Changing an encryption key is, by itself, straightforward: add the new key to your system and start using it for all writes going forward. Concretely, that means changing what "the current encryption key" resolves to (see <a href="../key-aliases/">Key Aliases &amp; Key Configs</a>) — nothing else in your application code changes.</p>
-<ul>
-<li>The new key can be from a completely different provider than the old one. The <a href="../structured-ciphertext/">structured ciphertext format</a> records which key encrypted each record, and the <a href="../key-aliases/">alias indirection</a> means nothing in application code ever hardcoded a specific provider — so swapping providers is just a different key configuration, not a code change.</li>
-<li>Old keys keep working for <strong>decryption</strong>. Resolving a key by ID still works for any key the application has ever used, so every record written under the old key keeps reading back correctly. Nothing needs to migrate yet — you just need to keep the old key around until nothing references it any more.</li>
-</ul>
-<h2 id="phase-2-migrating-old-data-to-the-new-key">Phase 2: migrating old data to the new key</h2>
-<p>Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: <strong>rekeying</strong>, covered in full in <a href="../rekeying-encryption/">Rekeying: Encryption</a> and <a href="../rekeying-hmacs/">Rekeying: HMACs</a>. It's a deliberately separate phase, not a single atomic switch, because:</p>
-<ul>
-<li>Rekeying potentially touches every record in the system, which takes time and costs performance/throughput you don't want to pay synchronously with the rotation itself.</li>
-<li>The old key has to remain valid and available for decryption for as long as any unrekeyed data still depends on it.</li>
-</ul>
-<p><strong>A data retention window doesn't remove the need for this.</strong> It's tempting to reason that if the key period is 10 years but data retention is only 5, rekey support is unnecessary — the key could just be swapped every 10 years. Consider what happens in year 11: the key changes, and 5 years of records (years 6–10) are still sitting on the old key. Search doesn't actually break here — those records stay findable as long as every search hashes the term with every key still known, old and new (see <a href="../introducing-hmacs/">Introducing HMACs</a>) — but that only works by retaining, and searching against, a list of old keys that never stops growing. Unique constraints fare worse: under the <a href="../single-hmac/">Single HMAC Strategy</a>, a duplicate can slip in under any of those years' keys at any point, and no amount of searching with old keys closes that gap — only rekeying does. Rekey support is needed regardless of how long data is retained, not only when retention exceeds the key period.</p>
-<h2 id="the-same-shape-of-problem-migrating-an-unencrypted-field-to-encrypted">The same shape of problem: migrating an <em>unencrypted</em> field to encrypted</h2>
-<p>Everything above assumes the field was already encrypted, just under an old key. But the very first time a field becomes confidential, you're migrating from <em>no</em> encryption at all — and the mechanics are similar to phase 2 above, with a few additional considerations:</p>
-<ul>
-<li><strong>Encryption for an existing column can't just be switched on.</strong> Every existing row is plaintext; there's no ciphertext yet to decrypt, so the migration has to write encrypted values for the first time, not just re-key existing ones.</li>
-<li><strong>Backfilling millions of rows without downtime</strong> is the same operational problem as any large-scale rekey, just with no prior art in the table to compare against as you go.</li>
-<li><strong>Dual-read/dual-write periods introduce their own complexity</strong> — while some rows are encrypted and some aren't, application code has to correctly read/write both shapes at once, and that temporary complexity can persist longer than planned if the migration stalls.</li>
-<li><strong>Pausing other work on the table for the duration of the migration</strong> is often unpopular, so teams sometimes rush the backfill instead (risking the issues above) or let it run indefinitely in the background.</li>
-</ul>
-<p>This transitional state deserves explicit support rather than being handled ad hoc. A field mid-migration is deliberately <em>not yet</em> meeting the normal rule that a confidential field only ever exists as a <a href="../transient-vs-encrypted-blobs/">working</a> value — it's still readable and writable in its old, unencrypted, persisted form while the backfill completes. Treating that as a tracked, temporary exception — with an owner, a justification, and a target date by which it should be gone — rather than a silent gap in the data model, is what keeps a migration from quietly becoming permanent. Making the exception loud (a startup warning that escalates to an error past the target date, for example) is what turns the deadline into an actual forcing function rather than a comment nobody revisits.</p>
-<h2 id="production-impact-of-single-key-single-hmac-designs">Production impact of single-key, single-HMAC designs</h2>
-<p>Rotation and migration are where the limitations of single-key, single-HMAC designs (<a href="../single-hmac/">Single HMAC Strategy</a>) become visible in production:</p>
-<ul>
-<li><strong>Search functionality degrades gradually</strong> — with only one HMAC key active at a time, a rotation makes every existing record's HMAC stop matching new search HMACs until it's rekeyed.</li>
-<li><strong>Duplicate records can appear in fields meant to be unique</strong> — the unique-constraint failure mode covered in <a href="../single-hmac/">Single HMAC Strategy</a>: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.</li>
-<li><strong>Rolling back a rotation doesn't undo its effects</strong> — writes that already went out under the new key stay as they are, so a rollback adds a second inconsistency rather than removing the first.</li>
-<li><strong>These failures tend to be gradual rather than immediate</strong> — they're rarely a hard crash, which means they're often identified well after the rotation, during a later investigation, rather than at the time it happened.</li>
-</ul>
-<p>This is the practical case for the <a href="../list-hmac/">List HMAC Strategy</a> and for treating rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.</p>
+<p>What's a hash, and how is that different from encryption?</p>
+<p>A hash is one-way: given a value, hashing it produces an output, but that output can never be reversed back into the original value — there's no key that decrypts it, because it was never "encrypted" in the first place. Encryption is two-way: the same key that produced the ciphertext can also recover the original plaintext from it. A <strong>HMAC</strong> (Hash-based Message Authentication Code) is a hash computed with a secret key added into the mix — still one-way, but only someone with that key can compute the correct HMAC for a given value. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
 
 
 
@@ -1229,44 +1020,6 @@
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../introducing-hmacs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introducing HMACs">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Introducing HMACs
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../single-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: Single HMAC Strategy">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Single HMAC Strategy
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1294,10 +1047,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
