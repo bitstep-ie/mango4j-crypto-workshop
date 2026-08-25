@@ -38,7 +38,7 @@ This is the more consequential of the two. Say `userName` has a DB-level unique 
 5. The unique constraint doesn't fire, because the two HMAC values genuinely differ.
 6. Two users now exist with the same username.
 
-Adding "key start time" narrows this to a race condition rather than eliminating it, and only by paying for a search-before-every-write — itself a performance cost, and it makes the DB's own unique constraint largely redundant for the cases it's supposed to catch. Even that doesn't fully close the gap: a request arriving right at the key-start-time boundary can still slip through a race between two concurrent writes on different keys, producing the same duplicate outcome.
+Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key *before every write*, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.
 
 ## Verdict
 
