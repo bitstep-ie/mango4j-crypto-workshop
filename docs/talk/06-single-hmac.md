@@ -25,7 +25,7 @@ Rotate the HMAC key and every existing record's HMAC was computed with the *old*
 
 A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.
 
-A partial fix exists: a **key start time**. When a new key is introduced, its start time is set to "now + the key cache duration," and writes never use it before that time — but *searches* immediately start hashing with every known key, old and new. Since nothing writes with the new key until every application instance has it cached, every record — old or freshly written — stays findable throughout.
+A partial fix exists: a **key start time**. Application instances typically cache their key configuration rather than reloading it on every request, so a newly introduced key doesn't reach every instance at once — it only takes effect, instance by instance, as each one's cache refreshes. A key start time accounts for this by setting the new key's start time to "now + the key cache duration," and holding off using it for *writes* until that time passes — guaranteeing every instance has picked it up before any of them relies on it. Searches, meanwhile, don't need to wait: as soon as an instance reloads its config and sees the new key, it starts hashing search terms with every known key, old and new, immediately. Because no record gets written with the new key until every instance is guaranteed to know about it, every record — old or freshly written — stays findable throughout.
 
 ## The unique constraint problem
 
