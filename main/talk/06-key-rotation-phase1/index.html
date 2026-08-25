@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../01-what-is-ale/">
+        <link rel="prev" href="../05-key-rotation-intro/">
       
       
-        <link rel="next" href="../03-the-naive-approach/">
+        <link rel="next" href="../07-key-rotation-phase2/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>2. Why Do We Need It? - Mango4j Crypto ALE Workshop</title>
+        <title>6. Key Rotation, Phase 1 - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#2-why-do-we-need-it" class="md-skip">
+        <a href="#6-key-rotation-phase-1-switching-to-a-new-key" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              2. Why Do We Need It?
+              6. Key Rotation, Phase 1
             
           </span>
         </div>
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-what-is-ale/" class="md-tabs__link">
+        <a href="../01-intro/" class="md-tabs__link">
           
   
   
@@ -433,14 +433,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-what-is-ale/" class="md-nav__link">
+      <a href="../01-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    1. What Is ALE?
+    1. What Is ALE, and Why?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-key-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Key Aliases & Key Configs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-structured-ciphertext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Structured Ciphertext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-key-rotation-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Key Rotation
   
 
     
@@ -470,24 +582,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2. Why Do We Need It?
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -495,7 +589,7 @@
   <span class="md-ellipsis">
     
   
-    2. Why Do We Need It?
+    6. Key Rotation, Phase 1
   
 
     
@@ -504,69 +598,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -580,14 +611,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-the-naive-approach/" class="md-nav__link">
+      <a href="../07-key-rotation-phase2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    3. A Simple Case of ALE
+    7. Key Rotation, Phase 2
   
 
     
@@ -608,14 +639,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-failure-columns/" class="md-nav__link">
+      <a href="../08-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    4. Failure: Encrypted Columns
+    8. Single HMAC Strategy
   
 
     
@@ -636,14 +667,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
+      <a href="../09-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Multiple Providers & Key Rotation
+    9. List HMAC Strategy
   
 
     
@@ -664,14 +695,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
+      <a href="../10-rekeying-encryption/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. HMAC Search & Key Rotation
+    10. Rekeying: Encryption
   
 
     
@@ -692,238 +723,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
+      <a href="../11-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. HMAC for Uniqueness
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Single vs. List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. Rekeying Encrypted Data
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Rekeying HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-failure-migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Failure: Migration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-outages-and-failure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Outages and Application Failure
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../13-doing-it-right/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    13. Doing It Right
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    14. Introducing mango4j-crypto
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../15-what-were-building-today/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    15. What We're Building Today
+    11. Rekeying: HMACs
   
 
     
@@ -1106,58 +913,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1176,16 +931,13 @@
   
 
 
-<h1 id="2-why-do-we-need-it">2. Why Do We Need It?</h1>
-<p>Encrypting things is extra engineering effort, so it's fair to ask why it's worth doing. The short answer: because most real-world data breaches don't involve anyone stealing a physical disk — they involve someone getting access to a live, running system, and the database sitting right there in plaintext.</p>
-<h2 id="regulatory-and-compliance-drivers">Regulatory and compliance drivers</h2>
-<p>Plenty of regulations and standards effectively require it for certain categories of data: PCI-DSS for card numbers (like the <code>cardNumber</code> field this workshop encrypts), HIPAA for health information, GDPR and similar privacy laws for personal data more broadly. These frameworks don't always say "you must implement Application Level Encryption" in those exact words, but they require controls that are, in practice, very hard to satisfy without it — data minimization, breach notification thresholds that change based on whether exposed data was encrypted, and demonstrable protection of data even from your own staff. Auditors increasingly ask specifically whether confidential fields are encrypted <em>before</em> they reach the database, not just whether the disk is encrypted.</p>
-<h2 id="reducing-blast-radius-when-a-database-or-backup-leaks">Reducing blast radius when a database or backup leaks</h2>
-<p>Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise be catastrophic (every customer's data, exposed) becomes a non-event, because the thing that leaked was never usable on its own.</p>
-<h2 id="tenant-customer-data-segregation-requirements">Tenant / customer data segregation requirements</h2>
-<p>If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a <strong>tenant</strong>, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all. If your application only has one "customer" — itself — you can just think of the whole application as a single tenant, but the same principle still applies: the keys are a first-class concept, not an afterthought.</p>
-<h2 id="why-encryption-at-rest-alone-isnt-enough">Why "encryption at rest" alone isn't enough</h2>
-<p>As covered in <a href="../01-what-is-ale/">Chapter 1</a>, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the <em>application's own access</em> is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.</p>
+<h1 id="6-key-rotation-phase-1-switching-to-a-new-key">6. Key Rotation, Phase 1: Switching to a New Key</h1>
+<p><em>Content coming soon.</em></p>
+<ul>
+<li>Pointing the alias used for new writes at a new crypto key config</li>
+<li>The new key can be from a completely different provider than the old one — the structured ciphertext format (Chapter 3) and the alias indirection (Chapter 2) are what make that possible</li>
+<li>Old keys continue to work for decryption, so existing data written under the old key keeps reading back correctly with no migration required yet</li>
+</ul>
 
 
 
@@ -1215,7 +967,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../01-what-is-ale/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 1. What Is ALE?">
+          <a href="../05-key-rotation-intro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5. Key Rotation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1225,20 +977,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                1. What Is ALE?
+                5. Key Rotation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../03-the-naive-approach/" class="md-footer__link md-footer__link--next" aria-label="Next: 3. A Simple Case of ALE">
+          <a href="../07-key-rotation-phase2/" class="md-footer__link md-footer__link--next" aria-label="Next: 7. Key Rotation, Phase 2">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                3. A Simple Case of ALE
+                7. Key Rotation, Phase 2
               </div>
             </div>
             <div class="md-footer__button md-icon">

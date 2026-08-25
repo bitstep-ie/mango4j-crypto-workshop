@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../13-doing-it-right/">
+        <link rel="prev" href="../09-list-hmac/">
       
       
-        <link rel="next" href="../15-what-were-building-today/">
+        <link rel="next" href="../11-rekeying-hmacs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>14. Introducing mango4j-crypto - Mango4j Crypto ALE Workshop</title>
+        <title>10. Rekeying: Encryption - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#14-introducing-mango4j-crypto" class="md-skip">
+        <a href="#10-rekeying-encryption" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              14. Introducing mango4j-crypto
+              10. Rekeying: Encryption
             
           </span>
         </div>
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-what-is-ale/" class="md-tabs__link">
+        <a href="../01-intro/" class="md-tabs__link">
           
   
   
@@ -433,14 +433,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-what-is-ale/" class="md-nav__link">
+      <a href="../01-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    1. What Is ALE?
+    1. What Is ALE, and Why?
   
 
     
@@ -461,14 +461,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-why-we-need-it/" class="md-nav__link">
+      <a href="../02-key-aliases/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    2. Why Do We Need It?
+    2. Key Aliases & Key Configs
   
 
     
@@ -489,14 +489,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-the-naive-approach/" class="md-nav__link">
+      <a href="../03-structured-ciphertext/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    3. A Simple Case of ALE
+    3. Structured Ciphertext
   
 
     
@@ -517,14 +517,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-failure-columns/" class="md-nav__link">
+      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    4. Failure: Encrypted Columns
+    4. Transient vs. Encrypted Blobs
   
 
     
@@ -545,14 +545,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
+      <a href="../05-key-rotation-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Multiple Providers & Key Rotation
+    5. Key Rotation
   
 
     
@@ -573,14 +573,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
+      <a href="../06-key-rotation-phase1/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. HMAC Search & Key Rotation
+    6. Key Rotation, Phase 1
   
 
     
@@ -601,14 +601,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
+      <a href="../07-key-rotation-phase2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. HMAC for Uniqueness
+    7. Key Rotation, Phase 2
   
 
     
@@ -629,14 +629,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
+      <a href="../08-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Single vs. List HMAC Strategy
+    8. Single HMAC Strategy
   
 
     
@@ -657,126 +657,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
+      <a href="../09-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. Rekeying Encrypted Data
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Rekeying HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-failure-migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Failure: Migration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-outages-and-failure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Outages and Application Failure
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../13-doing-it-right/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    13. Doing It Right
+    9. List HMAC Strategy
   
 
     
@@ -806,24 +694,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    14. Introducing mango4j-crypto
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -831,7 +701,7 @@
   <span class="md-ellipsis">
     
   
-    14. Introducing mango4j-crypto
+    10. Rekeying: Encryption
   
 
     
@@ -840,91 +710,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#key-driven-design-keys-as-objects-not-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key-driven design: keys as objects, not strings
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cryptoshield-and-annotations-as-the-single-source-of-truth-for-whats-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CryptoShield and annotations as the single source of truth for what's encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pluggable-encryption-service-delegates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pluggable encryption service delegates
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#single-double-and-list-hmac-strategies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single, Double, and List HMAC strategies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#built-in-rekeying-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in rekeying support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enablemigrationsupport-for-legacy-unencrypted-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        @EnableMigrationSupport for legacy unencrypted fields
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -938,14 +723,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../15-what-were-building-today/" class="md-nav__link">
+      <a href="../11-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    15. What We're Building Today
+    11. Rekeying: HMACs
   
 
     
@@ -1128,80 +913,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#key-driven-design-keys-as-objects-not-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key-driven design: keys as objects, not strings
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cryptoshield-and-annotations-as-the-single-source-of-truth-for-whats-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CryptoShield and annotations as the single source of truth for what's encrypted
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pluggable-encryption-service-delegates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pluggable encryption service delegates
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#single-double-and-list-hmac-strategies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single, Double, and List HMAC strategies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#built-in-rekeying-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in rekeying support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enablemigrationsupport-for-legacy-unencrypted-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        @EnableMigrationSupport for legacy unencrypted fields
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1220,19 +931,13 @@
   
 
 
-<h1 id="14-introducing-mango4j-crypto">14. Introducing mango4j-crypto</h1>
-<h2 id="key-driven-design-keys-as-objects-not-strings">Key-driven design: keys as objects, not strings</h2>
+<h1 id="10-rekeying-encryption">10. Rekeying: Encryption</h1>
 <p><em>Content coming soon.</em></p>
-<h2 id="cryptoshield-and-annotations-as-the-single-source-of-truth-for-whats-encrypted"><code>CryptoShield</code> and annotations as the single source of truth for what's encrypted</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="pluggable-encryption-service-delegates">Pluggable encryption service delegates</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="single-double-and-list-hmac-strategies">Single, Double, and List HMAC strategies</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="built-in-rekeying-support">Built-in rekeying support</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="enablemigrationsupport-for-legacy-unencrypted-fields"><code>@EnableMigrationSupport</code> for legacy unencrypted fields</h2>
-<p><em>Content coming soon.</em></p>
+<ul>
+<li>The encryption half of a rekey operation: decrypting each row's ciphertext under its old key and re-encrypting under the new key</li>
+<li>Treated as a distinct step from the HMAC rekey (Chapter 11), not a combined operation</li>
+<li>How this completes Phase 2 of key rotation (Chapter 7) for the encrypted data itself</li>
+</ul>
 
 
 
@@ -1262,7 +967,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../13-doing-it-right/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 13. Doing It Right">
+          <a href="../09-list-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 9. List HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1272,20 +977,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                13. Doing It Right
+                9. List HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../15-what-were-building-today/" class="md-footer__link md-footer__link--next" aria-label="Next: 15. What We&#39;re Building Today">
+          <a href="../11-rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: 11. Rekeying: HMACs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                15. What We're Building Today
+                11. Rekeying: HMACs
               </div>
             </div>
             <div class="md-footer__button md-icon">

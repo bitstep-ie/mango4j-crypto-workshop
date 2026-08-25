@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../03-the-naive-approach/">
+        <link rel="prev" href="../08-single-hmac/">
       
       
-        <link rel="next" href="../05-multiple-providers-and-key-rotation/">
+        <link rel="next" href="../10-rekeying-encryption/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>4. Failure: Encrypted Columns - Mango4j Crypto ALE Workshop</title>
+        <title>9. List HMAC Strategy - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#4-failure-mode-encrypting-fields-directly-into-their-columns" class="md-skip">
+        <a href="#9-the-list-hmac-strategy" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. Failure: Encrypted Columns
+              9. List HMAC Strategy
             
           </span>
         </div>
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-what-is-ale/" class="md-tabs__link">
+        <a href="../01-intro/" class="md-tabs__link">
           
   
   
@@ -433,14 +433,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-what-is-ale/" class="md-nav__link">
+      <a href="../01-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    1. What Is ALE?
+    1. What Is ALE, and Why?
   
 
     
@@ -461,14 +461,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-why-we-need-it/" class="md-nav__link">
+      <a href="../02-key-aliases/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    2. Why Do We Need It?
+    2. Key Aliases & Key Configs
   
 
     
@@ -489,14 +489,154 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-the-naive-approach/" class="md-nav__link">
+      <a href="../03-structured-ciphertext/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    3. A Simple Case of ALE
+    3. Structured Ciphertext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Transient vs. Encrypted Blobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-key-rotation-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Key Rotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-key-rotation-phase1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Key Rotation, Phase 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-key-rotation-phase2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Key Rotation, Phase 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-single-hmac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Single HMAC Strategy
   
 
     
@@ -526,24 +666,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4. Failure: Encrypted Columns
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -551,7 +673,7 @@
   <span class="md-ellipsis">
     
   
-    4. Failure: Encrypted Columns
+    9. List HMAC Strategy
   
 
     
@@ -560,69 +682,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#no-single-source-of-truth-for-whats-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        No single source of truth for "what's encrypted"
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-churn-every-time-a-new-field-needs-protecting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema churn every time a new field needs protecting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#no-consistent-record-of-which-key-encrypted-what" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        No consistent record of which key encrypted what
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#every-queryrepository-touching-that-column-needs-bespoke-logic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Every query/repository touching that column needs bespoke logic
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -636,14 +695,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-multiple-providers-and-key-rotation/" class="md-nav__link">
+      <a href="../10-rekeying-encryption/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    5. Multiple Providers & Key Rotation
+    10. Rekeying: Encryption
   
 
     
@@ -664,266 +723,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
+      <a href="../11-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. HMAC Search & Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    7. HMAC for Uniqueness
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Single vs. List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. Rekeying Encrypted Data
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Rekeying HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-failure-migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Failure: Migration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../12-outages-and-failure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Outages and Application Failure
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../13-doing-it-right/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    13. Doing It Right
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    14. Introducing mango4j-crypto
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../15-what-were-building-today/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    15. What We're Building Today
+    11. Rekeying: HMACs
   
 
     
@@ -1106,58 +913,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#no-single-source-of-truth-for-whats-encrypted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        No single source of truth for "what's encrypted"
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-churn-every-time-a-new-field-needs-protecting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema churn every time a new field needs protecting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#no-consistent-record-of-which-key-encrypted-what" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        No consistent record of which key encrypted what
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#every-queryrepository-touching-that-column-needs-bespoke-logic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Every query/repository touching that column needs bespoke logic
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1176,15 +931,14 @@
   
 
 
-<h1 id="4-failure-mode-encrypting-fields-directly-into-their-columns">4. Failure Mode: Encrypting Fields Directly Into Their Columns</h1>
-<h2 id="no-single-source-of-truth-for-whats-encrypted">No single source of truth for "what's encrypted"</h2>
+<h1 id="9-the-list-hmac-strategy">9. The List HMAC Strategy</h1>
 <p><em>Content coming soon.</em></p>
-<h2 id="schema-churn-every-time-a-new-field-needs-protecting">Schema churn every time a new field needs protecting</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="no-consistent-record-of-which-key-encrypted-what">No consistent record of which key encrypted what</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="every-queryrepository-touching-that-column-needs-bespoke-logic">Every query/repository touching that column needs bespoke logic</h2>
-<p><em>Content coming soon.</em></p>
+<ul>
+<li>Storing a list of HMACs per value (e.g. one per active key) instead of a single HMAC</li>
+<li>How this fixes search across a key rotation: a search term is hashed under every active key and matched against the list</li>
+<li>How this fixes unique constraints: uniqueness can be enforced against all HMACs a value could produce under any currently-valid key, not just the latest one</li>
+<li>Trade-offs versus the single HMAC strategy from Chapter 8 (storage, constraint complexity)</li>
+</ul>
 
 
 
@@ -1214,7 +968,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../03-the-naive-approach/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3. A Simple Case of ALE">
+          <a href="../08-single-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Single HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1224,20 +978,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                3. A Simple Case of ALE
+                8. Single HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../05-multiple-providers-and-key-rotation/" class="md-footer__link md-footer__link--next" aria-label="Next: 5. Multiple Providers &amp; Key Rotation">
+          <a href="../10-rekeying-encryption/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. Rekeying: Encryption">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                5. Multiple Providers & Key Rotation
+                10. Rekeying: Encryption
               </div>
             </div>
             <div class="md-footer__button md-icon">

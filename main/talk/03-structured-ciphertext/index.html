@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../04-failure-columns/">
+        <link rel="prev" href="../02-key-aliases/">
       
       
-        <link rel="next" href="../06-hmac-search-key-rotation/">
+        <link rel="next" href="../04-transient-vs-encrypted-blobs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>5. Multiple Providers & Key Rotation - Mango4j Crypto ALE Workshop</title>
+        <title>3. Structured Ciphertext - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#5-encryption-with-multiple-providers-and-key-rotation-support" class="md-skip">
+        <a href="#3-plain-ciphertext-structured-ciphertext" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5. Multiple Providers & Key Rotation
+              3. Structured Ciphertext
             
           </span>
         </div>
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../01-what-is-ale/" class="md-tabs__link">
+        <a href="../01-intro/" class="md-tabs__link">
           
   
   
@@ -433,14 +433,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-what-is-ale/" class="md-nav__link">
+      <a href="../01-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    1. What Is ALE?
+    1. What Is ALE, and Why?
   
 
     
@@ -461,70 +461,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-why-we-need-it/" class="md-nav__link">
+      <a href="../02-key-aliases/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    2. Why Do We Need It?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-the-naive-approach/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3. A Simple Case of ALE
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-failure-columns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4. Failure: Encrypted Columns
+    2. Key Aliases & Key Configs
   
 
     
@@ -554,24 +498,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    5. Multiple Providers & Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -579,7 +505,7 @@
   <span class="md-ellipsis">
     
   
-    5. Multiple Providers & Key Rotation
+    3. Structured Ciphertext
   
 
     
@@ -588,80 +514,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardcoding a KMS/HSM/algorithm choice into application code
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What happens when a provider changes, is deprecated, or isn't available in a region
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory-driven algorithm changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The cost of a "big bang" re-encryption project
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-encryption-key-rotation-support-to-the-demo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding encryption key rotation support to the demo
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -675,14 +527,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-hmac-search-key-rotation/" class="md-nav__link">
+      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. HMAC Search & Key Rotation
+    4. Transient vs. Encrypted Blobs
   
 
     
@@ -703,14 +555,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-hmac-unique-constraints/" class="md-nav__link">
+      <a href="../05-key-rotation-intro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. HMAC for Uniqueness
+    5. Key Rotation
   
 
     
@@ -731,14 +583,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-hmac-strategies-single-vs-list/" class="md-nav__link">
+      <a href="../06-key-rotation-phase1/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Single vs. List HMAC Strategy
+    6. Key Rotation, Phase 1
   
 
     
@@ -759,14 +611,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-encrypted-data/" class="md-nav__link">
+      <a href="../07-key-rotation-phase2/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. Rekeying Encrypted Data
+    7. Key Rotation, Phase 2
   
 
     
@@ -787,14 +639,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../08-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Rekeying HMACs
+    8. Single HMAC Strategy
   
 
     
@@ -815,14 +667,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../11-failure-migration/" class="md-nav__link">
+      <a href="../09-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    11. Failure: Migration
+    9. List HMAC Strategy
   
 
     
@@ -843,14 +695,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../12-outages-and-failure/" class="md-nav__link">
+      <a href="../10-rekeying-encryption/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    12. Outages and Application Failure
+    10. Rekeying: Encryption
   
 
     
@@ -871,70 +723,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../13-doing-it-right/" class="md-nav__link">
+      <a href="../11-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    13. Doing It Right
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../14-introducing-mango4j-crypto/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    14. Introducing mango4j-crypto
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../15-what-were-building-today/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    15. What We're Building Today
+    11. Rekeying: HMACs
   
 
     
@@ -1117,69 +913,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardcoding-a-kmshsmalgorithm-choice-into-application-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardcoding a KMS/HSM/algorithm choice into application code
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What happens when a provider changes, is deprecated, or isn't available in a region
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#regulatory-driven-algorithm-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory-driven algorithm changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-cost-of-a-big-bang-re-encryption-project" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The cost of a "big bang" re-encryption project
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-encryption-key-rotation-support-to-the-demo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding encryption key rotation support to the demo
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1198,17 +931,14 @@
   
 
 
-<h1 id="5-encryption-with-multiple-providers-and-key-rotation-support">5. Encryption With Multiple Providers and Key Rotation Support</h1>
-<h2 id="hardcoding-a-kmshsmalgorithm-choice-into-application-code">Hardcoding a KMS/HSM/algorithm choice into application code</h2>
+<h1 id="3-plain-ciphertext-structured-ciphertext">3. Plain Ciphertext → Structured Ciphertext</h1>
 <p><em>Content coming soon.</em></p>
-<h2 id="what-happens-when-a-provider-changes-is-deprecated-or-isnt-available-in-a-region">What happens when a provider changes, is deprecated, or isn't available in a region</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="regulatory-driven-algorithm-changes">Regulatory-driven algorithm changes</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="the-cost-of-a-big-bang-re-encryption-project">The cost of a "big bang" re-encryption project</h2>
-<p><em>Content coming soon.</em></p>
-<h2 id="adding-encryption-key-rotation-support-to-the-demo">Adding encryption key rotation support to the demo</h2>
-<p><em>Content coming soon.</em></p>
+<ul>
+<li>Starting point: a naive ciphertext is just an opaque blob of bytes</li>
+<li>The problem: an opaque blob carries no information about which key/provider/version encrypted it</li>
+<li>The fix: a structured ciphertext format that carries metadata (e.g. key alias, key version, provider) alongside the raw ciphertext</li>
+<li>Why this structure is the foundation that key rotation (Chapters 5–7) and rekeying (Chapters 10–11) depend on</li>
+</ul>
 
 
 
@@ -1238,7 +968,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../04-failure-columns/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 4. Failure: Encrypted Columns">
+          <a href="../02-key-aliases/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2. Key Aliases &amp; Key Configs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1248,20 +978,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                4. Failure: Encrypted Columns
+                2. Key Aliases & Key Configs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../06-hmac-search-key-rotation/" class="md-footer__link md-footer__link--next" aria-label="Next: 6. HMAC Search &amp; Key Rotation">
+          <a href="../04-transient-vs-encrypted-blobs/" class="md-footer__link md-footer__link--next" aria-label="Next: 4. Transient vs. Encrypted Blobs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                6. HMAC Search & Key Rotation
+                4. Transient vs. Encrypted Blobs
               </div>
             </div>
             <div class="md-footer__button md-icon">
