@@ -1010,7 +1010,7 @@
 
 <h1 id="2-key-aliases-crypto-key-configs">2. Key Aliases → Crypto Key Configs</h1>
 <h2 id="the-limits-of-representing-a-key-as-a-string">The limits of representing a key as a string</h2>
-<p>It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a <code>String</code>. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do any of the things mango4j-crypto's <strong>Key Driven Design</strong> is built to handle:</p>
+<p>It's tempting to represent an encryption key in your code the way you'd represent almost anything else identifying a resource: a plain string. An AWS KMS key ARN, an HSM slot label, a raw key ID — just a string your encrypt/decrypt calls pass around. That's workable until you need to do things like:</p>
 <ul>
 <li>Switch which cryptographic provider a key uses (AWS KMS today, an HSM tomorrow)</li>
 <li>Run multiple providers side by side (different regions, different regulatory regimes)</li>
@@ -1018,8 +1018,8 @@
 </ul>
 <p>A raw string can't carry any of that. It's just an opaque label — there's nothing in it saying <em>how</em> to use it.</p>
 <h2 id="a-key-as-an-object-not-a-string">A key as an object, not a string</h2>
-<p>mango4j-crypto's answer is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).</p>
-<p>That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, the library matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.</p>
+<p>A more durable approach is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).</p>
+<p>That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, something matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.</p>
 <h2 id="the-alias-how-application-code-actually-asks-for-a-key">The alias: how application code actually asks for a key</h2>
 <p>Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of <em>role</em>-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 6–7), and how to resolve any key by ID regardless of whether it's still "current."</p>
 <p>This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.</p>

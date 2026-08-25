@@ -1035,32 +1035,8 @@
 <p>Chapter 1 introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input.</p>
 <p><strong>HMAC</strong> fills that gap. Unlike encryption, an HMAC (a hash computed using a secret key) is <em>deterministic</em>: the same input with the same key always produces the same output. That determinism is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on.</p>
 <h2 id="the-single-hmac-strategy-one-column-per-hmac">The Single HMAC Strategy: one column per HMAC</h2>
-<p>The simplest possible design: one HMAC column per field, holding a single HMAC value.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@SingleHmacStrategy</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserProfileEntity</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="nd">@Encrypt</span>
-<span class="w">    </span><span class="nd">@Hmac</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Encrypt</span>
-<span class="w">    </span><span class="nd">@Hmac</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"USERNAME_HMAC"</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userNameHmac</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PAN_HMAC"</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">panHmac</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@HmacKeyId</span>
-<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"HMAC_KEY_ID"</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">hmacKeyId</span><span class="p">;</span>
-
-<span class="w">    </span><span class="c1">// ...@EncryptedData, @EncryptionKeyId as in Chapter 3</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>By convention, the HMAC field is named after the source field with an <code>Hmac</code> suffix — <code>pan</code> → <code>panHmac</code>. <code>@HmacKeyId</code> records which HMAC key produced these values, which rekeying (Chapters 8–9) needs to find what's stale. It's the way "many applications (unfortunately) default to using HMACs" — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
+<p>The simplest possible design: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a <code>USERNAME_HMAC</code> column next to the <code>userName</code> ciphertext, a <code>PAN_HMAC</code> column next to the <code>pan</code> ciphertext, and typically a column recording which HMAC key produced them, which rekeying (Chapters 8–9) needs later to find what's stale.</p>
+<p>It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
 <h2 id="the-search-problem">The search problem</h2>
 <p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
 <ol>

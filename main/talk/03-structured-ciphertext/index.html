@@ -988,10 +988,7 @@
 
 <h1 id="3-plain-ciphertext-structured-ciphertext">3. Plain Ciphertext → Structured Ciphertext</h1>
 <h2 id="the-naive-approach">The naive approach</h2>
-<p>The simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Encrypt</span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
-</code></pre></div>
+<p>The simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one blob of bytes.</p>
 <p>That gets you <em>an</em> opaque blob. But an opaque blob on its own can't answer the questions your application will inevitably need to ask later:</p>
 <ul>
 <li>Which key encrypted this? (You need to know, in order to decrypt it.)</li>
@@ -1000,29 +997,19 @@
 </ul>
 <p>Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes key rotation (Chapter 5) and multi-provider support (Chapter 2) painful to retrofit later.</p>
 <h2 id="the-fix-a-structured-ciphertext-format">The fix: a structured ciphertext format</h2>
-<p>mango4j-crypto's <code>CryptoShield.encrypt()</code> doesn't write raw ciphertext bytes into your <code>@EncryptedData</code> field. It writes a JSON structure:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"cryptoKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someKeyId"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"iv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInitializationVector"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:</p>
 <ul>
-<li><strong><code>cryptoKeyId</code></strong> — the <code>CryptoKey.id</code> (Chapter 2) that performed the encryption. This is how decryption always knows which key to ask <code>CryptoKeyProvider.getById()</code> for, even years after a key has stopped being "current."</li>
-<li><strong><code>iv</code></strong> — the Initialization Vector used for this specific encryption operation (see Chapter 1 — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).</li>
-<li><strong><code>data</code></strong> — whatever the Encryption Service Delegate actually returned. This is a <code>Map</code>, not a fixed shape, because different delegates need different things here — an AWS KMS delegate's output looks nothing like a PBKDF2 delegate's.</li>
+<li><strong>key ID</strong> — an identifier for the key that performed the encryption. This is how decryption always knows which key to ask for, even years after a key has stopped being "current."</li>
+<li><strong>IV</strong> — the Initialization Vector used for this specific encryption operation (see Chapter 1 — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).</li>
+<li><strong>the actual encrypted output</strong> — whatever bytes the underlying cryptographic operation produced. This doesn't need to be a fixed shape, because different providers can return different kinds of output here — an HSM-backed operation's output looks nothing like a password-derived key's.</li>
 </ul>
-<p>All of your <code>@Encrypt</code>-annotated fields on an entity are bundled into a single JSON payload and encrypted together in one operation, with the result — this whole structure — written into the single field marked <code>@EncryptedData</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ENCRYPTED_DATA"</span><span class="p">)</span>
-<span class="nd">@EncryptedData</span>
-<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
-</code></pre></div>
+<p>All of an entity's confidential fields can be bundled into a single payload and encrypted together in one operation, with this whole structure — key ID, IV, output — written into a single stored field, rather than encrypting each field independently and scattering key/IV metadata across several columns.</p>
 <h2 id="why-this-structure-is-the-foundation-for-everything-after-it">Why this structure is the foundation for everything after it</h2>
 <p>Every capability covered later in this talk depends on the ciphertext carrying its own metadata, rather than living in a bare column with the key/provider/IV tracked (or guessed at) elsewhere:</p>
 <ul>
-<li><strong>Key rotation (Chapter 5)</strong> — old records keep decrypting correctly after the current key changes, because each one's <code>cryptoKeyId</code> says exactly which key to use, permanently.</li>
-<li><strong>Multi-provider support (Chapter 2)</strong> — a new key can point at a totally different delegate <code>type</code>, and existing ciphertext is unaffected because it already recorded which key (and therefore which delegate) it needs.</li>
-<li><strong>Rekeying (Chapters 8–9)</strong> — a rekey job can find every record still on an old key by inspecting <code>cryptoKeyId</code> (or the optional <code>@EncryptionKeyId</code> field, kept alongside for cheap querying), decrypt with the old key, and re-encrypt with the new one.</li>
+<li><strong>Key rotation (Chapter 5)</strong> — old records keep decrypting correctly after the current key changes, because each one's stored key ID says exactly which key to use, permanently.</li>
+<li><strong>Multi-provider support (Chapter 2)</strong> — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.</li>
+<li><strong>Rekeying (Chapters 8–9)</strong> — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.</li>
 </ul>
 <p>One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key did we use back then."</p>
 

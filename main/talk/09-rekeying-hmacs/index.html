@@ -1055,7 +1055,7 @@
 <h1 id="9-rekeying-hmacs">9. Rekeying: HMACs</h1>
 <h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
 <p>Chapter 8 covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the List HMAC Strategy (Chapter 7), a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
-<p><strong>mango4j-crypto's built-in rekey job currently only supports HMAC rekeying for entities using the List HMAC Strategy.</strong> Encryption-only rekeying (Chapter 8) works for any entity; HMAC rekeying specifically needs the list shape to do this safely.</p>
+<p>This additive requirement is exactly why HMAC rekeying, in practice, tends to only be well-supported for entities using the List HMAC Strategy. Encryption-only rekeying (Chapter 8) doesn't care which HMAC strategy an entity uses — it works regardless; HMAC rekeying specifically needs the list shape to do this safely.</p>
 <h2 id="the-process">The process</h2>
 <ol>
 <li><strong>Add the new HMAC key</strong> to the active key list — this is rotation phase 1 from Chapter 5, nothing new here.</li>
@@ -1079,11 +1079,11 @@
 <h2 id="closing-what-doing-it-right-actually-requires">Closing: what "doing it right" actually requires</h2>
 <p>Two things, in the end, cover almost everything this talk has walked through:</p>
 <ul>
-<li><strong>Decoupling application code from cryptographic providers.</strong> Every mechanism covered — structured ciphertext, the key alias indirection, pluggable delegates — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey jobs are just what it takes to keep search and uniqueness correct while it happens.</li>
-<li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building <code>@EnableMigrationSupport</code>-style guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.</li>
+<li><strong>Decoupling application code from cryptographic providers.</strong> Every mechanism covered — structured ciphertext, the key alias indirection, pluggable providers — exists so that a provider change, a key rotation, or a rekey never requires touching business logic. That decoupling is the actual deliverable; HMAC strategies and rekey processes are just what it takes to keep search and uniqueness correct while it happens.</li>
+<li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. Chapter 5 covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.</li>
 </ul>
 <h2 id="what-were-building-today">What we're building today</h2>
-<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in <code>stages/</code> in this workshop's repository — starting from a plain project with the <code>mango4j-crypto</code> dependency added, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to recognize <code>@Encrypt</code>/<code>@EncryptedData</code> from Chapters 3–4 first, HMAC strategies from Chapters 6–7 next, and rotation/rekeying from Chapters 5, 8–9 as the workshop progresses.</p>
+<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in this workshop's repository — starting from a plain project with a crypto framework added as a dependency, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext from Chapters 3–4 first, HMAC strategies from Chapters 6–7 next, and rotation/rekeying from Chapters 5, 8–9 as the workshop progresses.</p>
 
 
 

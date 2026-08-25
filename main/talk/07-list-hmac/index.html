@@ -1032,56 +1032,30 @@
 
 <h1 id="7-the-list-hmac-strategy">7. The List HMAC Strategy</h1>
 <h2 id="two-elegant-concepts">Two elegant concepts</h2>
-<p>The List HMAC Strategy is the design mango4j-crypto's own authors recommend by default. It rests on two ideas:</p>
+<p>The List HMAC Strategy is the design generally recommended as the default choice, for applications that can accommodate its trade-offs. It rests on two ideas:</p>
 <ol>
 <li><strong>A list of HMAC keys, not a single key.</strong> During a rotation you <em>add</em> the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.</li>
 <li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
 </ol>
 <p>That second point is what the Single HMAC Strategy (Chapter 6) never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.</p>
 <h2 id="entity-shape-three-tables-instead-of-one">Entity shape: three tables instead of one</h2>
-<p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one <code>USER_PROFILE</code> row with inline HMAC columns, you get:</p>
+<p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one record with inline HMAC columns, you get:</p>
 <ul>
-<li><strong><code>USER_PROFILE</code></strong> — the encrypted record itself, no HMAC columns at all</li>
-<li><strong><code>USER_PROFILE_LOOKUPS</code></strong> — one row per (field, active HMAC key) pair, used for search</li>
-<li><strong><code>USER_PROFILE_UNIQUE_VALUES</code></strong> — structurally identical to lookups, but with a compound unique constraint on <code>(tenant, alias, value, hmacKeyId)</code> — separate purely because that constraint doesn't belong on the lookup table</li>
+<li><strong>The record itself</strong> — the encrypted data, with no HMAC columns at all</li>
+<li><strong>A lookups table</strong> — one row per (field, active HMAC key) pair, used for search</li>
+<li><strong>A unique-values table</strong> — structurally identical to the lookups table, but with a compound unique constraint on (tenant, field, value, key) — separate purely because that constraint doesn't belong on the lookup table</li>
 </ul>
-<p>In code, the entity implements <code>Lookup</code> and/or <code>Unique</code> instead of exposing per-field <code>*Hmac</code> columns:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@ListHmacStrategy</span>
-<span class="nd">@Document</span><span class="p">(</span><span class="n">collection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"UserProfile"</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserProfileEntity</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Lookup</span><span class="p">,</span><span class="w"> </span><span class="n">Unique</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="nd">@Encrypt</span>
-<span class="w">    </span><span class="nd">@Hmac</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Encrypt</span>
-<span class="w">    </span><span class="nd">@Hmac</span><span class="p">(</span><span class="n">purposes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">Hmac</span><span class="p">.</span><span class="na">Purposes</span><span class="p">.</span><span class="na">LOOKUP</span><span class="p">,</span><span class="w"> </span><span class="n">Hmac</span><span class="p">.</span><span class="na">Purposes</span><span class="p">.</span><span class="na">UNIQUE</span><span class="p">})</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setLookups</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lookups</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">lookups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getLookups</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setUniqueValues</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">uniqueValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getUniqueValues</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><code>@Hmac(purposes = ...)</code> says whether a field's HMAC is for lookup, uniqueness, or both (defaults to lookup). There's no <code>@HmacKeyId</code> here — with a list of HMACs, the key ID lives per-entry inside each <code>CryptoShieldHmacHolder</code>, not as a single field on the entity. And notably: <strong>when updating an entity, <code>setLookups()</code>/<code>setUniqueValues()</code> must completely replace the existing collections, never append to them</strong> — the library expects to own the full current set on every write.</p>
-<p>On a document DB like Mongo, <code>lookups</code>/<code>uniqueValues</code> are just embedded lists on the same document — no extra tables needed, which is why the docs call this "an excellent fit for document DBs." On a relational DB you pay for it with up to three writes and a join on search.</p>
+<p>A field's HMAC is no longer "for lookup" or "for uniqueness" implicitly by which column it's in — each field is explicitly marked for one purpose, the other, or both, and the write path is responsible for populating the right table(s) accordingly. Critically, an update must <em>replace</em> the full current set of HMAC entries for a record, not append to it — otherwise stale entries from a previous version of the value would linger and stay matchable.</p>
+<p>On a document DB (like MongoDB), the lookups/unique-values lists are just embedded arrays on the same document — no extra tables needed, which is part of why this strategy is a particularly good fit for document databases. On a relational DB you pay for it with up to three writes per update and a join on search.</p>
 <h2 id="why-this-closes-both-chapter-6-gaps">Why this closes both Chapter 6 gaps</h2>
 <ul>
 <li><strong>Search</strong>: a record written under key 2 while key 1 is still active carries lookup HMACs for <em>both</em>. Any application instance searching with either key finds it — including the multi-instance/cached-key race from Chapter 6, where one instance still thinks the old key is current.</li>
-<li><strong>Uniqueness</strong>: the compound constraint on <code>(alias, value, hmacKeyId)</code> means a duplicate username under <em>any</em> active key gets caught by the DB, not just the current one — there's no window where a rotated key lets a duplicate slip past.</li>
+<li><strong>Uniqueness</strong>: the compound constraint on (field, value, key) means a duplicate username under <em>any</em> active key gets caught by the database, not just the current one — there's no window where a rotated key lets a duplicate slip past.</li>
 </ul>
 <h2 id="extra-capabilities-this-design-unlocks">Extra capabilities this design unlocks</h2>
 <ul>
-<li><strong>HMAC tokenizers</strong> — <code>@Hmac(HmacTokenizers = {PanTokenizer.class})</code> generates <em>additional</em> lookup HMACs from derived representations of a value (e.g. last-4 digits, first-6, a normalized form with dashes stripped), stored alongside the full-value HMAC — richer search without weakening the encrypted value itself.</li>
-<li><strong><code>@UniqueGroup</code></strong> — a compound unique constraint spanning multiple fields (some HMAC'd, some cleartext) isn't expressible with a normal column-level constraint once one of those fields is a <code>@Hmac</code> field with no fixed column. <code>@UniqueGroup</code> lets you name a group and an order number per field so the library computes one combined unique HMAC across them.</li>
+<li><strong>Derived-value search terms</strong> — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of <em>derived</em> representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.</li>
+<li><strong>Compound uniqueness across multiple fields</strong> — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.</li>
 </ul>
 <h2 id="verdict">Verdict</h2>
 <table>

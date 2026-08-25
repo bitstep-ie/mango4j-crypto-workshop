@@ -588,10 +588,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-transient-matters" class="md-nav__link">
+  <a href="#why-this-separation-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why transient matters
+        Why this separation matters
       
     </span>
   </a>
@@ -956,10 +956,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-transient-matters" class="md-nav__link">
+  <a href="#why-this-separation-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why transient matters
+        Why this separation matters
       
     </span>
   </a>
@@ -1012,35 +1012,24 @@
 <h2 id="two-representations-of-the-same-value">Two representations of the same value</h2>
 <p>Every confidential field an entity carries actually has two lives:</p>
 <ul>
-<li>A <strong>transient</strong> representation — the plaintext value your business logic actually works with (validates, compares, displays)</li>
+<li>A <strong>transient</strong> (working, in-memory) representation — the plaintext value your business logic actually works with (validates, compares, displays)</li>
 <li>An <strong>encrypted-blob</strong> representation — the structured ciphertext (Chapter 3) that's what actually gets persisted</li>
 </ul>
-<p>mango4j-crypto keeps these strictly separate, and requires it in the entity definition:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Encrypt</span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
-
-<span class="nd">@Encrypt</span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
-
-<span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ENCRYPTED_DATA"</span><span class="p">)</span>
-<span class="nd">@EncryptedData</span>
-<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
-</code></pre></div>
-<p>The <code>pan</code> and <code>userName</code> fields are marked <code>transient</code> — a hard requirement mango4j-crypto enforces at registration time. All <code>@Encrypt</code> fields get bundled into one JSON payload and encrypted in a single operation into the one <code>@EncryptedData</code> field; the source fields themselves are never touched by that operation and never get their own column.</p>
-<h2 id="why-transient-matters">Why <code>transient</code> matters</h2>
-<p><code>transient</code> isn't decoration here — it's what stops serialization frameworks (Hibernate, Jackson, whatever your ORM is) from ever flushing the plaintext value to the database on their own. Without it, nothing stops an ORM from quietly persisting <code>pan</code> into its own column alongside the encrypted blob, defeating the entire point of ALE the moment someone adds an innocuous <code>@Column</code> to the wrong field.</p>
-<p>Calling <code>cryptoShield.encrypt(entity)</code> doesn't clear the transient fields either — they keep their plaintext values so your code can keep working with them after encrypting. <code>cryptoShield.decrypt(entity)</code> does the reverse: it reads <code>encryptedData</code>, decrypts it, and repopulates the transient fields — it does not touch <code>encryptedData</code> itself.</p>
+<p>A sound ALE design keeps these strictly separate: the plaintext value exists only for as long as it's needed in memory, and the only thing that ever gets written to storage is the encrypted blob. The two are never the same field, and nothing is expected to hold both at once.</p>
+<h2 id="why-this-separation-matters">Why this separation matters</h2>
+<p>If a field can hold either plaintext or ciphertext depending on when you look at it, nothing in the code guarantees which one it currently holds — every reader and writer has to know by convention, and that convention eventually gets it wrong. Keeping the working value and the persisted value as genuinely separate representations means whatever serializes data out to storage can only ever see the encrypted form; the plaintext simply isn't reachable from that path. This is usually enforced by whatever mechanism controls what a serialization layer (an ORM, a JSON mapper, whatever writes to storage) is allowed to touch — excluding the working field from that path entirely, so a plaintext value can never be accidentally flushed to disk.</p>
+<p>Encrypting a value doesn't need to destroy the working copy — the application can keep using the plaintext for the rest of its current operation. Decrypting, likewise, just repopulates the working representation from the stored blob; it doesn't need to touch the blob itself.</p>
 <h2 id="the-failure-mode-this-avoids-double-encryptdecrypt">The failure mode this avoids: double encrypt/decrypt</h2>
-<p>Keeping the two representations distinct — and only ever converting between them at the <code>CryptoShield.encrypt()</code>/<code>decrypt()</code> boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an application called <code>encrypt()</code> twice on data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Because mango4j-crypto requires that only the transient fields hold plaintext and only <code>@EncryptedData</code> holds ciphertext, there's no state a value can end up in that's ambiguous about which one it currently is.</p>
+<p>Keeping the two representations distinct — and only ever converting between them at one well-defined boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Requiring that only the working fields hold plaintext and only the designated stored field holds ciphertext removes any state a value can end up in that's ambiguous about which one it currently is.</p>
 <h2 id="what-happens-without-this-discipline-encrypting-fields-directly-into-their-columns">What happens without this discipline: encrypting fields directly into their columns</h2>
-<p>The failure mode this design specifically guards against is the naive alternative: encrypting values directly in place, in their own columns, with no separate transient/blob distinction at all — e.g. hand-rolling <code>encrypt()</code>/<code>decrypt()</code> calls around a <code>panColumn</code> field that's sometimes plaintext and sometimes ciphertext depending on when you look at it. This tends to produce:</p>
+<p>The failure mode this design specifically guards against is the naive alternative: encrypting values directly in place, in their own columns, with no separate transient/blob distinction at all — hand-rolling encrypt/decrypt calls around a column that's sometimes plaintext and sometimes ciphertext depending on when you look at it. This tends to produce:</p>
 <ul>
 <li><strong>No single source of truth for "what's encrypted"</strong> — you have to go read the code (or worse, ask around) to know whether a given column currently holds plaintext or ciphertext.</li>
-<li><strong>Schema churn every time a new field needs protecting</strong> — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of just adding <code>@Encrypt</code>.</li>
+<li><strong>Schema churn every time a new field needs protecting</strong> — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of following one consistent pattern.</li>
 <li><strong>No consistent record of which key encrypted what</strong> — without a structured ciphertext (Chapter 3), there's nowhere obvious to put that metadata, so it either doesn't exist or gets tracked out-of-band.</li>
 <li><strong>Every query/repository touching that column needs bespoke logic</strong> — because the column's meaning (plaintext or cipher) isn't guaranteed by the type system, every caller has to know the current state by convention.</li>
 </ul>
-<p>The transient/<code>@EncryptedData</code> split is what makes all four of those non-issues: the field's type tells you what it holds, and the library — not scattered application code — owns the only place the conversion happens.</p>
+<p>The transient/encrypted-blob split is what makes all four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens.</p>
 
 
 

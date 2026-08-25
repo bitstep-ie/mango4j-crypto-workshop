@@ -700,10 +700,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-rekey-modes" class="md-nav__link">
+  <a href="#two-directions-of-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two rekey modes
+        Two directions of rekey
       
     </span>
   </a>
@@ -967,10 +967,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-rekey-modes" class="md-nav__link">
+  <a href="#two-directions-of-rekey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two rekey modes
+        Two directions of rekey
       
     </span>
   </a>
@@ -1033,28 +1033,28 @@
 <h1 id="8-rekeying-encryption">8. Rekeying: Encryption</h1>
 <h2 id="rekeying-vs-rotation-not-the-same-step">Rekeying vs. rotation: not the same step</h2>
 <p>Chapter 5 drew the line already: rotation (phase 1) is switching <em>new writes</em> to a new key. Rekeying is the separate background process that goes back over <em>existing</em> records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key actually be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.</p>
-<h2 id="two-rekey-modes">Two rekey modes</h2>
-<p>mango4j-crypto's built-in rekey job drives this off a <code>rekeyMode</code> field on the <code>CryptoKey</code> itself (Chapter 2), with two modes:</p>
+<h2 id="two-directions-of-rekey">Two directions of rekey</h2>
+<p>A rekey process typically needs to support two directions, both driven by which key a given record was written under:</p>
 <ul>
-<li><strong><code>KEY_OFF</code></strong> — rekey everything <em>off</em> this specific key and onto the current key. Used when you want to retire one particular old key. (Setting it on the <em>current</em> key is a no-op — it doesn't make sense to key something off itself.)</li>
-<li><strong><code>KEY_ON</code></strong> — rekey everything currently on <em>any other</em> key onto this one. This has a much broader scope than <code>KEY_OFF</code>: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it. (Also a no-op if set on a key that isn't current.)</li>
+<li><strong>Retiring one specific key</strong> — moving everything currently on that key onto whatever key is current, so the old one can eventually be deleted.</li>
+<li><strong>Consolidating everything onto one key</strong> — moving everything currently on <em>any other</em> key onto a single target key. This has a much broader scope than retiring a single key: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it.</li>
 </ul>
 <h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
-<p>The rekey job needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. That's why <code>@EncryptionKeyId</code> (Chapter 3) is worth having even though it's optional for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the job find "all records where <code>encryptionKeyId != currentKey</code>" cheaply, instead of decrypting every row just to check.</p>
-<p>For each batch of matching records, the job:</p>
+<p>The rekey process needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. This is why it's worth storing the key ID that encrypted a record in its own queryable column (Chapter 3), even though it's not strictly required for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the process find "all records not on the current key" cheaply, instead of decrypting every row just to check.</p>
+<p>For each batch of matching records, the process:</p>
 <ol>
 <li>Decrypts the record with its current (old) key</li>
 <li>Re-encrypts it with the current encryption key</li>
-<li>Saves it back, with <code>@EncryptedData</code> and <code>@EncryptionKeyId</code> now reflecting the new key</li>
+<li>Saves it back, with the stored ciphertext and key-ID column now reflecting the new key</li>
 </ol>
-<p>This runs as a background process the application configures once — a scheduler that periodically checks for keys marked <code>KEY_ON</code>/<code>KEY_OFF</code> and works through matching entities in batches, pausing between batches to limit load on the database and any external cryptographic provider (KMS calls aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
+<p>This runs as a background process, working through matching entities in batches and pausing between batches to limit load on the database and any external cryptographic provider (calls to an external key-management service aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
 <h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
 <p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. Chapter 9 covers that half.</p>
 <h2 id="how-this-completes-rotation">How this completes rotation</h2>
 <p>Put together with Chapter 5's phase 1, the full rotation lifecycle looks like:</p>
 <ol>
 <li><strong>Phase 1</strong> — new key becomes current; new writes use it; old key still decrypts.</li>
-<li><strong>Phase 2 / this chapter</strong> — a rekey job (<code>KEY_OFF</code> on the old key, or <code>KEY_ON</code> on the new one) works through existing records, re-encrypting each from old key to new key.</li>
+<li><strong>Phase 2 / this chapter</strong> — a rekey process (retiring the old key, or consolidating onto the new one) works through existing records, re-encrypting each from old key to new key.</li>
 <li>Once no records remain on the old key, it can finally be deleted from the system — decryption no longer needs it, and leaving unused key material around is its own security liability.</li>
 </ol>
 
