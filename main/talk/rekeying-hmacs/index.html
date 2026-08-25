@@ -1088,7 +1088,7 @@
 <li><strong>Understanding the unencrypted → encrypted migration path <em>up front</em></strong>, before you need it. <a href="../key-rotation/">Key Rotation</a> covered why addressing this after the fact adds complexity — dual-read/dual-write periods, unplanned pauses on other work. Deciding early how a field moves from plaintext to encrypted, and building tracked, temporary guardrails into your process from day one, is generally cheaper than retrofitting it later under time pressure.</li>
 </ul>
 <h2 id="what-were-building-today">What we're building today</h2>
-<p>The rest of this session moves from theory to hands-on practice, working through the numbered stages in this workshop's repository — starting from a plain project with a crypto framework added as a dependency, and building up field encryption, HMAC search, and (as stages are added) key rotation and rekeying, one exercise at a time. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext first, HMAC strategies and key rotation next, and rekeying as the workshop progresses.</p>
+<p>The rest of this session moves from theory to hands-on practice, working through this workshop's stages one exercise at a time — starting from a plain project with no encryption at all, and building up to full encryption with multiple keys and providers, HMAC search and unique constraints, and key rotation that incorporates both data re-encryption and rehashing. Each stage maps back to a concept from this talk: expect to see field-level encryption and structured ciphertext first, HMAC strategies and key rotation next, and rekeying as the workshop progresses.</p>
 
 
 
