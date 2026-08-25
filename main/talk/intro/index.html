@@ -483,10 +483,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
+  <a href="#key-terms-tenant-key-ciphertext-iv-hmac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key terms: tenant, key, ciphertext, HMAC, IV
+        Key terms: tenant, key, ciphertext, IV, HMAC
       
     </span>
   </a>
@@ -1165,10 +1165,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
+  <a href="#key-terms-tenant-key-ciphertext-iv-hmac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key terms: tenant, key, ciphertext, HMAC, IV
+        Key terms: tenant, key, ciphertext, IV, HMAC
       
     </span>
   </a>
@@ -1288,7 +1288,7 @@
 <div class="highlight"><pre><span></span><code>Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository → Database
 </code></pre></div>
 <p>Your business logic still works with plaintext values — a <code>cardNumber</code>, an <code>email</code> — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.</p>
-<h2 id="key-terms-tenant-key-ciphertext-hmac-iv">Key terms: tenant, key, ciphertext, HMAC, IV</h2>
+<h2 id="key-terms-tenant-key-ciphertext-iv-hmac">Key terms: tenant, key, ciphertext, IV, HMAC</h2>
 <p>A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:</p>
 <dl>
 <dt><strong>Tenant</strong></dt>
@@ -1297,10 +1297,10 @@
 <dd>The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change <em>how</em> encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in <a href="../key-aliases/">Key Aliases &amp; Key Configs</a>.</dd>
 <dt><strong>Ciphertext</strong></dt>
 <dd>The encrypted output. Irreversible without the correct key — that's the entire point.</dd>
-<dt><strong>HMAC</strong></dt>
-<dd>A hash computed using a secret key. Unlike encryption, a HMAC is <em>deterministic</em>: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. More on why in a later chapter.</dd>
 <dt><strong>IV (Initialization Vector)</strong></dt>
-<dd>Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time. That's exactly the gap HMACs exist to fill.</dd>
+<dd>Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time.</dd>
+<dt><strong>HMAC</strong></dt>
+<dd>A hash computed using a secret key. Unlike encryption, a HMAC is <em>deterministic</em>: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on, and it's exactly the gap left open by the IV above. More on why in a later chapter.</dd>
 </dl>
 <h2 id="why-do-we-still-need-it">Why do we still need it?</h2>
 <p>Encrypting things is extra engineering effort, so it's fair to ask why it's worth doing. The short answer: because most real-world data breaches don't involve anyone stealing a physical disk — they involve someone getting access to a live, running system, and the database sitting right there in plaintext.</p>
