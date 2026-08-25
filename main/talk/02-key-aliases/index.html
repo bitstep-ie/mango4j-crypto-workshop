@@ -614,7 +614,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-single-hmac/" class="md-nav__link">
+      <a href="../06-introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-single-hmac/" class="md-nav__link">
         
   
   
@@ -642,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-list-hmac/" class="md-nav__link">
+      <a href="../08-list-hmac/" class="md-nav__link">
         
   
   
@@ -670,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -698,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-hmacs/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -999,7 +1027,7 @@
 <p>A more durable approach is to represent every key as a small object rather than a bare identifier — something carrying not just an ID, but what the key is used for (encryption vs. HMAC), which cryptographic provider/mechanism should handle it, and whatever configuration that provider needs to actually perform the operation (a reference to where the key lives, never the raw key material itself).</p>
 <p>That last split — provider type separate from provider-specific configuration — is the whole point. Application code never says "call AWS KMS." It says "encrypt with this key," and underneath, something matches the key's declared type to whichever implementation knows how to handle that type. Swap the implementation, or introduce a new one entirely, and no application code changes at all.</p>
 <h2 id="the-alias-how-application-code-actually-asks-for-a-key">The alias: how application code actually asks for a key</h2>
-<p>Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of <em>role</em>-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 6–7), and how to resolve any key by ID regardless of whether it's still "current."</p>
+<p>Application code doesn't hardcode a specific key's ID either — that would just move the stringly-typed problem up one layer, from "which provider" to "which specific key." Instead, the application answers a small set of <em>role</em>-based questions on demand: which key is currently active for new encryption, which keys are currently active for HMACs (plural — more on why in Chapters 7–8), and how to resolve any key by ID regardless of whether it's still "current."</p>
 <p>This is the alias indirection: "the current encryption key" is a question answered dynamically by whatever component owns key configuration, not a string baked into a config file or a call site. Change what it answers, and every future write picks up the new key config automatically — nothing else in the application needs to know a change happened at all.</p>
 <h2 id="why-this-is-the-foundation-for-everything-that-follows">Why this is the foundation for everything that follows</h2>
 <p>This indirection — alias in, concrete key config out — is what makes the rest of the talk possible:</p>

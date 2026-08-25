@@ -603,7 +603,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-single-hmac/" class="md-nav__link">
+      <a href="../06-introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-single-hmac/" class="md-nav__link">
         
   
   
@@ -631,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-list-hmac/" class="md-nav__link">
+      <a href="../08-list-hmac/" class="md-nav__link">
         
   
   
@@ -659,7 +687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -687,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-hmacs/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -987,7 +1015,7 @@
 <ul>
 <li><strong>Key rotation (Chapter 5)</strong> — old records keep decrypting correctly after the current key changes, because each one's stored key ID says exactly which key to use, permanently.</li>
 <li><strong>Multi-provider support (Chapter 2)</strong> — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.</li>
-<li><strong>Rekeying (Chapters 8–9)</strong> — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.</li>
+<li><strong>Rekeying (Chapters 9–10)</strong> — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new one.</li>
 </ul>
 <p>One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key did we use back then."</p>
 

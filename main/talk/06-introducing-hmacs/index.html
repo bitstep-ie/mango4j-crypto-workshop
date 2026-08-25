@@ -11,24 +11,28 @@
       
       
       
+        <link rel="prev" href="../05-key-rotation/">
+      
+      
+        <link rel="next" href="../07-single-hmac/">
       
       
         
       
       
-      <link rel="icon" href="assets/favicon.ico">
+      <link rel="icon" href="../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>ALE Workshop</title>
+        <title>Introducing HMACs - ALE Workshop</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ale-workshop" class="md-skip">
+        <a href="#why-you-cant-search-or-constrain-on-the-ciphertext-itself" class="md-skip">
           Skip to content
         </a>
       
@@ -90,9 +94,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../.." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="assets/mango-black.png" alt="logo">
+  <img src="../../assets/mango-black.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ALE Workshop
+              Introducing HMACs
             
           </span>
         </div>
@@ -218,11 +222,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="talk/01-intro/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-intro/" class="md-tabs__link">
           
   
   
@@ -242,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="stages/00-intro/" class="md-tabs__link">
+        <a href="../../stages/00-intro/" class="md-tabs__link">
           
   
   
@@ -260,7 +266,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="how-it-works/" class="md-tabs__link">
+      <a href="../../how-it-works/" class="md-tabs__link">
         
   
   
@@ -295,9 +301,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../.." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="assets/mango-black.png" alt="logo">
+  <img src="../../assets/mango-black.png" alt="logo">
 
     </a>
     ALE Workshop
@@ -321,26 +327,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
             
   
   
@@ -358,7 +369,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -376,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/01-intro/" class="md-nav__link">
+      <a href="../01-intro/" class="md-nav__link">
         
   
   
@@ -404,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/02-key-aliases/" class="md-nav__link">
+      <a href="../02-key-aliases/" class="md-nav__link">
         
   
   
@@ -432,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/03-structured-ciphertext/" class="md-nav__link">
+      <a href="../03-structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -460,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -488,7 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/05-key-rotation/" class="md-nav__link">
+      <a href="../05-key-rotation/" class="md-nav__link">
         
   
   
@@ -513,10 +524,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="talk/06-introducing-hmacs/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -532,6 +568,79 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-you-cant-search-or-constrain-on-the-ciphertext-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you can't search or constrain on the ciphertext itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-hmac-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a HMAC is
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-youd-want-one-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you'd want one: search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-youd-want-one-unique-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you'd want one: unique constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -544,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/07-single-hmac/" class="md-nav__link">
+      <a href="../07-single-hmac/" class="md-nav__link">
         
   
   
@@ -572,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/08-list-hmac/" class="md-nav__link">
+      <a href="../08-list-hmac/" class="md-nav__link">
         
   
   
@@ -600,7 +709,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/09-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -628,7 +737,7 @@
   
   
     <li class="md-nav__item">
-      <a href="talk/10-rekeying-hmacs/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -715,7 +824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="stages/00-intro/" class="md-nav__link">
+      <a href="../../stages/00-intro/" class="md-nav__link">
         
   
   
@@ -743,7 +852,7 @@
   
   
     <li class="md-nav__item">
-      <a href="stages/01-getting-started/" class="md-nav__link">
+      <a href="../../stages/01-getting-started/" class="md-nav__link">
         
   
   
@@ -771,7 +880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="stages/02-encrypting-a-field/" class="md-nav__link">
+      <a href="../../stages/02-encrypting-a-field/" class="md-nav__link">
         
   
   
@@ -806,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="how-it-works/" class="md-nav__link">
+      <a href="../../how-it-works/" class="md-nav__link">
         
   
   
@@ -843,8 +952,69 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-you-cant-search-or-constrain-on-the-ciphertext-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you can't search or constrain on the ciphertext itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-hmac-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a HMAC is
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-youd-want-one-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you'd want one: search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-youd-want-one-unique-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you'd want one: unique constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -864,8 +1034,19 @@
   
 
 
-<h1 id="ale-workshop">ALE Workshop</h1>
-<p>Head to <a href="talk/01-intro/">The Talk</a> for the conceptual background first, or straight to <a href="stages/00-intro/">The Workshop → Introduction</a> to get started.</p>
+  <h1>Introducing HMACs</h1>
+
+<p>Introducing HMACs</p>
+<h2 id="why-you-cant-search-or-constrain-on-the-ciphertext-itself">Why you can't search or constrain on the ciphertext itself</h2>
+<p>Chapter 1 introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input. The same problem applies to uniqueness: you can't put a database constraint directly on a ciphertext column, because two records holding the identical plaintext value will never produce identical ciphertext.</p>
+<h2 id="what-a-hmac-is">What a HMAC is</h2>
+<p><strong>HMAC</strong> (Hash-based Message Authentication Code) fills that gap. Unlike encryption, a HMAC — a hash computed using a secret key — is <em>deterministic</em>: the same input with the same key always produces the same output, every time. That determinism is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. A HMAC isn't reversible the way encryption is; you can't recover the original value from it. All it tells you is whether some other value, hashed with the same key, matches.</p>
+<h2 id="why-youd-want-one-search">Why you'd want one: search</h2>
+<p>If a field is encrypted, finding a record by that field's value isn't possible by comparing ciphertext (see above). The fix: alongside the ciphertext, store a HMAC of the plaintext value, computed with a secret key. To search, compute the HMAC of the search term with that same key and look for a match. Because the HMAC is deterministic, the same plaintext value always produces the same HMAC — so this works exactly like an index lookup on a regular column, just without ever exposing the plaintext itself in storage.</p>
+<h2 id="why-youd-want-one-unique-constraints">Why you'd want one: unique constraints</h2>
+<p>The same determinism solves a second, related problem: enforcing uniqueness on an encrypted field — a username or email address, say — at the database level. A unique constraint on the ciphertext column itself is useless, since encrypting the same value twice produces two different ciphertexts. Put the constraint on the HMAC column instead: since the same plaintext always produces the same HMAC, two records with the same underlying value produce a HMAC collision, and the database's own unique constraint catches it — just as if the field had never been encrypted at all.</p>
+<h2 id="choosing-a-strategy">Choosing a strategy</h2>
+<p>Storing HMACs sounds simple in isolation, but <em>how</em> they're stored and managed matters a great deal once key rotation (Chapter 5) enters the picture — the same HMAC key can't stay in use forever, and what happens to search and uniqueness while it changes depends heavily on the design chosen. The next two chapters cover the two main strategies: a single HMAC per field (Chapter 7), and a list of HMACs per field (Chapter 8).</p>
 
 
 
@@ -890,6 +1071,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-key-rotation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Rotation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Key Rotation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07-single-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: Single HMAC Strategy">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Single HMAC Strategy
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -917,10 +1136,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../07-list-hmac/">
+        <link rel="prev" href="../07-single-hmac/">
       
       
-        <link rel="next" href="../09-rekeying-hmacs/">
+        <link rel="next" href="../09-rekeying-encryption/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Rekeying: Encryption - ALE Workshop</title>
+        <title>List HMAC Strategy - ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rekeying-vs-rotation-not-the-same-step" class="md-skip">
+        <a href="#two-core-ideas" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rekeying: Encryption
+              List HMAC Strategy
             
           </span>
         </div>
@@ -527,14 +527,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-single-hmac/" class="md-nav__link">
+      <a href="../06-introducing-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Single HMAC Strategy
+    Introducing HMACs
   
 
     
@@ -555,14 +555,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-list-hmac/" class="md-nav__link">
+      <a href="../07-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    List HMAC Strategy
+    Single HMAC Strategy
   
 
     
@@ -597,7 +597,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: Encryption
+    List HMAC Strategy
   
 
     
@@ -615,7 +615,7 @@
   <span class="md-ellipsis">
     
   
-    Rekeying: Encryption
+    List HMAC Strategy
   
 
     
@@ -639,10 +639,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+  <a href="#two-core-ideas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rekeying vs. rotation: not the same step
+        Two core ideas
       
     </span>
   </a>
@@ -650,10 +650,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-directions-of-rekey" class="md-nav__link">
+  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two directions of rekey
+        Entity shape: three tables instead of one
       
     </span>
   </a>
@@ -661,10 +661,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+  <a href="#why-this-closes-both-chapter-7-gaps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it actually finds and re-encrypts records
+        Why this closes both Chapter 7 gaps
       
     </span>
   </a>
@@ -672,10 +672,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is a distinct step from the HMAC rekey
+        Extra capabilities this design unlocks
       
     </span>
   </a>
@@ -683,10 +683,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-this-completes-rotation" class="md-nav__link">
+  <a href="#verdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How this completes rotation
+        Verdict
       
     </span>
   </a>
@@ -709,7 +709,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-hmacs/" class="md-nav__link">
+      <a href="../09-rekeying-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -932,10 +960,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+  <a href="#two-core-ideas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rekeying vs. rotation: not the same step
+        Two core ideas
       
     </span>
   </a>
@@ -943,10 +971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#two-directions-of-rekey" class="md-nav__link">
+  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Two directions of rekey
+        Entity shape: three tables instead of one
       
     </span>
   </a>
@@ -954,10 +982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+  <a href="#why-this-closes-both-chapter-7-gaps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it actually finds and re-encrypts records
+        Why this closes both Chapter 7 gaps
       
     </span>
   </a>
@@ -965,10 +993,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this is a distinct step from the HMAC rekey
+        Extra capabilities this design unlocks
       
     </span>
   </a>
@@ -976,10 +1004,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-this-completes-rotation" class="md-nav__link">
+  <a href="#verdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How this completes rotation
+        Verdict
       
     </span>
   </a>
@@ -1006,43 +1034,61 @@
   
 
 
-  <h1>Rekeying: Encryption</h1>
+  <h1>List HMAC Strategy</h1>
 
-<h2 id="rekeying-vs-rotation-not-the-same-step">Rekeying vs. rotation: not the same step</h2>
-<p>Chapter 5 drew the line already: rotation (phase 1) is switching <em>new writes</em> to a new key. Rekeying is the separate background process that goes back over <em>existing</em> records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.</p>
-<h2 id="two-directions-of-rekey">Two directions of rekey</h2>
-<p>A rekey process typically needs to support two directions, both driven by which key a given record was written under:</p>
+<p>The List HMAC Strategy</p>
+<h2 id="two-core-ideas">Two core ideas</h2>
+<p>The List HMAC Strategy is generally the recommended default for applications that can accommodate its trade-offs. It rests on two ideas:</p>
+<ol>
+<li><strong>A list of HMAC keys, not a single key.</strong> During a rotation you <em>add</em> the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.</li>
+<li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
+</ol>
+<p>That second point is what the Single HMAC Strategy (Chapter 7) never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.</p>
+<h2 id="entity-shape-three-tables-instead-of-one">Entity shape: three tables instead of one</h2>
+<p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one record with inline HMAC columns, you get:</p>
 <ul>
-<li><strong>Retiring one specific key</strong> — moving everything currently on that key onto whatever key is current, so the old one can eventually be deleted.</li>
-<li><strong>Consolidating everything onto one key</strong> — moving everything currently on <em>any other</em> key onto a single target key. This has a much broader scope than retiring a single key: it can touch a large fraction of your entities at once, so it warrants careful consideration of the performance and provider-traffic impact before triggering it.</li>
+<li><strong>The record itself</strong> — the encrypted data, with no HMAC columns at all</li>
+<li><strong>A lookups table</strong> — one row per (field, active HMAC key) pair, used for search</li>
+<li><strong>A unique-values table</strong> — structurally identical to the lookups table, but with a compound unique constraint on (tenant, field, value, key) — separate purely because that constraint doesn't belong on the lookup table</li>
 </ul>
-<h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
-<p>The rekey process needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. This is why it's worth storing the key ID that encrypted a record in its own queryable column (Chapter 3), even though it's not strictly required for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the process find "all records not on the current key" cheaply, instead of decrypting every row just to check.</p>
-<p>For each batch of matching records, the process:</p>
-<ol>
-<li>Decrypts the record with its current (old) key</li>
-<li>Re-encrypts it with the current encryption key</li>
-<li>Saves it back, with the stored ciphertext and key-ID column now reflecting the new key</li>
-</ol>
-<p>This runs as a background process, working through matching entities in batches and pausing between batches to limit load on the database and any external cryptographic provider (calls to an external key-management service aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey can trip a provider's own rate limits).</p>
-<h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
-<p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. Chapter 9 covers that half.</p>
-<h2 id="how-this-completes-rotation">How this completes rotation</h2>
-<p>Put together with Chapter 5's phase 1, the full rotation lifecycle looks like:</p>
-<ol>
-<li><strong>Phase 1</strong> — new key becomes current; new writes use it; old key still decrypts.</li>
-<li><strong>Phase 2 / this chapter</strong> — a rekey process (retiring the old key, or consolidating onto the new one) works through existing records, re-encrypting each from old key to new key.</li>
-<li>Once no records remain on the old key, it can finally be deleted from the system — decryption no longer needs it, and leaving unused key material around is its own security liability.</li>
-</ol>
+<p>A field's HMAC is no longer "for lookup" or "for uniqueness" implicitly by which column it's in — each field is explicitly marked for one purpose, the other, or both, and the write path is responsible for populating the right table(s) accordingly. Critically, an update must <em>replace</em> the full current set of HMAC entries for a record, not append to it — otherwise stale entries from a previous version of the value would linger and stay matchable.</p>
+<p>On a document DB (like MongoDB), the lookups/unique-values lists are just embedded arrays on the same document — no extra tables needed, which is part of why this strategy is a particularly good fit for document databases. On a relational DB you pay for it with up to three writes per update and a join on search.</p>
+<h2 id="why-this-closes-both-chapter-7-gaps">Why this closes both Chapter 7 gaps</h2>
+<ul>
+<li><strong>Search</strong>: a record written under key 2 while key 1 is still active carries lookup HMACs for <em>both</em>. Any application instance searching with either key finds it — including the multi-instance/cached-key race from Chapter 7, where one instance still thinks the old key is current.</li>
+<li><strong>Uniqueness</strong>: the compound constraint on (field, value, key) means a duplicate username under <em>any</em> active key gets caught by the database, not just the current one — there's no window where a rotated key lets a duplicate slip past.</li>
+</ul>
+<h2 id="extra-capabilities-this-design-unlocks">Extra capabilities this design unlocks</h2>
+<ul>
+<li><strong>Derived-value search terms</strong> — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of <em>derived</em> representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.</li>
+<li><strong>Compound uniqueness across multiple fields</strong> — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.</li>
+</ul>
+<h2 id="verdict">Verdict</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pros</strong></td>
+<td>Correct under all combinations of requirements; the only design supporting passive key rotation for long-lived uniqueness data; standardized, cleaner search code; strong fit for document DBs; zero-outage search; guaranteed unique-constraint integrity; works correctly even with cached keys; easiest to rekey with no functional impact; supports as many HMAC keys as needed, added at any time</td>
+</tr>
+<tr>
+<td><strong>Cons</strong></td>
+<td>Forces relational DBs into a multi-table design; every write costs N HMACs (N = number of active keys), so a growing key list has a real performance cost until old keys are rekeyed away</td>
+</tr>
+</tbody>
+</table>
+<p>That last con is exactly why rekeying (Chapters 9–10) isn't optional infrastructure — without it, the "list" in List HMAC only ever grows.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -1066,7 +1112,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../07-list-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: List HMAC Strategy">
+          <a href="../07-single-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Single HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1076,20 +1122,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                List HMAC Strategy
+                Single HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../09-rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Rekeying: HMACs">
+          <a href="../09-rekeying-encryption/" class="md-footer__link md-footer__link--next" aria-label="Next: Rekeying: Encryption">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Rekeying: HMACs
+                Rekeying: Encryption
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -14,7 +14,7 @@
         <link rel="prev" href="../04-transient-vs-encrypted-blobs/">
       
       
-        <link rel="next" href="../06-single-hmac/">
+        <link rel="next" href="../06-introducing-hmacs/">
       
       
         
@@ -625,7 +625,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-single-hmac/" class="md-nav__link">
+      <a href="../06-introducing-hmacs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-single-hmac/" class="md-nav__link">
         
   
   
@@ -653,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-list-hmac/" class="md-nav__link">
+      <a href="../08-list-hmac/" class="md-nav__link">
         
   
   
@@ -681,7 +709,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -709,7 +737,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-hmacs/" class="md-nav__link">
+      <a href="../10-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -1018,7 +1046,7 @@
 <li>Old keys keep working for <strong>decryption</strong>. Resolving a key by ID still works for any key the application has ever used, so every record written under the old key keeps reading back correctly. Nothing needs to migrate yet — you just need to keep the old key around until nothing references it any more.</li>
 </ul>
 <h2 id="phase-2-migrating-old-data-to-the-new-key">Phase 2: migrating old data to the new key</h2>
-<p>Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: <strong>rekeying</strong>, covered in full in Chapters 8–9. It's a deliberately separate phase, not a single atomic switch, because:</p>
+<p>Once new writes are on the new key, old rows are still sitting there encrypted under the old key. Getting them off it — so the old key can eventually be retired — is a separate, later pass: <strong>rekeying</strong>, covered in full in Chapters 9–10. It's a deliberately separate phase, not a single atomic switch, because:</p>
 <ul>
 <li>Rekeying potentially touches every record in the system, which takes time and costs performance/throughput you don't want to pay synchronously with the rotation itself.</li>
 <li>The old key has to remain valid and available for decryption for as long as any unrekeyed data still depends on it.</li>
@@ -1034,14 +1062,14 @@
 </ul>
 <p>This transitional state deserves explicit support rather than being handled ad hoc. A field mid-migration is deliberately <em>not yet</em> meeting the normal rule that a confidential field only ever exists as a working (Chapter 4) value — it's still readable and writable in its old, unencrypted, persisted form while the backfill completes. Treating that as a tracked, temporary exception — with an owner, a justification, and a target date by which it should be gone — rather than a silent gap in the data model, is what keeps a migration from quietly becoming permanent. Making the exception loud (a startup warning that escalates to an error past the target date, for example) is what turns the deadline into an actual forcing function rather than a comment nobody revisits.</p>
 <h2 id="production-impact-of-single-key-single-hmac-designs">Production impact of single-key, single-HMAC designs</h2>
-<p>Rotation and migration are where the limitations of single-key, single-HMAC designs (Chapter 6) become visible in production:</p>
+<p>Rotation and migration are where the limitations of single-key, single-HMAC designs (Chapter 7) become visible in production:</p>
 <ul>
 <li><strong>Search functionality degrades gradually</strong> — with only one HMAC key active at a time, a rotation makes every existing record's HMAC stop matching new search HMACs until it's rekeyed.</li>
-<li><strong>Duplicate records can appear in fields meant to be unique</strong> — the unique-constraint failure mode covered in Chapter 6: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.</li>
+<li><strong>Duplicate records can appear in fields meant to be unique</strong> — the unique-constraint failure mode covered in Chapter 7: a rotated HMAC key means the same plaintext value now hashes differently, and a DB-level unique constraint on the HMAC column no longer catches the duplicate.</li>
 <li><strong>Rolling back a rotation doesn't undo its effects</strong> — writes that already went out under the new key stay as they are, so a rollback adds a second inconsistency rather than removing the first.</li>
 <li><strong>These failures tend to be gradual rather than immediate</strong> — they're rarely a hard crash, which means they're often identified well after the rotation, during a later investigation, rather than at the time it happened.</li>
 </ul>
-<p>This is the practical case for the List HMAC Strategy (Chapter 7) and for treating rekeying (Chapters 8–9) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.</p>
+<p>This is the practical case for the List HMAC Strategy (Chapter 8) and for treating rekeying (Chapters 9–10) as a first-class, tested capability rather than something addressed only after a rotation causes a problem.</p>
 
 
 
@@ -1088,13 +1116,13 @@
         
         
           
-          <a href="../06-single-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: Single HMAC Strategy">
+          <a href="../06-introducing-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Introducing HMACs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Single HMAC Strategy
+                Introducing HMACs
               </div>
             </div>
             <div class="md-footer__button md-icon">
