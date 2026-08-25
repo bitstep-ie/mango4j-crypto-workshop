@@ -582,6 +582,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -598,6 +616,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-you-cant-search-or-constrain-on-the-ciphertext-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you can't search or constrain on the ciphertext itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-single-hmac-strategy-one-column-per-hmac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single HMAC Strategy: one column per HMAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-breaks-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it breaks: search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-breaks-worse-unique-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it breaks worse: unique constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -857,6 +949,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-you-cant-search-or-constrain-on-the-ciphertext-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why you can't search or constrain on the ciphertext itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-single-hmac-strategy-one-column-per-hmac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single HMAC Strategy: one column per HMAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-breaks-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it breaks: search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-breaks-worse-unique-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it breaks worse: unique constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -876,16 +1031,79 @@
 
 
 <h1 id="6-introducing-hmacs-the-single-hmac-strategy">6. Introducing HMACs: The Single HMAC Strategy</h1>
-<p><em>Content coming soon.</em></p>
-<ul>
-<li>Why encrypted values can't be searched or checked for uniqueness directly (IVs make ciphertext non-deterministic — see Chapter 1)</li>
-<li>Introducing a single HMAC column alongside the ciphertext, computed deterministically from the plaintext, as the thing you actually search and constrain on</li>
-<li>Where the single HMAC strategy breaks down:<ul>
-<li>Search: during key rotation, rows hashed under the old key no longer match a search term hashed under the new key</li>
-<li>Unique constraints: especially problematic — a value can silently violate (or fail to enforce) uniqueness across a key rotation boundary, since the same plaintext produces two different HMACs under the two keys</li>
-</ul>
-</li>
-</ul>
+<h2 id="why-you-cant-search-or-constrain-on-the-ciphertext-itself">Why you can't search or constrain on the ciphertext itself</h2>
+<p>Chapter 1 introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input.</p>
+<p><strong>HMAC</strong> fills that gap. Unlike encryption, an HMAC (a hash computed using a secret key) is <em>deterministic</em>: the same input with the same key always produces the same output. That determinism is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on.</p>
+<h2 id="the-single-hmac-strategy-one-column-per-hmac">The Single HMAC Strategy: one column per HMAC</h2>
+<p>The simplest possible design: one HMAC column per field, holding a single HMAC value.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@SingleHmacStrategy</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserProfileEntity</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="nd">@Hmac</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="nd">@Hmac</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"USERNAME_HMAC"</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userNameHmac</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PAN_HMAC"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">panHmac</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@HmacKeyId</span>
+<span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"HMAC_KEY_ID"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">hmacKeyId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ...@EncryptedData, @EncryptionKeyId as in Chapter 3</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>By convention, the HMAC field is named after the source field with an <code>Hmac</code> suffix — <code>pan</code> → <code>panHmac</code>. <code>@HmacKeyId</code> records which HMAC key produced these values, which rekeying (Chapters 8–9) needs to find what's stale. It's the way "many applications (unfortunately) default to using HMACs" — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.</p>
+<h2 id="where-it-breaks-search">Where it breaks: search</h2>
+<p>Rotate the HMAC key and every existing record's HMAC was computed with the <em>old</em> key. A search hashes the term with the <em>new</em> key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:</p>
+<ol>
+<li>You change the HMAC key.</li>
+<li>All searches going forward use the new key.</li>
+<li>Immediately, none of your existing records are findable — their HMACs were all computed with the old key.</li>
+<li>A background job starts rekeying record by record.</li>
+<li>Search results gradually improve as the job progresses.</li>
+<li>Only once the job finishes is search fully back online.</li>
+</ol>
+<p>A single HMAC key per tenant means a rotation is a functional search outage for however long the rekey takes — unacceptable for most production systems, and unavoidable with only one active key.</p>
+<p>A partial fix exists: a <strong>key start time</strong>. When a new key is introduced, its start time is set to "now + the key cache duration," and writes never use it before that time — but <em>searches</em> immediately start hashing with every known key, old and new. Since nothing writes with the new key until every application instance has it cached, every record — old or freshly written — stays findable throughout.</p>
+<h2 id="where-it-breaks-worse-unique-constraints">Where it breaks worse: unique constraints</h2>
+<p>This is the more serious problem. Say <code>userName</code> has a DB-level unique constraint on its HMAC column. Walk through it:</p>
+<ol>
+<li>A user exists with username <code>john.doe@test.com</code>, HMAC'd under the old key.</li>
+<li>The HMAC key changes.</li>
+<li>A request comes in to create a <em>new</em> user with the same username, <code>john.doe@test.com</code>.</li>
+<li>Its HMAC is computed under the new key — a different value than the existing record's HMAC.</li>
+<li>The unique constraint doesn't fire, because the two HMAC values genuinely differ.</li>
+<li>Two users now exist with the same username.</li>
+</ol>
+<p>Adding "key start time" narrows this to a race condition rather than eliminating it, and only by paying for a search-before-every-write — itself a performance cost, and it makes the DB's own unique constraint largely redundant for the cases it's supposed to catch. Even that doesn't fully close the gap: a request arriving right at the key-start-time boundary can still slip through a race between two concurrent writes on different keys, producing the same duplicate outcome.</p>
+<h2 id="verdict">Verdict</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pros</strong></td>
+<td>Simplest possible design; relational-DB-friendly single-table layout; no extra write-path cost (one HMAC per attribute per write); little room for process error during a rotation</td>
+</tr>
+<tr>
+<td><strong>Cons</strong></td>
+<td>Cannot support unique constraint enforcement <em>and</em> key rotation without serious drawbacks; without key start time, rotation causes intermittent search outages; even with it, unique constraint support costs performance and still can't guarantee integrity under all circumstances</td>
+</tr>
+</tbody>
+</table>
+<p>If your application needs uniqueness enforced on any encrypted field, the Single HMAC Strategy is a design you'll eventually have to walk away from. Chapter 7 covers the strategy that actually solves both problems.</p>
 
 
 
