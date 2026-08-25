@@ -995,7 +995,19 @@
   <h1>Built in rekeying</h1>
 
 <p>Is rekeying built into mango4j-crypto, or do I have to write it myself?</p>
-<p>Built in (currently in beta). Configure a <code>RekeyCryptoKeyManager</code> and a <code>RekeyService</code> per entity, wire up a <code>RekeyScheduler</code>, and set a <code>CryptoKey</code>'s <code>rekeyMode</code> to <code>KEY_ON</code> or <code>KEY_OFF</code> to trigger a rekey the next time the scheduler runs — no additional per-rekey code required. HMAC rekeying specifically is only supported for entities using the List HMAC Strategy.</p>
+<p>Built in (currently in beta) — the actual decrypt/re-encrypt and HMAC recompute work is handled by the library. What an application has to supply is the plumbing that connects that work to its own database:</p>
+<ul>
+<li><strong>A <code>RekeyCryptoKeyManager</code></strong>, with one method: <code>markKeyForDeletion(cryptoKey)</code>. Called once a key is no longer needed; the application marks it deleted (typically so its own <code>CryptoKeyProvider</code> stops returning it) rather than being required to destroy it immediately.</li>
+<li><strong>A <code>RekeyService&lt;T&gt;</code> per entity type</strong>, with a handful of methods the rekey process calls repeatedly in batches until nothing's left to do:<ul>
+<li><code>findRecordsNotUsingCryptoKey(cryptoKey)</code> — for <code>KEY_ON</code> rekeys: a batch of records <em>not</em> yet on the target key.</li>
+<li><code>findRecordsUsingCryptoKey(cryptoKey)</code> — for <code>KEY_OFF</code> rekeys: a batch of records still on the key being retired.</li>
+<li><code>save(records)</code> — persist the batch after the library has already re-encrypted/re-hashed it in memory.</li>
+<li><code>notify(rekeyEvent)</code> — an optional hook for reacting to lifecycle events, e.g. a rekey finishing, or old HMACs becoming safe to purge.</li>
+</ul>
+</li>
+<li><strong>A <code>RekeyScheduler</code></strong>, configured once with these plus timing settings (how often to check for pending rekeys, batching pace, etc.).</li>
+</ul>
+<p>From there, setting a <code>CryptoKey</code>'s <code>rekeyMode</code> to <code>KEY_ON</code> or <code>KEY_OFF</code> is what actually triggers a rekey the next time the scheduler runs — no per-rekey code needed once the plumbing above exists. HMAC rekeying specifically is only supported for entities using the List HMAC Strategy. A later workshop stage walks through implementing this for a real entity.</p>
 
 
 
