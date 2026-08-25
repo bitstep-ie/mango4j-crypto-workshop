@@ -610,6 +610,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -626,6 +644,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#two-elegant-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two elegant concepts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity shape: three tables instead of one
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-closes-both-chapter-6-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this closes both Chapter 6 gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra capabilities this design unlocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -857,6 +949,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#two-elegant-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two elegant concepts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-shape-three-tables-instead-of-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity shape: three tables instead of one
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-closes-both-chapter-6-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this closes both Chapter 6 gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-capabilities-this-design-unlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra capabilities this design unlocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -876,13 +1031,78 @@
 
 
 <h1 id="7-the-list-hmac-strategy">7. The List HMAC Strategy</h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="two-elegant-concepts">Two elegant concepts</h2>
+<p>The List HMAC Strategy is the design mango4j-crypto's own authors recommend by default. It rests on two ideas:</p>
+<ol>
+<li><strong>A list of HMAC keys, not a single key.</strong> During a rotation you <em>add</em> the new key rather than replacing the old one — exactly the "list of HMAC keys per tenant" idea introduced in Chapter 5, now taken all the way.</li>
+<li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
+</ol>
+<p>That second point is what the Single HMAC Strategy (Chapter 6) never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.</p>
+<h2 id="entity-shape-three-tables-instead-of-one">Entity shape: three tables instead of one</h2>
+<p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one <code>USER_PROFILE</code> row with inline HMAC columns, you get:</p>
 <ul>
-<li>Storing a list of HMACs per value (e.g. one per active key) instead of a single HMAC</li>
-<li>How this fixes search across a key rotation: a search term is hashed under every active key and matched against the list</li>
-<li>How this fixes unique constraints: uniqueness can be enforced against all HMACs a value could produce under any currently-valid key, not just the latest one</li>
-<li>Trade-offs versus the single HMAC strategy from Chapter 6 (storage, constraint complexity)</li>
+<li><strong><code>USER_PROFILE</code></strong> — the encrypted record itself, no HMAC columns at all</li>
+<li><strong><code>USER_PROFILE_LOOKUPS</code></strong> — one row per (field, active HMAC key) pair, used for search</li>
+<li><strong><code>USER_PROFILE_UNIQUE_VALUES</code></strong> — structurally identical to lookups, but with a compound unique constraint on <code>(tenant, alias, value, hmacKeyId)</code> — separate purely because that constraint doesn't belong on the lookup table</li>
 </ul>
+<p>In code, the entity implements <code>Lookup</code> and/or <code>Unique</code> instead of exposing per-field <code>*Hmac</code> columns:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@ListHmacStrategy</span>
+<span class="nd">@Document</span><span class="p">(</span><span class="n">collection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"UserProfile"</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserProfileEntity</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Lookup</span><span class="p">,</span><span class="w"> </span><span class="n">Unique</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="nd">@Hmac</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pan</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="nd">@Hmac</span><span class="p">(</span><span class="n">purposes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">Hmac</span><span class="p">.</span><span class="na">Purposes</span><span class="p">.</span><span class="na">LOOKUP</span><span class="p">,</span><span class="w"> </span><span class="n">Hmac</span><span class="p">.</span><span class="na">Purposes</span><span class="p">.</span><span class="na">UNIQUE</span><span class="p">})</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setLookups</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lookups</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">lookups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getLookups</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">lookups</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setUniqueValues</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">uniqueValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getUniqueValues</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">uniqueValues</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>@Hmac(purposes = ...)</code> says whether a field's HMAC is for lookup, uniqueness, or both (defaults to lookup). There's no <code>@HmacKeyId</code> here — with a list of HMACs, the key ID lives per-entry inside each <code>CryptoShieldHmacHolder</code>, not as a single field on the entity. And notably: <strong>when updating an entity, <code>setLookups()</code>/<code>setUniqueValues()</code> must completely replace the existing collections, never append to them</strong> — the library expects to own the full current set on every write.</p>
+<p>On a document DB like Mongo, <code>lookups</code>/<code>uniqueValues</code> are just embedded lists on the same document — no extra tables needed, which is why the docs call this "an excellent fit for document DBs." On a relational DB you pay for it with up to three writes and a join on search.</p>
+<h2 id="why-this-closes-both-chapter-6-gaps">Why this closes both Chapter 6 gaps</h2>
+<ul>
+<li><strong>Search</strong>: a record written under key 2 while key 1 is still active carries lookup HMACs for <em>both</em>. Any application instance searching with either key finds it — including the multi-instance/cached-key race from Chapter 6, where one instance still thinks the old key is current.</li>
+<li><strong>Uniqueness</strong>: the compound constraint on <code>(alias, value, hmacKeyId)</code> means a duplicate username under <em>any</em> active key gets caught by the DB, not just the current one — there's no window where a rotated key lets a duplicate slip past.</li>
+</ul>
+<h2 id="extra-capabilities-this-design-unlocks">Extra capabilities this design unlocks</h2>
+<ul>
+<li><strong>HMAC tokenizers</strong> — <code>@Hmac(HmacTokenizers = {PanTokenizer.class})</code> generates <em>additional</em> lookup HMACs from derived representations of a value (e.g. last-4 digits, first-6, a normalized form with dashes stripped), stored alongside the full-value HMAC — richer search without weakening the encrypted value itself.</li>
+<li><strong><code>@UniqueGroup</code></strong> — a compound unique constraint spanning multiple fields (some HMAC'd, some cleartext) isn't expressible with a normal column-level constraint once one of those fields is a <code>@Hmac</code> field with no fixed column. <code>@UniqueGroup</code> lets you name a group and an order number per field so the library computes one combined unique HMAC across them.</li>
+</ul>
+<h2 id="verdict">Verdict</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pros</strong></td>
+<td>Correct under all combinations of requirements; the only design supporting passive key rotation for long-lived uniqueness data; standardized, cleaner search code; strong fit for document DBs; zero-outage search; guaranteed unique-constraint integrity; works correctly even with cached keys; easiest to rekey with no functional impact; supports as many HMAC keys as needed, added at any time</td>
+</tr>
+<tr>
+<td><strong>Cons</strong></td>
+<td>Forces relational DBs into a multi-table design; every write costs N HMACs (N = number of active keys), so a growing key list has a real performance cost until old keys are rekeyed away</td>
+</tr>
+</tbody>
+</table>
+<p>That last con is exactly why rekeying (Chapters 8–9) isn't optional infrastructure — without it, the "list" in List HMAC only ever grows.</p>
 
 
 
