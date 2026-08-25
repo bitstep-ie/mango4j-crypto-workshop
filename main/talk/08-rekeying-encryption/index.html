@@ -638,6 +638,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Rekeying: Encryption
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -654,6 +672,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rekeying vs. rotation: not the same step
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-rekey-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two rekey modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it actually finds and re-encrypts records
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is a distinct step from the HMAC rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-completes-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this completes rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -857,6 +949,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rekeying-vs-rotation-not-the-same-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rekeying vs. rotation: not the same step
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-rekey-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two rekey modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-finds-and-re-encrypts-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it actually finds and re-encrypts records
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-is-a-distinct-step-from-the-hmac-rekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is a distinct step from the HMAC rekey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-completes-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this completes rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -876,12 +1031,32 @@
 
 
 <h1 id="8-rekeying-encryption">8. Rekeying: Encryption</h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="rekeying-vs-rotation-not-the-same-step">Rekeying vs. rotation: not the same step</h2>
+<p>Chapter 5 drew the line already: rotation (phase 1) is switching <em>new writes</em> to a new key. Rekeying is the separate background process that goes back over <em>existing</em> records still encrypted under an old key, decrypts them, and re-encrypts them with the new one — the mechanism that eventually lets an old key actually be retired. Without it, an old key has to stay valid and available forever, because there's no way to know you've stopped needing it.</p>
+<h2 id="two-rekey-modes">Two rekey modes</h2>
+<p>mango4j-crypto's built-in rekey job drives this off a <code>rekeyMode</code> field on the <code>CryptoKey</code> itself (Chapter 2), with two modes:</p>
 <ul>
-<li>The encryption half of a rekey operation: decrypting each row's ciphertext under its old key and re-encrypting under the new key</li>
-<li>Treated as a distinct step from the HMAC rekey (Chapter 9), not a combined operation</li>
-<li>How this completes Phase 2 of key rotation (Chapter 5) for the encrypted data itself</li>
+<li><strong><code>KEY_OFF</code></strong> — rekey everything <em>off</em> this specific key and onto the current key. Used when you want to retire one particular old key. (Setting it on the <em>current</em> key is a no-op — it doesn't make sense to key something off itself.)</li>
+<li><strong><code>KEY_ON</code></strong> — rekey everything currently on <em>any other</em> key onto this one. A much bigger hammer: it can touch a large fraction of your entities at once, so it needs real consideration of the performance and provider-traffic impact before triggering it. (Also a no-op if set on a key that isn't current.)</li>
 </ul>
+<h2 id="how-it-actually-finds-and-re-encrypts-records">How it actually finds and re-encrypts records</h2>
+<p>The rekey job needs to answer two questions about every entity type it manages: which records are still using a given key, and which records aren't. That's why <code>@EncryptionKeyId</code> (Chapter 3) is worth having even though it's optional for decryption — the ciphertext itself already carries the key ID, but a queryable column lets the job find "all records where <code>encryptionKeyId != currentKey</code>" cheaply, instead of decrypting every row just to check.</p>
+<p>For each batch of matching records, the job:</p>
+<ol>
+<li>Decrypts the record with its current (old) key</li>
+<li>Re-encrypts it with the current encryption key</li>
+<li>Saves it back, with <code>@EncryptedData</code> and <code>@EncryptionKeyId</code> now reflecting the new key</li>
+</ol>
+<p>This runs as a background process the application configures once — a scheduler that periodically checks for keys marked <code>KEY_ON</code>/<code>KEY_OFF</code> and works through matching entities in batches, pausing between batches to avoid hammering the database or an external cryptographic provider (KMS calls aren't free, and a sudden spike in decrypt/encrypt traffic during a large rekey is exactly the kind of thing that can trip a provider's own rate limits).</p>
+<h2 id="why-this-is-a-distinct-step-from-the-hmac-rekey">Why this is a distinct step from the HMAC rekey</h2>
+<p>Encryption rekeying only has to satisfy one property: after it runs, the record decrypts correctly under the new key. There's no search index or uniqueness constraint riding on the <em>encrypted</em> value itself — only on the HMACs, which is a separate structure with its own rekey mechanics, its own completion criteria, and (for the List HMAC Strategy) its own multi-table shape. Chapter 9 covers that half.</p>
+<h2 id="how-this-completes-rotation">How this completes rotation</h2>
+<p>Put together with Chapter 5's phase 1, the full rotation lifecycle looks like:</p>
+<ol>
+<li><strong>Phase 1</strong> — new key becomes current; new writes use it; old key still decrypts.</li>
+<li><strong>Phase 2 / this chapter</strong> — a rekey job (<code>KEY_OFF</code> on the old key, or <code>KEY_ON</code> on the new one) works through existing records, re-encrypting each from old key to new key.</li>
+<li>Once no records remain on the old key, it can finally be deleted from the system — decryption no longer needs it, and leaving unused key material around is its own security liability.</li>
+</ol>
 
 
 
