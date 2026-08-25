@@ -66,3 +66,16 @@ If your application serves multiple distinct customers or organizations — bank
 ### Why "encryption at rest" alone isn't enough
 
 As covered above, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the *application's own access* is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.
+
+## Introducing mango4j-crypto
+
+*Content coming soon.*
+
+The rest of this talk demonstrates the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — as implemented by mango4j-crypto, the framework this workshop is built around:
+
+- Key-driven design: keys as objects, not strings
+- `CryptoShield` and annotations as the single source of truth for what's encrypted
+- Pluggable encryption service delegates
+- Single, Double, and List HMAC strategies
+- Built-in rekeying support
+- `@EnableMigrationSupport` for legacy unencrypted fields

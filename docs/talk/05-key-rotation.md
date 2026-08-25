@@ -11,3 +11,13 @@
     - Once new writes are on the new key, old rows are still encrypted under the old key
     - Migrating/rekeying existing data to the new key — the actual rekey mechanics are covered in Chapters 8–9
     - Why this happens as a later, separate pass rather than a single atomic switch
+- The related failure mode: migrating an unencrypted field to encrypted (same shape of problem as phase 2, starting from no encryption at all instead of an old key):
+    - Why you can't just "turn on" encryption for an existing column
+    - Backfilling millions of rows without downtime
+    - Dual-read/dual-write periods and their own bugs
+    - The feature freeze nobody wants to announce
+- When rotation/migration goes wrong in production — outages and application failure:
+    - Search functionality silently degrading in production
+    - Duplicate "unique" records corrupting business data
+    - Emergency rollbacks and the risks they introduce
+    - The incident review nobody wants to present
