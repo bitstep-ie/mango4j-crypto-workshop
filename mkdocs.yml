@@ -47,7 +47,6 @@ extra:
     provider: mike
 
 nav:
-  - Home: index.md
   - The Talk:
       - "1. What Is ALE, and Why?": talk/01-intro.md
       - "2. Key Aliases & Key Configs": talk/02-key-aliases.md
@@ -58,7 +57,8 @@ nav:
       - "7. List HMAC Strategy": talk/07-list-hmac.md
       - "8. Rekeying: Encryption": talk/08-rekeying-encryption.md
       - "9. Rekeying: HMACs": talk/09-rekeying-hmacs.md
-  - Workshop:
+  - The Workshop:
+      - Introduction: stages/00-intro.md
       - "1. Hands on Workshop": stages/01-getting-started.md
       - "2. Encrypting a Field": stages/02-encrypting-a-field.md
   - How This Workshop Works: how-it-works.md
