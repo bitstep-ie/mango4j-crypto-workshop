@@ -11,8 +11,10 @@
       
       
       
+        <link rel="prev" href="../../talk/09-rekeying-hmacs/">
       
-        <link rel="next" href="../02-key-aliases/">
+      
+        <link rel="next" href="../01-getting-started/">
       
       
         
@@ -23,7 +25,7 @@
     
     
       
-        <title>1. What Is ALE, and Why? - ALE Workshop</title>
+        <title>Introduction - ALE Workshop</title>
       
     
     
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#1-what-is-ale-and-why-do-we-still-need-it" class="md-skip">
+        <a href="#introduction" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              1. What Is ALE, and Why?
+              Introduction
             
           </span>
         </div>
@@ -220,13 +222,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../talk/01-intro/" class="md-tabs__link">
           
   
   
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../stages/00-intro/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -325,31 +327,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
             
   
   
@@ -367,7 +364,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -382,37 +379,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1. What Is ALE, and Why?
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../talk/01-intro/" class="md-nav__link">
         
   
   
@@ -428,131 +398,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ALE versus TDE / disk encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where ALE sits in the application stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key terms: tenant, key, ciphertext, HMAC, IV
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-do-we-still-need-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why do we still need it?
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Why do we still need it?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#from-concepts-to-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        From concepts to practice
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -565,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-key-aliases/" class="md-nav__link">
+      <a href="../../talk/02-key-aliases/" class="md-nav__link">
         
   
   
@@ -593,7 +438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-structured-ciphertext/" class="md-nav__link">
+      <a href="../../talk/03-structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -621,7 +466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../../talk/04-transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -649,7 +494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation/" class="md-nav__link">
+      <a href="../../talk/05-key-rotation/" class="md-nav__link">
         
   
   
@@ -677,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-single-hmac/" class="md-nav__link">
+      <a href="../../talk/06-single-hmac/" class="md-nav__link">
         
   
   
@@ -705,7 +550,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-list-hmac/" class="md-nav__link">
+      <a href="../../talk/07-list-hmac/" class="md-nav__link">
         
   
   
@@ -733,7 +578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-rekeying-encryption/" class="md-nav__link">
+      <a href="../../talk/08-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -761,7 +606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-rekeying-hmacs/" class="md-nav__link">
+      <a href="../../talk/09-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -793,26 +638,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -830,7 +680,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -845,10 +695,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../stages/00-intro/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -864,6 +741,48 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-follow-along" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to follow along
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -876,7 +795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stages/01-getting-started/" class="md-nav__link">
+      <a href="../01-getting-started/" class="md-nav__link">
         
   
   
@@ -904,7 +823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stages/02-encrypting-a-field/" class="md-nav__link">
+      <a href="../02-encrypting-a-field/" class="md-nav__link">
         
   
   
@@ -986,10 +905,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ale-versus-tde-disk-encryption" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ALE versus TDE / disk encryption
+        Prerequisites
       
     </span>
   </a>
@@ -997,93 +916,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-ale-sits-in-the-application-stack" class="md-nav__link">
+  <a href="#how-to-follow-along" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where ALE sits in the application stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-terms-tenant-key-ciphertext-hmac-iv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key terms: tenant, key, ciphertext, HMAC, IV
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-do-we-still-need-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why do we still need it?
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Why do we still need it?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#regulatory-and-compliance-drivers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regulatory and compliance drivers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reducing-blast-radius-when-a-database-or-backup-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reducing blast radius when a database or backup leaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tenant-customer-data-segregation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant / customer data segregation requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-encryption-at-rest-alone-isnt-enough" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why "encryption at rest" alone isn't enough
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#from-concepts-to-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        From concepts to practice
+        How to follow along
       
     </span>
   </a>
@@ -1110,52 +946,18 @@
   
 
 
-<h1 id="1-what-is-ale-and-why-do-we-still-need-it">1. What Is ALE, and Why Do We Still Need It?</h1>
-<p>Application Level Encryption (ALE) means your <strong>application code</strong> encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.</p>
-<p>This is a deliberate contrast with encryption that happens <em>underneath</em> your application, at the infrastructure layer.</p>
-<h2 id="ale-versus-tde-disk-encryption">ALE versus TDE / disk encryption</h2>
-<p>Transparent Data Encryption (TDE) and disk/volume encryption protect data <strong>at rest</strong> — the bytes sitting on a physical or virtual disk. They're valuable, but they solve a narrow problem: someone stealing a disk, a decommissioned drive, or an unencrypted backup file. The moment there's an authenticated connection to the database — a valid DB credential, a live query, a DBA doing routine maintenance — TDE decrypts everything transparently and hands back plaintext. That's the point of the "T" in TDE.</p>
-<p>ALE protects against a much wider threat model, because the plaintext simply never reaches the database layer at all:</p>
+<h1 id="introduction">Introduction</h1>
+<p>Welcome to the workshop for <strong>mango4j-crypto</strong>, an Application Level Encryption framework for Java applications. It supports pluggable encryption providers (AWS KMS, PBKDF2, wrapped keys, or your own), multiple HMAC strategies for searching and enforcing uniqueness on encrypted fields, automatic key rotation and rekeying, multi-tenant key segregation, and migrating existing unencrypted fields to encrypted ones.</p>
+<p><strong>Application Level Encryption (ALE)</strong> means your application code — not the database, not the disk — encrypts confidential fields before they're ever persisted. Done naively, it's a minefield: fields hand-encrypted straight into columns, a single HMAC column that quietly breaks unique constraints during a key rotation, a hard dependency on one cryptographic provider, no safe path from an unencrypted field to an encrypted one. All of it tends to surface as production outages, not build failures.</p>
+<p><a href="https://github.com/bitstep-ie/mango4j-crypto">mango4j-crypto</a> is built specifically to avoid those traps. Keys are objects, not hardcoded strings, so swapping or rotating a cryptographic provider needs zero application code changes. <code>@Encrypt</code>/<code>@EncryptedData</code> annotations give you one consistent way to mark confidential fields, instead of ad hoc code scattered across the codebase. It ships multiple HMAC strategies so you can actually get searchability <em>and</em> unique constraints right, built-in rekeying support so key rotation doesn't mean a search outage or duplicate data, and <code>@EnableMigrationSupport</code> for safely moving an existing unencrypted field to encrypted. This workshop is a hands-on, step-by-step introduction to using it.</p>
+<p>Before the hands-on stages, <a href="../../talk/01-intro/">The Talk</a> goes deeper: what ALE is, why it's needed, and the numerous ways the typical/naive approach fails in production.</p>
+<h2 id="prerequisites">Prerequisites</h2>
 <ul>
-<li>A leaked or overly broad database credential</li>
-<li>A SQL injection vulnerability</li>
-<li>A well-meaning DBA (or a compromised one) running an ad hoc query</li>
-<li>A backup or replica that ends up somewhere it shouldn't</li>
-<li>An application bug that logs a raw query</li>
+<li>JDK 17+</li>
+<li>Maven</li>
 </ul>
-<p>None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — most serious systems use both — but only ALE addresses this category of risk.</p>
-<h2 id="where-ale-sits-in-the-application-stack">Where ALE sits in the application stack</h2>
-<p>ALE lives in the application/service layer, as close as possible to the boundary where data crosses from your business logic into persistence:</p>
-<div class="highlight"><pre><span></span><code>Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository → Database
-</code></pre></div>
-<p>Your business logic still works with plaintext values — a <code>cardNumber</code>, an <code>email</code> — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.</p>
-<h2 id="key-terms-tenant-key-ciphertext-hmac-iv">Key terms: tenant, key, ciphertext, HMAC, IV</h2>
-<p>A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:</p>
-<dl>
-<dt><strong>Tenant</strong></dt>
-<dd>A logical isolation boundary for a distinct customer or client entity in your system, each with its own encryption/HMAC keys — so a data breach or key compromise affecting one tenant can't expose another's data. If your application doesn't have the concept of multiple customers, you can just think of your whole application as "the tenant."</dd>
-<dt><strong>Key</strong></dt>
-<dd>The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change <em>how</em> encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in Chapter 2.</dd>
-<dt><strong>Ciphertext</strong></dt>
-<dd>The encrypted output. Irreversible without the correct key — that's the entire point.</dd>
-<dt><strong>HMAC</strong></dt>
-<dd>A hash computed using a secret key. Unlike encryption, a HMAC is <em>deterministic</em>: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. More on why in a later chapter.</dd>
-<dt><strong>IV (Initialization Vector)</strong></dt>
-<dd>Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time. That's exactly the gap HMACs exist to fill.</dd>
-</dl>
-<h2 id="why-do-we-still-need-it">Why do we still need it?</h2>
-<p>Encrypting things is extra engineering effort, so it's fair to ask why it's worth doing. The short answer: because most real-world data breaches don't involve anyone stealing a physical disk — they involve someone getting access to a live, running system, and the database sitting right there in plaintext.</p>
-<h3 id="regulatory-and-compliance-drivers">Regulatory and compliance drivers</h3>
-<p>Plenty of regulations and standards effectively require it for certain categories of data: PCI-DSS for card numbers (like the <code>cardNumber</code> field this workshop encrypts), HIPAA for health information, GDPR and similar privacy laws for personal data more broadly. These frameworks don't always say "you must implement Application Level Encryption" in those exact words, but they require controls that are, in practice, very hard to satisfy without it — data minimization, breach notification thresholds that change based on whether exposed data was encrypted, and demonstrable protection of data even from your own staff. Auditors increasingly ask specifically whether confidential fields are encrypted <em>before</em> they reach the database, not just whether the disk is encrypted.</p>
-<h3 id="reducing-blast-radius-when-a-database-or-backup-leaks">Reducing blast radius when a database or backup leaks</h3>
-<p>Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise have exposed every customer's data becomes a non-event, because the thing that leaked was never usable on its own.</p>
-<h3 id="tenant-customer-data-segregation-requirements">Tenant / customer data segregation requirements</h3>
-<p>If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a <strong>tenant</strong>, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all.</p>
-<h3 id="why-encryption-at-rest-alone-isnt-enough">Why "encryption at rest" alone isn't enough</h3>
-<p>As covered above, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the <em>application's own access</em> is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.</p>
-<h2 id="from-concepts-to-practice">From concepts to practice</h2>
-<p>The rest of this talk works through the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — one at a time, on their own terms, independent of any particular library or language. They're general ALE design problems that any application implementing this pattern has to solve somehow, whether it rolls its own solution or reaches for an existing framework.</p>
-<p>The hands-on workshop that follows this talk puts these same concepts into practice using mango4j-crypto, a Java framework built around exactly this set of ideas — a key-driven design, pluggable providers, a choice of HMAC strategies, and built-in support for rotation and rekeying. Where the talk stays conceptual, the workshop is where you'll see one concrete implementation of it.</p>
+<h2 id="how-to-follow-along">How to follow along</h2>
+<p>Head straight to <a href="../01-getting-started/">Hands on Workshop</a> to get started.</p>
 
 
 
@@ -1184,15 +986,31 @@
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../../talk/09-rekeying-hmacs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 9. Rekeying: HMACs">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                9. Rekeying: HMACs
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="../02-key-aliases/" class="md-footer__link md-footer__link--next" aria-label="Next: 2. Key Aliases &amp; Key Configs">
+          <a href="../01-getting-started/" class="md-footer__link md-footer__link--next" aria-label="Next: 1. Hands on Workshop">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                2. Key Aliases & Key Configs
+                1. Hands on Workshop
               </div>
             </div>
             <div class="md-footer__button md-icon">
