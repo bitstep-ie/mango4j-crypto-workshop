@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../08-single-hmac/">
+        <link rel="prev" href="../07-list-hmac/">
       
       
-        <link rel="next" href="../10-rekeying-encryption/">
+        <link rel="next" href="../09-rekeying-hmacs/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>9. List HMAC Strategy - Mango4j Crypto ALE Workshop</title>
+        <title>8. Rekeying: Encryption - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#9-the-list-hmac-strategy" class="md-skip">
+        <a href="#8-rekeying-encryption" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              9. List HMAC Strategy
+              8. Rekeying: Encryption
             
           </span>
         </div>
@@ -545,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation-intro/" class="md-nav__link">
+      <a href="../05-key-rotation/" class="md-nav__link">
         
   
   
@@ -573,14 +573,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-key-rotation-phase1/" class="md-nav__link">
+      <a href="../06-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Key Rotation, Phase 1
+    6. Single HMAC Strategy
   
 
     
@@ -601,42 +601,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-key-rotation-phase2/" class="md-nav__link">
+      <a href="../07-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Key Rotation, Phase 2
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../08-single-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Single HMAC Strategy
+    7. List HMAC Strategy
   
 
     
@@ -673,7 +645,7 @@
   <span class="md-ellipsis">
     
   
-    9. List HMAC Strategy
+    8. Rekeying: Encryption
   
 
     
@@ -695,42 +667,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Rekeying: Encryption
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Rekeying: HMACs
+    9. Rekeying: HMACs
   
 
     
@@ -931,13 +875,12 @@
   
 
 
-<h1 id="9-the-list-hmac-strategy">9. The List HMAC Strategy</h1>
+<h1 id="8-rekeying-encryption">8. Rekeying: Encryption</h1>
 <p><em>Content coming soon.</em></p>
 <ul>
-<li>Storing a list of HMACs per value (e.g. one per active key) instead of a single HMAC</li>
-<li>How this fixes search across a key rotation: a search term is hashed under every active key and matched against the list</li>
-<li>How this fixes unique constraints: uniqueness can be enforced against all HMACs a value could produce under any currently-valid key, not just the latest one</li>
-<li>Trade-offs versus the single HMAC strategy from Chapter 8 (storage, constraint complexity)</li>
+<li>The encryption half of a rekey operation: decrypting each row's ciphertext under its old key and re-encrypting under the new key</li>
+<li>Treated as a distinct step from the HMAC rekey (Chapter 9), not a combined operation</li>
+<li>How this completes Phase 2 of key rotation (Chapter 5) for the encrypted data itself</li>
 </ul>
 
 
@@ -968,7 +911,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../08-single-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Single HMAC Strategy">
+          <a href="../07-list-hmac/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 7. List HMAC Strategy">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -978,20 +921,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                8. Single HMAC Strategy
+                7. List HMAC Strategy
               </div>
             </div>
           </a>
         
         
           
-          <a href="../10-rekeying-encryption/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. Rekeying: Encryption">
+          <a href="../09-rekeying-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: 9. Rekeying: HMACs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                10. Rekeying: Encryption
+                9. Rekeying: HMACs
               </div>
             </div>
             <div class="md-footer__button md-icon">

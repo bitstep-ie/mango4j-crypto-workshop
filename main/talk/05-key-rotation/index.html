@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../05-key-rotation-intro/">
+        <link rel="prev" href="../04-transient-vs-encrypted-blobs/">
       
       
-        <link rel="next" href="../07-key-rotation-phase2/">
+        <link rel="next" href="../06-single-hmac/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>6. Key Rotation, Phase 1 - Mango4j Crypto ALE Workshop</title>
+        <title>5. Key Rotation - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#6-key-rotation-phase-1-switching-to-a-new-key" class="md-skip">
+        <a href="#5-encryption-key-rotation" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              6. Key Rotation, Phase 1
+              5. Key Rotation
             
           </span>
         </div>
@@ -542,34 +542,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-key-rotation-intro/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    5. Key Rotation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -589,7 +561,7 @@
   <span class="md-ellipsis">
     
   
-    6. Key Rotation, Phase 1
+    5. Key Rotation
   
 
     
@@ -611,14 +583,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-key-rotation-phase2/" class="md-nav__link">
+      <a href="../06-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Key Rotation, Phase 2
+    6. Single HMAC Strategy
   
 
     
@@ -639,14 +611,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-single-hmac/" class="md-nav__link">
+      <a href="../07-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Single HMAC Strategy
+    7. List HMAC Strategy
   
 
     
@@ -667,14 +639,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-list-hmac/" class="md-nav__link">
+      <a href="../08-rekeying-encryption/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. List HMAC Strategy
+    8. Rekeying: Encryption
   
 
     
@@ -695,42 +667,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../10-rekeying-encryption/" class="md-nav__link">
+      <a href="../09-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    10. Rekeying: Encryption
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Rekeying: HMACs
+    9. Rekeying: HMACs
   
 
     
@@ -931,12 +875,22 @@
   
 
 
-<h1 id="6-key-rotation-phase-1-switching-to-a-new-key">6. Key Rotation, Phase 1: Switching to a New Key</h1>
+<h1 id="5-encryption-key-rotation">5. Encryption Key Rotation</h1>
 <p><em>Content coming soon.</em></p>
 <ul>
+<li>Why keys need to rotate: age, suspected compromise, compliance schedules, provider migration</li>
+<li>Phase 1 — switching new writes to a new key:<ul>
 <li>Pointing the alias used for new writes at a new crypto key config</li>
 <li>The new key can be from a completely different provider than the old one — the structured ciphertext format (Chapter 3) and the alias indirection (Chapter 2) are what make that possible</li>
 <li>Old keys continue to work for decryption, so existing data written under the old key keeps reading back correctly with no migration required yet</li>
+</ul>
+</li>
+<li>Phase 2 — migrating old data to the new key:<ul>
+<li>Once new writes are on the new key, old rows are still encrypted under the old key</li>
+<li>Migrating/rekeying existing data to the new key — the actual rekey mechanics are covered in Chapters 8–9</li>
+<li>Why this happens as a later, separate pass rather than a single atomic switch</li>
+</ul>
+</li>
 </ul>
 
 
@@ -967,7 +921,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../05-key-rotation-intro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5. Key Rotation">
+          <a href="../04-transient-vs-encrypted-blobs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 4. Transient vs. Encrypted Blobs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -977,20 +931,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                5. Key Rotation
+                4. Transient vs. Encrypted Blobs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../07-key-rotation-phase2/" class="md-footer__link md-footer__link--next" aria-label="Next: 7. Key Rotation, Phase 2">
+          <a href="../06-single-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: 6. Single HMAC Strategy">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                7. Key Rotation, Phase 2
+                6. Single HMAC Strategy
               </div>
             </div>
             <div class="md-footer__button md-icon">

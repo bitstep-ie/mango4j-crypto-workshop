@@ -534,7 +534,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation-intro/" class="md-nav__link">
+      <a href="../05-key-rotation/" class="md-nav__link">
         
   
   
@@ -562,14 +562,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-key-rotation-phase1/" class="md-nav__link">
+      <a href="../06-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Key Rotation, Phase 1
+    6. Single HMAC Strategy
   
 
     
@@ -590,14 +590,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-key-rotation-phase2/" class="md-nav__link">
+      <a href="../07-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Key Rotation, Phase 2
+    7. List HMAC Strategy
   
 
     
@@ -618,14 +618,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-single-hmac/" class="md-nav__link">
+      <a href="../08-rekeying-encryption/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    8. Single HMAC Strategy
+    8. Rekeying: Encryption
   
 
     
@@ -646,70 +646,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../09-list-hmac/" class="md-nav__link">
+      <a href="../09-rekeying-hmacs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    9. List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-encryption/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Rekeying: Encryption
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Rekeying: HMACs
+    9. Rekeying: HMACs
   
 
     
@@ -921,13 +865,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#new-talk-chapter-order-regenerated-as-docstalk0111-on-2026-08-25" class="md-nav__link">
+  <a href="#new-talk-chapter-order-regenerated-as-docstalk0109-on-2026-08-25" class="md-nav__link">
     <span class="md-ellipsis">
       
-        New talk — chapter order (regenerated as docs/talk/01–11 on 2026-08-25)
+        New talk — chapter order (regenerated as docs/talk/01–09 on 2026-08-25)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="New talk — chapter order (regenerated as docs/talk/01–09 on 2026-08-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chapters-dropped-from-the-original-15-chapter-talk-docstalk-pre-2026-08-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapters dropped from the original 15-chapter talk (docs/talk, pre-2026-08-25)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -979,21 +940,59 @@
 </li>
 <li>Split into two separate rekey operations/topics: encryption rekey and HMAC rekey — treat them as distinct steps, not one combined step.</li>
 </ul>
-<h2 id="new-talk-chapter-order-regenerated-as-docstalk0111-on-2026-08-25">New talk — chapter order (regenerated as docs/talk/01–11 on 2026-08-25)</h2>
+<h2 id="new-talk-chapter-order-regenerated-as-docstalk0109-on-2026-08-25">New talk — chapter order (regenerated as docs/talk/01–09 on 2026-08-25)</h2>
 <ol>
 <li><code>01-intro.md</code> — What is ALE, and why do we still need it (merged old chapters 1+2)</li>
 <li><code>02-key-aliases.md</code> — Key aliases → crypto key configs</li>
 <li><code>03-structured-ciphertext.md</code> — Plain ciphertext → structured ciphertext</li>
 <li><code>04-transient-vs-encrypted-blobs.md</code> — Transient vs. encrypted blobs, avoiding double encrypt/decrypt</li>
-<li><code>05-key-rotation-intro.md</code> — Encryption key rotation, introducing the concept</li>
-<li><code>06-key-rotation-phase1.md</code> — Phase 1: switch new writes to the new key; new key can be a different provider; old keys still decrypt</li>
-<li><code>07-key-rotation-phase2.md</code> — Phase 2: migrate old data to the new key</li>
-<li><code>08-single-hmac.md</code> — Introducing HMACs, single HMAC strategy: search and unique-constraint issues, why they break, especially unique constraints</li>
-<li><code>09-list-hmac.md</code> — List HMAC strategy: why it fits search and unique keys better than single HMAC</li>
-<li><code>10-rekeying-encryption.md</code> — Rekeying: encryption — re-encrypting data to the new key</li>
-<li><code>11-rekeying-hmacs.md</code> — Rekeying: HMACs — regenerating HMACs separately from the encryption rekey</li>
+<li><code>05-key-rotation.md</code> — Encryption key rotation as a single chapter (phase 1: switch new writes to the new key, new key can be a different provider, old keys still decrypt; phase 2: migrate old data to the new key) — originally split into 3 chapters (intro/phase1/phase2), merged into one per explicit request, no split</li>
+<li><code>06-single-hmac.md</code> — Introducing HMACs, single HMAC strategy: search and unique-constraint issues, why they break, especially unique constraints</li>
+<li><code>07-list-hmac.md</code> — List HMAC strategy: why it fits search and unique keys better than single HMAC</li>
+<li><code>08-rekeying-encryption.md</code> — Rekeying: encryption — re-encrypting data to the new key</li>
+<li><code>09-rekeying-hmacs.md</code> — Rekeying: HMACs — regenerating HMACs separately from the encryption rekey</li>
 </ol>
-<p>All chapters except 1 are currently outline stubs ("Content coming soon.") with bullet points capturing what each should cover. <code>mkdocs.yml</code> nav updated to match; old chapters 3–15 (naive approach, failure columns, outages, doing-it-right, mango4j-crypto intro, what-we're-building-today) deleted rather than folded in — revisit if any of that material is still needed.</p>
+<p>All chapters except 1 are currently outline stubs ("Content coming soon.") with bullet points capturing what each should cover. <code>mkdocs.yml</code> nav updated to match.</p>
+<h3 id="chapters-dropped-from-the-original-15-chapter-talk-docstalk-pre-2026-08-25">Chapters dropped from the original 15-chapter talk (docs/talk, pre-2026-08-25)</h3>
+<p>Not carried into the new outline in any form — set aside along with the rest of the old talk, not folded into a new chapter:</p>
+<ul>
+<li>
+<ol>
+<li>The Naive Approach: A Simple Case of Implementing ALE</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>Failure Mode: Encrypting Fields Directly Into Their Columns</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>Failure Mode: Migrating an Unencrypted Field to Encrypted</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>When It All Comes Together: Outages and Application Failure</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>What "Doing It Right" Actually Requires</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>Introducing mango4j-crypto</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>What We're Building Today</li>
+</ol>
+</li>
+</ul>
+<p>Old chapters 1 and 2 were merged into new chapter 1 (not dropped). Old chapters 5–10 were absorbed into the new outline's chapters 2–3, 5–9 (not dropped, restructured). Revisit the dropped list above if any of that material turns out to still be needed (e.g. a workshop-intro chapter like old 14/15, or the failure-mode narratives).</p>
 
 
 

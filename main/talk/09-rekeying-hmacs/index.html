@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../07-key-rotation-phase2/">
+        <link rel="prev" href="../08-rekeying-encryption/">
       
       
-        <link rel="next" href="../09-list-hmac/">
+        <link rel="next" href="../../stages/01-getting-started/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>8. Single HMAC Strategy - Mango4j Crypto ALE Workshop</title>
+        <title>9. Rekeying: HMACs - Mango4j Crypto ALE Workshop</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#8-introducing-hmacs-the-single-hmac-strategy" class="md-skip">
+        <a href="#9-rekeying-hmacs" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              8. Single HMAC Strategy
+              9. Rekeying: HMACs
             
           </span>
         </div>
@@ -545,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-key-rotation-intro/" class="md-nav__link">
+      <a href="../05-key-rotation/" class="md-nav__link">
         
   
   
@@ -573,14 +573,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-key-rotation-phase1/" class="md-nav__link">
+      <a href="../06-single-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    6. Key Rotation, Phase 1
+    6. Single HMAC Strategy
   
 
     
@@ -601,14 +601,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-key-rotation-phase2/" class="md-nav__link">
+      <a href="../07-list-hmac/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    7. Key Rotation, Phase 2
+    7. List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-rekeying-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Rekeying: Encryption
   
 
     
@@ -645,7 +673,7 @@
   <span class="md-ellipsis">
     
   
-    8. Single HMAC Strategy
+    9. Rekeying: HMACs
   
 
     
@@ -655,90 +683,6 @@
 
       </a>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../09-list-hmac/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. List HMAC Strategy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../10-rekeying-encryption/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. Rekeying: Encryption
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../11-rekeying-hmacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Rekeying: HMACs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -931,16 +875,12 @@
   
 
 
-<h1 id="8-introducing-hmacs-the-single-hmac-strategy">8. Introducing HMACs: The Single HMAC Strategy</h1>
+<h1 id="9-rekeying-hmacs">9. Rekeying: HMACs</h1>
 <p><em>Content coming soon.</em></p>
 <ul>
-<li>Why encrypted values can't be searched or checked for uniqueness directly (IVs make ciphertext non-deterministic — see Chapter 1)</li>
-<li>Introducing a single HMAC column alongside the ciphertext, computed deterministically from the plaintext, as the thing you actually search and constrain on</li>
-<li>Where the single HMAC strategy breaks down:<ul>
-<li>Search: during key rotation, rows hashed under the old key no longer match a search term hashed under the new key</li>
-<li>Unique constraints: especially problematic — a value can silently violate (or fail to enforce) uniqueness across a key rotation boundary, since the same plaintext produces two different HMACs under the two keys</li>
-</ul>
-</li>
+<li>The HMAC half of a rekey operation: regenerating each row's HMAC(s) under the new key</li>
+<li>Why this is split out from the encryption rekey (Chapter 8) as its own step</li>
+<li>How this interacts with the list HMAC strategy (Chapter 7) — old HMACs can be dropped from the list once the rekey completes and rotation is done</li>
 </ul>
 
 
@@ -971,7 +911,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../07-key-rotation-phase2/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 7. Key Rotation, Phase 2">
+          <a href="../08-rekeying-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Rekeying: Encryption">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -981,20 +921,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                7. Key Rotation, Phase 2
+                8. Rekeying: Encryption
               </div>
             </div>
           </a>
         
         
           
-          <a href="../09-list-hmac/" class="md-footer__link md-footer__link--next" aria-label="Next: 9. List HMAC Strategy">
+          <a href="../../stages/01-getting-started/" class="md-footer__link md-footer__link--next" aria-label="Next: 1. Getting Started">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                9. List HMAC Strategy
+                1. Getting Started
               </div>
             </div>
             <div class="md-footer__button md-icon">
