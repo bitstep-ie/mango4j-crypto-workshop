@@ -2,8 +2,8 @@ ALE FAQ
 
 Quick answers to questions that come up repeatedly when discussing Application Level Encryption in general, independent of any particular framework.
 
-- [What's a hash, and how is that different from encryption?](faq/hash-vs-encryption.md)
 - [What's an IV, and why does it matter?](faq/iv.md)
+- [What's a hash, and how is that different from encryption?](faq/hash-vs-encryption.md)
 - [Why do I need to HMAC data to make it searchable?](faq/hmac-for-search.md)
 - [Why do I need to HMAC data to enforce a unique constraint?](faq/hmac-for-uniqueness.md)
 - [What's the difference between key rotation and rekeying?](faq/rotation-vs-rekeying.md)

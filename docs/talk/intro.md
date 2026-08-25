@@ -28,7 +28,7 @@ Client → API → Business logic → ALE (encrypt/decrypt) → ORM / Repository
 
 Your business logic still works with plaintext values — a `cardNumber`, an `email` — because that's what your domain rules, validation, and application behavior actually need. The encryption step sits right before that value is handed off to be persisted, and the reverse (decryption) happens right after a record is loaded back. From the database's point of view, nothing has changed: it's still storing strings and blobs. It just never has the key, and never sees the plaintext.
 
-## Key terms: tenant, key, ciphertext, HMAC, IV
+## Key terms: tenant, key, ciphertext, IV, HMAC
 
 A handful of terms come up constantly when discussing ALE — worth having a shared, precise vocabulary before going further:
 
@@ -41,11 +41,11 @@ A handful of terms come up constantly when discussing ALE — worth having a sha
 **Ciphertext**
 :   The encrypted output. Irreversible without the correct key — that's the entire point.
 
-**HMAC**
-:   A hash computed using a secret key. Unlike encryption, a HMAC is *deterministic*: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on. More on why in a later chapter.
-
 **IV (Initialization Vector)**
-:   Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time. That's exactly the gap HMACs exist to fill.
+:   Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time.
+
+**HMAC**
+:   A hash computed using a secret key. Unlike encryption, a HMAC is *deterministic*: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on, and it's exactly the gap left open by the IV above. More on why in a later chapter.
 
 ## Why do we still need it?
 
