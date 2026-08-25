@@ -59,6 +59,6 @@ nav:
       - "8. Rekeying: Encryption": talk/08-rekeying-encryption.md
       - "9. Rekeying: HMACs": talk/09-rekeying-hmacs.md
   - Workshop:
-      - "1. Getting Started": stages/01-getting-started.md
+      - "1. Hands on Workshop": stages/01-getting-started.md
       - "2. Encrypting a Field": stages/02-encrypting-a-field.md
   - How This Workshop Works: how-it-works.md
