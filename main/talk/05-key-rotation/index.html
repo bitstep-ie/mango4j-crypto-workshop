@@ -891,6 +891,20 @@
 <li>Why this happens as a later, separate pass rather than a single atomic switch</li>
 </ul>
 </li>
+<li>The related failure mode: migrating an unencrypted field to encrypted (same shape of problem as phase 2, starting from no encryption at all instead of an old key):<ul>
+<li>Why you can't just "turn on" encryption for an existing column</li>
+<li>Backfilling millions of rows without downtime</li>
+<li>Dual-read/dual-write periods and their own bugs</li>
+<li>The feature freeze nobody wants to announce</li>
+</ul>
+</li>
+<li>When rotation/migration goes wrong in production — outages and application failure:<ul>
+<li>Search functionality silently degrading in production</li>
+<li>Duplicate "unique" records corrupting business data</li>
+<li>Emergency rollbacks and the risks they introduce</li>
+<li>The incident review nobody wants to present</li>
+</ul>
+</li>
 </ul>
 
 

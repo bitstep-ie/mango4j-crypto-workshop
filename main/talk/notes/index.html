@@ -877,10 +877,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chapters-dropped-from-the-original-15-chapter-talk-docstalk-pre-2026-08-25" class="md-nav__link">
+  <a href="#old-talk-chapters-folded-into-the-new-outline-2026-08-25" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chapters dropped from the original 15-chapter talk (docs/talk, pre-2026-08-25)
+        Old-talk chapters folded into the new outline (2026-08-25)
       
     </span>
   </a>
@@ -953,46 +953,20 @@
 <li><code>09-rekeying-hmacs.md</code> — Rekeying: HMACs — regenerating HMACs separately from the encryption rekey</li>
 </ol>
 <p>All chapters except 1 are currently outline stubs ("Content coming soon.") with bullet points capturing what each should cover. <code>mkdocs.yml</code> nav updated to match.</p>
-<h3 id="chapters-dropped-from-the-original-15-chapter-talk-docstalk-pre-2026-08-25">Chapters dropped from the original 15-chapter talk (docs/talk, pre-2026-08-25)</h3>
-<p>Not carried into the new outline in any form — set aside along with the rest of the old talk, not folded into a new chapter:</p>
+<h3 id="old-talk-chapters-folded-into-the-new-outline-2026-08-25">Old-talk chapters folded into the new outline (2026-08-25)</h3>
+<p>Every chapter from the original 15-chapter talk now has a home in the new 9-chapter outline — nothing was left out in the end:</p>
 <ul>
-<li>
-<ol>
-<li>The Naive Approach: A Simple Case of Implementing ALE</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>Failure Mode: Encrypting Fields Directly Into Their Columns</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>Failure Mode: Migrating an Unencrypted Field to Encrypted</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>When It All Comes Together: Outages and Application Failure</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>What "Doing It Right" Actually Requires</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>Introducing mango4j-crypto</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>What We're Building Today</li>
-</ol>
-</li>
+<li>Old 1–2 (What Is ALE / Why We Need It) → new Ch 1 (merged directly)</li>
+<li>Old 3 (The Naive Approach) → new Ch 3 (Structured Ciphertext), as the naive/opaque-blob starting point</li>
+<li>Old 4 (Failure: Encrypted Columns) → new Ch 4 (Transient vs. Encrypted Blobs), as the motivating failure mode</li>
+<li>Old 5–10 (multi-provider/rotation, HMAC search/uniqueness, single-vs-list HMAC, rekeying) → new Ch 2–3, 5–9, restructured</li>
+<li>Old 11 (Failure: Migration) → new Ch 5 (Key Rotation), as the related unencrypted→encrypted migration failure mode</li>
+<li>Old 12 (Outages and App Failure) → new Ch 5 (Key Rotation), as the "when it goes wrong in production" section</li>
+<li>Old 13 (Doing It Right) → new Ch 9 (Rekeying: HMACs), as the closing wrap-up</li>
+<li>Old 14 (Introducing mango4j-crypto) → new Ch 1, as a closing section naming the framework the talk demonstrates</li>
+<li>Old 15 (What We're Building Today) → new Ch 9, as the closing transition into the hands-on workshop</li>
 </ul>
-<p>Old chapters 1 and 2 were merged into new chapter 1 (not dropped). Old chapters 5–10 were absorbed into the new outline's chapters 2–3, 5–9 (not dropped, restructured). Revisit the dropped list above if any of that material turns out to still be needed (e.g. a workshop-intro chapter like old 14/15, or the failure-mode narratives).</p>
+<p>All merged-in content is still outline-stub bullets/headings, not full prose (except chapter 1's original content, which was already written).</p>
 
 
 

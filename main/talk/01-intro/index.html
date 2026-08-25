@@ -586,6 +586,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#introducing-mango4j-crypto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducing mango4j-crypto
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1088,6 +1099,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#introducing-mango4j-crypto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducing mango4j-crypto
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1151,6 +1173,17 @@
 <p>If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a <strong>tenant</strong>, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all.</p>
 <h3 id="why-encryption-at-rest-alone-isnt-enough">Why "encryption at rest" alone isn't enough</h3>
 <p>As covered above, disk/volume encryption (TDE) only protects against someone stealing the physical media. The moment there's a valid, authenticated connection to the database — which describes almost every real attack path: a leaked credential, a SQL injection, an over-privileged service account, a compromised internal tool — TDE decrypts everything and hands back plaintext without a second thought. It solves a real but narrow problem. It does nothing for the much more common scenario where the <em>application's own access</em> is what's abused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.</p>
+<h2 id="introducing-mango4j-crypto">Introducing mango4j-crypto</h2>
+<p><em>Content coming soon.</em></p>
+<p>The rest of this talk demonstrates the concepts above — key aliases, structured ciphertext, key rotation, HMAC strategies, rekeying — as implemented by mango4j-crypto, the framework this workshop is built around:</p>
+<ul>
+<li>Key-driven design: keys as objects, not strings</li>
+<li><code>CryptoShield</code> and annotations as the single source of truth for what's encrypted</li>
+<li>Pluggable encryption service delegates</li>
+<li>Single, Double, and List HMAC strategies</li>
+<li>Built-in rekeying support</li>
+<li><code>@EnableMigrationSupport</code> for legacy unencrypted fields</li>
+</ul>
 
 
 
