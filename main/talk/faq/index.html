@@ -923,6 +923,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hmac-is-deterministic-by-definition-does-any-of-this-change-that" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HMAC is deterministic by definition — does any of this change that?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#whats-an-iv-and-why-does-it-matter" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1065,6 +1076,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hmac-is-deterministic-by-definition-does-any-of-this-change-that" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HMAC is deterministic by definition — does any of this change that?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#whats-an-iv-and-why-does-it-matter" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1189,6 +1211,8 @@
 <p>Quick answers to questions that come up repeatedly when discussing ALE. Each one links to the chapter that covers the full reasoning.</p>
 <h2 id="whats-a-hash-and-how-is-that-different-from-encryption">What's a hash, and how is that different from encryption?</h2>
 <p>A hash is one-way: given a value, hashing it produces an output, but that output can never be reversed back into the original value — there's no key that decrypts it, because it was never "encrypted" in the first place. Encryption is two-way: the same key that produced the ciphertext can also recover the original plaintext from it. A <strong>HMAC</strong> (Hash-based Message Authentication Code) is a hash computed with a secret key added into the mix — still one-way, but only someone with that key can compute the correct HMAC for a given value. See <a href="../introducing-hmacs/">Introducing HMACs</a>.</p>
+<h2 id="hmac-is-deterministic-by-definition-does-any-of-this-change-that">HMAC is deterministic by definition — does any of this change that?</h2>
+<p>No. Determinism (same input, same key, always the same output) is a property of the HMAC algorithm itself — HMAC-SHA256 or whichever construction is in use — not something a particular design or framework adds or removes. A given (value, key) pair always produces the same HMAC, full stop. What varies between strategies isn't whether a HMAC is deterministic — it's <em>how many</em> HMACs get computed and stored for a value, and under how many different keys. The <a href="../list-hmac/">List HMAC Strategy</a> stores one HMAC per active key rather than one HMAC overall, but each of those individual HMACs is still exactly as deterministic as it always was — you're just keeping several deterministic answers to "what's the HMAC of this value under key K", one per key, side by side. See <a href="../introducing-hmacs/">Introducing HMACs</a>.</p>
 <h2 id="whats-an-iv-and-why-does-it-matter">What's an IV, and why does it matter?</h2>
 <p>An IV (Initialization Vector) is randomness mixed into an encryption operation so that encrypting the same value twice never produces the same ciphertext, even with the same key. It travels alongside the ciphertext (in the clear — it isn't secret) so decryption can reverse the operation. This is good for security, but it has a direct consequence: you can't search for a record by re-encrypting a search term and comparing ciphertext, because the ciphertext is different every time. See <a href="../intro/">What Is ALE, and Why Do We Still Need It?</a> and <a href="../structured-ciphertext/">Structured Ciphertext</a>.</p>
 <h2 id="why-do-i-need-to-hmac-data-to-make-it-searchable">Why do I need to HMAC data to make it searchable?</h2>
