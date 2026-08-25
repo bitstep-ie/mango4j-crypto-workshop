@@ -1,0 +1,3 @@
+Why can there be only one active encryption key at a time, but potentially many active HMAC keys?
+
+Decrypting a record is only possible once you already have that record — its ciphertext carries the ID of the key that encrypted it, so decryption always knows exactly which key to use, regardless of how many keys have existed over time. Searching is the opposite problem: you don't have the record yet, that's what you're trying to find, so you don't know in advance which key was used to HMAC it. The only way to find it is to try every key that might have been used — which means every key still holding un-rekeyed data has to stay active for search, not just the newest one. See [Introducing HMACs](../introducing-hmacs.md) and [List HMAC Strategy](../list-hmac.md).

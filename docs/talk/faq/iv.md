@@ -1,0 +1,3 @@
+What's an IV, and why does it matter?
+
+An IV (Initialization Vector) is randomness mixed into an encryption operation so that encrypting the same value twice never produces the same ciphertext, even with the same key. It travels alongside the ciphertext (in the clear — it isn't secret) so decryption can reverse the operation. This is good for security, but it has a direct consequence: you can't search for a record by re-encrypting a search term and comparing ciphertext, because the ciphertext is different every time. See [What Is ALE, and Why Do We Still Need It?](../intro.md) and [Structured Ciphertext](../structured-ciphertext.md).

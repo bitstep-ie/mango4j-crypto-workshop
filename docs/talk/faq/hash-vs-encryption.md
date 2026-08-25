@@ -1,0 +1,3 @@
+What's a hash, and how is that different from encryption?
+
+A hash is one-way: given a value, hashing it produces an output, but that output can never be reversed back into the original value — there's no key that decrypts it, because it was never "encrypted" in the first place. Encryption is two-way: the same key that produced the ciphertext can also recover the original plaintext from it. A **HMAC** (Hash-based Message Authentication Code) is a hash computed with a secret key added into the mix — still one-way, but only someone with that key can compute the correct HMAC for a given value. See [Introducing HMACs](../introducing-hmacs.md).

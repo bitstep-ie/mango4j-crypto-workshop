@@ -1,0 +1,3 @@
+If HMACs don't carry a reference to their own key, how does rekeying know what to rekey?
+
+By the time you've found a record via search, you already know which row it is — so a stored key reference on the HMAC itself wouldn't help you find it any faster. But it's still useful for a different reason: a rekey process needs to efficiently ask "which records still have a HMAC from this old key?" without decrypting everything to check. Storing the HMAC key ID alongside each HMAC (purely as a rekeying convenience, not something search itself depends on) is what makes that query cheap. See [Rekeying: HMACs](../rekeying-hmacs.md).

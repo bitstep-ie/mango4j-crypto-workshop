@@ -63,4 +63,6 @@ nav:
       - "Getting Started": stages/01-getting-started.md
       - "Encrypting a Field": stages/02-encrypting-a-field.md
   - How This Workshop Works: how-it-works.md
-  - FAQ: talk/faq.md
+  - FAQ:
+      - ALE: talk/faq-ale.md
+      - mango4j-crypto: talk/faq-mango4j.md
