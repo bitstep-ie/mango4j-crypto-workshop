@@ -664,6 +664,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -995,7 +1023,7 @@
   <h1>Hmac for search</h1>
 
 <p>Why do I need to HMAC data to make it searchable?</p>
-<p>Because ciphertext is never the same twice (see <a href="../iv/">What's an IV, and why does it matter?</a>), you can't search on it directly. A HMAC of the same value, computed with the same key, is always the same — so you store a HMAC alongside the ciphertext, and search by hashing the search term and matching against stored HMACs, the same way you'd match against a regular indexed column. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
+<p>With the usual randomized or nonce-based encryption schemes, the same plaintext produces different ciphertext each time (see <a href="../iv/">What's an IV, and why does it matter?</a>), so ciphertext is not normally suitable for equality search. A HMAC of the same normalized value, computed with the same key, is deterministic; storing it alongside ciphertext enables equality lookup by HMAC. This also reveals equality between matching stored values, so normalization, authorization, and key management are part of the design. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
 
 
 

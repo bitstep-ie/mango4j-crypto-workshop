@@ -664,6 +664,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -995,7 +1023,7 @@
   <h1>Migration support</h1>
 
 <p>How do I migrate an existing unencrypted field to encrypted with mango4j-crypto?</p>
-<p>The <code>@EnableMigrationSupport</code> annotation marks a field as temporarily exempt from the usual rule that <code>@Encrypt</code> fields must be transient — letting it stay in its old, unencrypted, persisted form while a backfill completes. It takes a <code>completedBy</code> date and a <code>justification</code>; the framework logs a warning before that date and an error after it, so the exception doesn't quietly become permanent.</p>
+<p>Use <code>@EnableMigrationSupport</code> alongside <code>@Encrypt</code> to temporarily exempt a field from the usual rule that encrypted fields must be <code>transient</code>. This lets the old persisted plaintext field remain available while a backfill completes. It takes a <code>completedBy</code> date and a <code>justification</code>; the framework logs a warning before that date and an error after it. The annotation records a temporary exception; the application still needs a controlled backfill, dual-read/write behaviour where needed, monitoring, and removal of the exception once migration is complete.</p>
 
 
 

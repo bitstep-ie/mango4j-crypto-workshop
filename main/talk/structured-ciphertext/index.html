@@ -756,6 +756,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1134,7 +1162,7 @@
 <ul>
 <li>Which key encrypted this? (You need to know, in order to decrypt it.)</li>
 <li>Which provider handled that key? (AWS KMS? An HSM? Something else?)</li>
-<li>What IV was used? (Needed to reverse the encryption operation, and never safe to reuse.)</li>
+<li>What IV or nonce was used? (Needed to reverse the encryption operation; the encryption scheme defines whether it must be random, unique, or both.)</li>
 </ul>
 <p>Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes <a href="../key-rotation/">key rotation</a> and <a href="../key-aliases/">multi-provider support</a> difficult to retrofit later.</p>
 <h2 id="the-fix-a-structured-ciphertext-format">The fix: a structured ciphertext format</h2>

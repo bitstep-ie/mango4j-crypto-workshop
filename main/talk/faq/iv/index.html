@@ -664,6 +664,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -995,7 +1023,7 @@
   <h1>Iv</h1>
 
 <p>What's an IV, and why does it matter?</p>
-<p>An IV (Initialization Vector) is randomness mixed into an encryption operation so that encrypting the same value twice never produces the same ciphertext, even with the same key. It travels alongside the ciphertext (in the clear — it isn't secret) so decryption can reverse the operation. This is good for security, but it has a direct consequence: you can't search for a record by re-encrypting a search term and comparing ciphertext, because the ciphertext is different every time. See <a href="../../intro/">What Is ALE, and Why Do We Still Need It?</a> and <a href="../../structured-ciphertext/">Structured Ciphertext</a>.</p>
+<p>An IV (Initialization Vector), often called a nonce, is per-operation input to an encryption scheme. Its requirements depend on that scheme: it may need to be random, unique, or both. It normally travels alongside the ciphertext in the clear because it is not secret. With the usual randomized or nonce-based schemes, encrypting the same value twice produces different ciphertext, so you cannot search by re-encrypting a term and comparing ciphertext. See <a href="../../intro/">What Is ALE, and Why Do We Still Need It?</a> and <a href="../../structured-ciphertext/">Structured Ciphertext</a>.</p>
 
 
 

@@ -778,6 +778,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1178,7 +1206,7 @@
 <li><strong>A list of HMAC keys, not a single key.</strong> During a <a href="../key-rotation/">rotation</a> you <em>add</em> the new key rather than replacing the old one, so a tenant can have several active HMAC keys at once.</li>
 <li><strong>Every write stores HMACs for the entire list of active keys, not just the current one.</strong> Not one HMAC per field — one per field <em>per active key</em>.</li>
 </ol>
-<p>That second point is what the <a href="../single-hmac/">Single HMAC Strategy</a> never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.</p>
+<p>This differs from the <a href="../single-hmac/">Single HMAC Strategy</a>: a record written today carries HMACs under every active key. With transactional writes and correctly refreshed key configuration, that lets it remain findable and participate in uniqueness checks throughout a rotation.</p>
 <h2 id="entity-shape-three-tables-instead-of-one">Entity shape: three tables instead of one</h2>
 <p>This is the trade-off — it forces relational DBs into a multi-table design. Instead of one record with inline HMAC columns, you get:</p>
 <ul>
@@ -1195,7 +1223,7 @@
 </ul>
 <h2 id="extra-capabilities-this-design-unlocks">Extra capabilities this design unlocks</h2>
 <ul>
-<li><strong>Derived-value search terms</strong> — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of <em>derived</em> representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.</li>
+<li><strong>Derived-value equality lookups</strong> — because a field can carry more than one HMAC entry, it can also store HMACs of deliberately derived representations (for example, a normalized value with punctuation stripped, or a card number's last four digits). This supports equality lookup for that specific derived value; it is not general substring or prefix search. Each derived token adds an observable equality/frequency signal, and low-entropy tokens such as four digits are easy to enumerate through a query oracle. Include only tokens justified by the threat model and access controls.</li>
 <li><strong>Compound uniqueness across multiple fields</strong> — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.</li>
 </ul>
 <h2 id="verdict">Verdict</h2>
@@ -1209,7 +1237,7 @@
 <tbody>
 <tr>
 <td><strong>Pros</strong></td>
-<td>Correct under all combinations of requirements; the only design supporting passive key rotation for long-lived uniqueness data; standardized, cleaner search code; strong fit for document DBs; zero-outage search; guaranteed unique-constraint integrity; works correctly even with cached keys; easiest to rekey with no functional impact; supports as many HMAC keys as needed, added at any time</td>
+<td>Supports passive key rotation for long-lived uniqueness data when the application maintains every active-key entry transactionally; a strong fit for document DBs; can preserve search availability and database-enforced uniqueness across a rotation; supports multiple active HMAC keys</td>
 </tr>
 <tr>
 <td><strong>Cons</strong></td>

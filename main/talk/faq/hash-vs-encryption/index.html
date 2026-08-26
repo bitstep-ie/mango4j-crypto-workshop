@@ -664,6 +664,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-and-operational-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Operational Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -995,7 +1023,7 @@
   <h1>Hash vs encryption</h1>
 
 <p>What's a hash, and how is that different from encryption?</p>
-<p>A hash is one-way: given a value, hashing it produces an output, but that output can never be reversed back into the original value — there's no key that decrypts it, because it was never "encrypted" in the first place. Encryption is two-way: the same key that produced the ciphertext can also recover the original plaintext from it. A <strong>HMAC</strong> (Hash-based Message Authentication Code) is a hash computed with a secret key added into the mix — still one-way, but only someone with that key can compute the correct HMAC for a given value. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
+<p>A hash is one-way: given a value, hashing it produces an output, but that output cannot be decrypted back into the original value — there is no decryption key because it was never encrypted. Encryption is reversible by the appropriate decryption key or capability; symmetric encryption uses the same secret key, while public-key encryption uses a key pair. A <strong>HMAC</strong> (Hash-based Message Authentication Code) is a keyed cryptographic function — still one-way, but only someone with the secret key can compute the correct HMAC for a given value. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
 
 
 
