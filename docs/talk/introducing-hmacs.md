@@ -2,7 +2,7 @@ Introducing HMACs
 
 ## Why you can't search or constrain on the ciphertext itself
 
-[What Is ALE, and Why Do We Still Need It?](intro.md) introduced the IV: randomness fed into every encryption operation so encrypting the same value twice never produces the same ciphertext. That's essential for security, but it has a direct, unavoidable consequence — you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every single time, even for the same input. The same problem applies to uniqueness: you can't put a database constraint directly on a ciphertext column, because two records holding the identical plaintext value will never produce identical ciphertext.
+[What Is ALE, and Why Do We Still Need It?](intro.md) introduced IV/nonce handling. With the usual randomized or nonce-based encryption schemes, encrypting the same value twice produces different ciphertext. As a result, equality search and a unique constraint cannot normally operate on ciphertext values themselves.
 
 ## What a HMAC is
 
@@ -10,7 +10,7 @@ Introducing HMACs
 
 ## Why you'd want one: search
 
-If a field is encrypted, finding a record by that field's value isn't possible by comparing ciphertext (see above). The fix: alongside the ciphertext, store a HMAC of the plaintext value, computed with a secret key. To search, compute the HMAC of the search term with that same key and look for a match. Because the HMAC is deterministic, the same plaintext value always produces the same HMAC — so this works exactly like an index lookup on a regular column, just without ever exposing the plaintext itself in storage.
+If a field is encrypted, finding a record by that field's value is not normally possible by comparing ciphertext (see above). One approach is to store a HMAC of the plaintext alongside the ciphertext. To search, compute the HMAC of the normalized search term with the same key and look for a match. This supports equality lookup without storing the plaintext, but it does reveal that matching stored values are equal and requires deliberate normalization, access control, and key management.
 
 ## Why you'd want one: unique constraints
 

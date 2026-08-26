@@ -8,7 +8,7 @@ That gets you *an* opaque blob. But an opaque blob on its own can't answer the q
 
 - Which key encrypted this? (You need to know, in order to decrypt it.)
 - Which provider handled that key? (AWS KMS? An HSM? Something else?)
-- What IV was used? (Needed to reverse the encryption operation, and never safe to reuse.)
+- What IV or nonce was used? (Needed to reverse the encryption operation; the encryption scheme defines whether it must be random, unique, or both.)
 
 Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes [key rotation](key-rotation.md) and [multi-provider support](key-aliases.md) difficult to retrofit later.
 

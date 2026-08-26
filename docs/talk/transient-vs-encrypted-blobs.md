@@ -7,17 +7,17 @@ Every confidential field an entity carries actually has two lives:
 - A **transient** (working, in-memory) representation — the plaintext value your business logic actually works with (validates, compares, displays)
 - An **encrypted-blob** representation — the [structured ciphertext](structured-ciphertext.md) that's what actually gets persisted
 
-A sound ALE design keeps these strictly separate: the plaintext value exists only for as long as it's needed in memory, and the only thing that ever gets written to storage is the encrypted blob. The two are never the same field, and nothing is expected to hold both at once.
+A sound ALE design keeps these representations separate: the plaintext value is used in memory and the encrypted blob is the persistence representation. The two are not the same field, although both can legitimately be present on an in-memory entity while it is being processed.
 
 ## Why this separation matters
 
-If a field can hold either plaintext or ciphertext depending on when you look at it, nothing in the code guarantees which one it currently holds — every reader and writer has to know by convention, and that convention eventually gets it wrong. Keeping the working value and the persisted value as genuinely separate representations means whatever serializes data out to storage can only ever see the encrypted form; the plaintext simply isn't reachable from that path. This is usually enforced by whatever mechanism controls what a serialization layer (an ORM, a JSON mapper, whatever writes to storage) is allowed to touch — excluding the working field from that path entirely, so a plaintext value can never be accidentally flushed to disk.
+If a field can hold either plaintext or ciphertext depending on when you look at it, every reader and writer has to infer its current representation. Keeping working and persisted values separate makes the intended boundary explicit and lets an ORM or persistence mapper exclude the plaintext field. That is a valuable safeguard, but it is not automatic: review serializers, ORM mappings, logs, caches, queues, traces, and diagnostic tooling as well. Any of them can still persist or expose plaintext if configured to inspect the working field.
 
 Encrypting a value doesn't need to destroy the working copy — the application can keep using the plaintext for the rest of its current operation. Decrypting, likewise, just repopulates the working representation from the stored blob; it doesn't need to touch the blob itself.
 
 ## The failure mode this avoids: double encrypt/decrypt
 
-Keeping the two representations distinct — and only ever converting between them at one well-defined boundary — means a value gets encrypted exactly once on the way in and decrypted exactly once on the way out. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, the result would be redundant (and potentially incorrect) encrypt/decrypt passes on the same data as it moves through the system. Requiring that only the working fields hold plaintext and only the designated stored field holds ciphertext removes any ambiguity about which representation a value is currently in.
+Keeping the two representations distinct — and converting at a well-defined boundary — makes redundant encrypt/decrypt passes easier to prevent and test. If plaintext and ciphertext shared the same field, or an operation encrypted data that was already ciphertext, callers could apply the wrong operation. The split removes ambiguity about the intended representation, but application control flow must still ensure that encryption and decryption are called at the correct lifecycle points.
 
 ## What happens without this discipline: encrypting fields directly into their columns
 

@@ -58,6 +58,7 @@ nav:
       - "List HMAC Strategy": talk/list-hmac.md
       - "Rekeying: Encryption": talk/rekeying-encryption.md
       - "Rekeying: HMACs": talk/rekeying-hmacs.md
+      - "Security & Operational Considerations": talk/security-and-operational-considerations.md
   - The Workshop:
       - Introduction: stages/00-intro.md
       - "Getting Started": stages/01-getting-started.md

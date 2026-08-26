@@ -1,6 +1,6 @@
 What Is ALE, and Why Do We Still Need It?
 
-Application Level Encryption (ALE) means your **application code** encrypts and decrypts specific pieces of confidential data itself, before that data is ever written to (or after it's read from) storage. The database, the disk, the backup system — none of them ever see the plaintext. As far as they're concerned, a confidential field is just an opaque blob of ciphertext.
+Application Level Encryption (ALE) means your **application code** encrypts and decrypts specific pieces of confidential data itself, before that data is written to (or after it is read from) storage. Correctly integrated, the database and its backups store ciphertext rather than those fields' plaintext.
 
 This is a deliberate contrast with encryption that happens *underneath* your application, at the infrastructure layer.
 
@@ -8,7 +8,7 @@ This is a deliberate contrast with encryption that happens *underneath* your app
 
 Transparent Data Encryption (TDE) and disk/volume encryption protect data **at rest** — the bytes sitting on a physical or virtual disk. They're valuable, but they solve a narrow problem: someone stealing a disk, a decommissioned drive, or an unencrypted backup file. The moment there's an authenticated connection to the database — a valid DB credential, a live query, a DBA doing routine maintenance — TDE decrypts everything transparently and hands back plaintext. That's the point of the "T" in TDE.
 
-ALE protects against a much wider threat model, because the plaintext simply never reaches the database layer at all:
+ALE can reduce the impact of direct access to a database or backup, because the protected plaintext does not need to reach the database layer:
 
 - A leaked or overly broad database credential
 - A SQL injection vulnerability
@@ -16,7 +16,7 @@ ALE protects against a much wider threat model, because the plaintext simply nev
 - A backup or replica that ends up somewhere it shouldn't
 - An application bug that logs a raw query
 
-None of these expose confidential data if the value was already ciphertext before it left your application. TDE and ALE aren't competing choices — many production systems use both — but only ALE addresses this category of risk.
+For these cases, an attacker who obtains only the ciphertext still needs access to the relevant decryption capability and keys. This is an important boundary, not a blanket guarantee: ALE does not by itself protect against an attacker who can run application code, call a decryption path, obtain key-management access, or read plaintext from application logs, caches, traces, or responses. TDE and ALE are complementary controls; many production systems use both.
 
 ## Where ALE sits in the application stack
 
@@ -39,10 +39,10 @@ A handful of terms come up constantly when discussing ALE — worth having a sha
 :   The secret material (and its associated metadata — identity, purpose, which provider or mechanism should handle it) used to perform an encryption or HMAC operation. How a key is represented in code has a big effect on how easily an application can later change *how* encryption is performed (a different KMS, a different algorithm, a different provider) — more on this in [Key Aliases & Key Configs](key-aliases.md).
 
 **Ciphertext**
-:   The encrypted output. Irreversible without the correct key — that's the entire point.
+:   The encrypted output. It can be decrypted only with the appropriate decryption key or capability.
 
-**IV (Initialization Vector)**
-:   Randomness fed into an encryption operation so that encrypting the same value twice never produces the same ciphertext. This is essential for security (it defeats pattern analysis on your data), but it has a direct consequence: you can never find a record by encrypting a search term and comparing ciphertext, because the ciphertext is different every time.
+**IV (Initialization Vector) / nonce**
+:   Per-operation input used by an encryption scheme. Depending on the scheme, it must be random, unique, or both; it is normally stored with the ciphertext and is not secret. Correct nonce handling prevents repeated encryptions of the same value from revealing an avoidable pattern. With the usual randomized or nonce-based encryption schemes, you therefore cannot find a record by encrypting a search term and comparing ciphertext.
 
 **HMAC**
 :   A hash computed using a secret key. Unlike encryption, a HMAC is *deterministic*: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on, and it's exactly the gap left open by the IV above. More on why in a later chapter.
@@ -53,19 +53,25 @@ Encrypting things is extra engineering effort, so it's fair to ask why it's wort
 
 ### Regulatory and compliance drivers
 
-Plenty of regulations and standards effectively require it for certain categories of data: PCI-DSS for card numbers (like the `cardNumber` field this workshop encrypts), HIPAA for health information, GDPR and similar privacy laws for personal data more broadly. These frameworks don't always say "you must implement Application Level Encryption" in those exact words, but they require controls that are, in practice, very hard to satisfy without it — data minimization, breach notification thresholds that change based on whether exposed data was encrypted, and demonstrable protection of data even from your own staff. Auditors increasingly ask specifically whether confidential fields are encrypted *before* they reach the database, not just whether the disk is encrypted.
+Regulations and standards often make encryption an important option, but they do not universally prescribe ALE. PCI DSS requires stored PAN to be rendered unreadable and allows several approved approaches; HIPAA requires a documented, risk-based decision on addressable encryption specifications; and GDPR Article 32 names encryption as one possible appropriate technical measure. Whether ALE is appropriate depends on the data, threat model, architecture, and applicable legal or contractual obligations. Treat this workshop as technical guidance, not compliance or legal advice.
 
 ### Reducing blast radius when a database or backup leaks
 
-Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, an exposed backup, a misconfigured replica, or a stolen snapshot all contain nothing but ciphertext — useless without the encryption keys, which live somewhere else entirely (a KMS, an HSM, a secrets manager). This is what "reducing blast radius" means in practice: a breach that would otherwise have exposed every customer's data becomes a non-event, because the thing that leaked was never usable on its own.
+Every additional place plaintext data exists is another place it can leak from. With ALE, a leaked database dump, exposed backup, misconfigured replica, or stolen snapshot can contain ciphertext rather than plaintext. If the keys and decryption services remain protected, that can substantially reduce the value of the leaked data. It does not remove incident-response, notification, or key-compromise obligations.
 
 ### Tenant / customer data segregation requirements
 
-If your application serves multiple distinct customers or organizations — banks, enterprises, whoever — each one is a **tenant**, and it's common (and sometimes contractually required) that each tenant's confidential data be cryptographically isolated from every other tenant's. That means each tenant needs its own encryption keys, not just its own database rows. Done properly, this means a key compromise, a legal data request, or a "right to be forgotten" deletion for one tenant can be handled without touching any other tenant's data at all.
+If your application serves multiple distinct customers or organizations, each one is a **tenant**, and it can be useful to cryptographically isolate one tenant's data from another's. Per-tenant keys can reduce the scope of a key compromise and can help implement contractual or operational isolation requirements. They do not, on their own, satisfy legal data-access or deletion obligations; those still require the relevant data-governance and retention processes.
 
 ### Why "encryption at rest" alone isn't enough
 
 As covered above under [ALE versus TDE / disk encryption](#ale-versus-tde-disk-encryption), TDE only protects against someone stealing the physical media, not against the much more common case of an authenticated connection being misused. ALE is the layer that still holds even when the database itself is fully compromised, because the database was never trusted with the plaintext in the first place.
+
+## Confidentiality is not the whole security property
+
+Encryption protects confidentiality; it does not automatically establish that ciphertext has not been altered. Production encryption delegates should normally use authenticated encryption (for example, an AEAD mode) or an equally robust integrity design, and should store the authentication data required for verification. The HMACs discussed later in this talk are deterministic search and uniqueness indexes. They are not, by themselves, authentication tags for the ciphertext and must not be treated as a substitute for ciphertext integrity.
+
+The application also owns the boundaries around the crypto operation. Review ORM and serializer mappings, API responses, logs, error reporting, metrics, tracing, caches, queues, and debug tooling so that plaintext does not escape through a path outside the encrypted persistence model. Test those boundaries as part of integration and incident-response exercises.
 
 ## From concepts to practice
 

@@ -7,7 +7,7 @@ The List HMAC Strategy is generally the recommended default for applications tha
 1. **A list of HMAC keys, not a single key.** During a [rotation](key-rotation.md) you *add* the new key rather than replacing the old one, so a tenant can have several active HMAC keys at once.
 2. **Every write stores HMACs for the entire list of active keys, not just the current one.** Not one HMAC per field — one per field *per active key*.
 
-That second point is what the [Single HMAC Strategy](single-hmac.md) never did, and it's what actually closes both the search-outage and unique-constraint gaps: a record written today carries HMACs under every key currently in play, so it stays findable and constraint-checkable under all of them, immediately, with no rotation window where anything is stale.
+This differs from the [Single HMAC Strategy](single-hmac.md): a record written today carries HMACs under every active key. With transactional writes and correctly refreshed key configuration, that lets it remain findable and participate in uniqueness checks throughout a rotation.
 
 ## Entity shape: three tables instead of one
 
@@ -28,14 +28,14 @@ On a document DB (like MongoDB), the lookups/unique-values lists are just embedd
 
 ## Extra capabilities this design unlocks
 
-- **Derived-value search terms** — because a field can carry more than one HMAC entry, it's straightforward to also store HMACs of *derived* representations of a value (e.g. the last four digits of a card number, a normalized form with punctuation stripped), enabling richer partial-match search without weakening the encrypted value itself.
+- **Derived-value equality lookups** — because a field can carry more than one HMAC entry, it can also store HMACs of deliberately derived representations (for example, a normalized value with punctuation stripped, or a card number's last four digits). This supports equality lookup for that specific derived value; it is not general substring or prefix search. Each derived token adds an observable equality/frequency signal, and low-entropy tokens such as four digits are easy to enumerate through a query oracle. Include only tokens justified by the threat model and access controls.
 - **Compound uniqueness across multiple fields** — a unique constraint spanning several fields, where at least one is HMAC'd, isn't expressible as a normal column-level constraint once that field has no fixed column of its own. A named group with an explicit, stable ordering across the participating fields lets a single combined unique value be computed and constrained across all of them together.
 
 ## Verdict
 
 | | |
 |---|---|
-| **Pros** | Correct under all combinations of requirements; the only design supporting passive key rotation for long-lived uniqueness data; standardized, cleaner search code; strong fit for document DBs; zero-outage search; guaranteed unique-constraint integrity; works correctly even with cached keys; easiest to rekey with no functional impact; supports as many HMAC keys as needed, added at any time |
+| **Pros** | Supports passive key rotation for long-lived uniqueness data when the application maintains every active-key entry transactionally; a strong fit for document DBs; can preserve search availability and database-enforced uniqueness across a rotation; supports multiple active HMAC keys |
 | **Cons** | Forces relational DBs into a multi-table design; every write costs N HMACs (N = number of active keys), so a growing key list has a real performance cost until old keys are rekeyed away |
 
 That last con is exactly why rekeying ([encryption](rekeying-encryption.md), [HMACs](rekeying-hmacs.md)) isn't optional infrastructure — without it, the "list" in List HMAC only ever grows.
