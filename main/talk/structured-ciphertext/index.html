@@ -1165,7 +1165,7 @@
 <li>What IV or nonce was used? (Needed to reverse the encryption operation; the encryption scheme defines whether it must be random, unique, or both.)</li>
 </ul>
 <p>Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes <a href="../key-rotation/">key rotation</a> and <a href="../key-aliases/">multi-provider support</a> difficult to retrofit later.</p>
-<p>Here's that naive shape in code — an IV and the raw ciphertext bytes, and nothing that says which key produced them:</p>
+<p>Here's that naive shape in code, just an IV and the raw ciphertext bytes, with nothing that says which key produced them:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="p">;</span>
 <span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">ciphertext</span><span class="p">;</span>
 </code></pre></div>
@@ -1181,7 +1181,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveVault.java#L66-L74">View on GitHub</a></small></p>
-<p>That's <code>O(number of keys ever issued)</code> per read, forever — and once a key is retired and its material destroyed (as compliance often requires), there was never a way to query "which records still depend on this key?" to migrate them first. See <a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-ciphertext-blob"><code>talk/naive-ciphertext-blob/</code></a> for the full runnable demo, including that failure.</p>
+<p>That's <code>O(number of keys ever issued)</code> per read, forever, and once a key is retired and its material destroyed (as compliance often requires), there was never a way to query "which records still depend on this key?" to migrate them first. See <a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-ciphertext-blob"><code>talk/naive-ciphertext-blob/</code></a> for the full runnable demo, including that failure.</p>
 <h2 id="the-fix-a-structured-ciphertext-format">The fix: a structured ciphertext format</h2>
 <p>The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:</p>
 <ul>
