@@ -33,7 +33,14 @@ public final class NaiveCardStore {
     // --8<-- [start:naive-card-save] link
     public void save(NaiveCardEntity entity, SecretKey encryptionKey, SecretKey hmacKey,
                       Runnable duringCiphertextWindow) {
-        String plaintext = entity.cardNumber();
+        String plaintext = entity.cardNumber();     // might not actually be plaintext: save() has
+                                                     // no way to verify that, so an entity that
+                                                     // picked up ciphertext some other way (e.g.
+                                                     // built from raw persisted bytes without going
+                                                     // through load()) gets silently double-encrypted
+                                                     // here, the mirror of load()'s double decrypt,
+                                                     // except encrypting ciphertext-as-plaintext never
+                                                     // throws, so there's no loud failure to notice
         Crypto.EncryptedValue encrypted = Crypto.encryptDetached(plaintext, encryptionKey);
 
         entity.setCardNumber(encrypted.ciphertext());     // the SAME field now holds ciphertext
