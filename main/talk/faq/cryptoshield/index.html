@@ -71,6 +71,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#gaps" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1002,6 +1007,25 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1024,6 +1048,10 @@
 
 <p>What's <code>CryptoShield</code>?</p>
 <p>The central class applications interact with: <code>cryptoShield.encrypt(entity)</code> and <code>cryptoShield.decrypt(entity)</code>. It's configured once, at startup, with a <code>CryptoKeyProvider</code>, the list of annotated entity classes it should know about, and the Encryption Service Delegates available to it.</p>
+<h2 id="gaps">Gaps</h2>
+<ul>
+<li><strong>No protection against concurrent <code>encrypt()</code>/<code>decrypt()</code> calls on the same entity instance.</strong> Both methods are plain reflective field reads/writes, with no locking, no <code>volatile</code>, and no version or dirty check anywhere in the class. <code>encrypt()</code> never writes to the source (<code>@Encrypt</code>) fields, so a concurrent reader can never observe raw ciphertext there, but <code>decrypt()</code>'s <code>field.set(...)</code> on those fields is unconditional: it never checks whether the field already holds an unsaved in-memory value before overwriting it. Two threads calling <code>encrypt()</code> and <code>decrypt()</code> on the same entity concurrently, or two <code>decrypt()</code> calls racing, is an ordinary unsynchronized data race, with no protection at any layer of the library. See <a href="../../transient-vs-encrypted-blobs/">Transient vs. Encrypted Blobs</a> for the underlying mechanism and a runnable demo of the equivalent race. Avoiding it is the calling application's responsibility: don't share a mutable entity instance across threads or requests without your own synchronization, or scope entities to a single request or transaction.</li>
+</ul>
 
 
 
