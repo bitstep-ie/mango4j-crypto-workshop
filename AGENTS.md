@@ -8,7 +8,7 @@ This repository is a step-by-step workshop teaching the **mango4j** crypto frame
 
 ## Current status
 
-Docs-site scaffolding (MkDocs), `stages/01-Getting-Started/` (a plain stage: adds the `mango4j-crypto` dependency), and `stages/02-Encrypt-a-Field/` (a starter/complete stage: encrypts a single `cardNumber` field) exist, plus `.github/workflows/ci.yml` which builds/verifies every stage; later stages are not yet written. The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
+Docs-site scaffolding (MkDocs), `stages/01-Getting-Started/` (a plain stage: adds the `mango4j-crypto` dependency), and `stages/02-Encrypt-a-Field/` (a starter/complete stage: encrypts a single `cardNumber` field) exist, plus `.github/workflows/ci.yml` which builds/verifies every stage; later stages are not yet written. `talk/` holds supporting code samples for the conceptual talk that precedes the hands-on workshop (see [Talk supporting samples](#talk-supporting-samples) below). The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
 
 ## Workshop structure: folder-per-stage + MkDocs
 
@@ -31,6 +31,7 @@ Each stage of the workshop lives in its own folder — `stages/01-Getting-Starte
   ...
   <?mkdocs-snippet --8<-- [end:dependency]?>
   ```
+  A `start` marker can carry a trailing `link` flag — `// --8<-- [start:label] link` — to opt that one snippet into a "View on GitHub" link rendered right under it, pointing at the exact source lines. This is per-marker, not per-page: only flag a snippet worth reading in its full surrounding context (a whole method, not a two-line field declaration), and don't flag every marker on a page — see `talk/naive-ciphertext-blob/`'s `brute-force-decrypt` marker or `talk/naive-single-hmac/`'s `unique-constraint` marker for examples, and [hooks/snippet_links.py](hooks/snippet_links.py) for the MkDocs hook that implements it (registered via `hooks:` in `mkdocs.yml`; the trailing text after `]` is otherwise ignored by pymdownx.snippets, so this never affects what gets pulled into the docs).
 
 **Stages with a starter/complete split**
 
@@ -81,6 +82,20 @@ A stage can instead be three sibling folders — `template/`, `complete/`, and `
 2. Commit.
 3. Add `docs/stages/0N-*.md`, add it to `nav:` in `mkdocs.yml`, and add its snippet includes (pointing at `complete/` for a split stage). Start the page with an `!!! abstract "Overview"` admonition — 2-3 sentences on what problem this stage solves and why, written so a workshop facilitator can talk through it before releasing learners to work through the rest of the page themselves (see stages 1 and 2 for examples). This is what makes the docs usable for both self-serve reading and live-led sessions from the same page, without needing a separate facilitator guide.
 4. Preview locally with `mkdocs serve`.
+
+## Talk supporting samples: `talk/`
+
+`docs/talk/*.md` is the conceptual talk that precedes the hands-on workshop (see `docs/talk/notes.md` for the chapter outline and its rationale) — general ALE design problems discussed independent of mango4j-crypto. Several chapters describe a "naive approach" and walk through the concrete pitfall it runs into (e.g. [Structured Ciphertext](docs/talk/structured-ciphertext.md)'s opaque blob with no key ID, [Single HMAC Strategy](docs/talk/single-hmac.md)'s one-column-one-key design). `talk/` is a multi-module Maven project, sibling to `stages/`, holding runnable code that reproduces those pitfalls — for live demos during the talk and as CI-verified proof the pitfall is real, not just prose.
+
+- `talk/pom.xml` is the aggregator (`packaging: pom`), listing each pitfall demo as a `<module>` and centralizing shared config (Java 17, JUnit 5 version, plugin versions) in `<properties>`/`<dependencyManagement>`/`<pluginManagement>` so individual modules stay short.
+- Each module (e.g. `talk/naive-ciphertext-blob/`, `talk/naive-single-hmac/`) is a standalone `jar` project, following the same distinct-`artifactId`/`name` rule as workshop stages. Deliberately does **not** depend on mango4j-crypto — the point is to show what a hand-rolled/naive implementation looks like and where it breaks, using plain JCE (`javax.crypto`), which is what motivates reaching for a framework in the first place.
+- Each module has two things:
+  - A `Main` class (`exec-maven-plugin`, run via `mvn -f talk/<module>/pom.xml exec:java`) that narrates the pitfall step-by-step with `System.out` output — this is what gets shown live during the talk.
+  - A JUnit 5 test class that asserts the same pitfall programmatically, so `mvn test` fails if a demo ever stops reproducing the failure mode it's meant to illustrate.
+- `.github/workflows/ci.yml`'s `talk` job runs `mvn -f talk/pom.xml test` across all modules, then runs `exec:java` for every module whose `pom.xml` declares `exec-maven-plugin` — mirroring how the `stages` job treats `complete/` (must not just compile, must actually run).
+- Wired into `mkdocs.yml`/`docs/talk/*.md` the same way workshop stages are: `mkdocs.yml`'s `pymdownx.snippets` `base_path` includes `talk` alongside `stages`, so a talk page can pull a marked region straight from a `talk/` module with `--8<-- "naive-ciphertext-blob/src/.../NaiveVault.java:brute-force-decrypt"`, same syntax as the workshop stages use. A handful of markers additionally carry the `link` flag described above, which renders a "View on GitHub" link under that one snippet — used sparingly, only where the reader benefits from seeing the whole file, not on every include.
+
+**Adding a new pitfall demo:** create `talk/<short-name>/` (e.g. `talk/naive-key-rotation/` for the [Key Rotation](docs/talk/key-rotation.md) chapter), add it to `talk/pom.xml`'s `<modules>`, give it its own `artifactId`/`name`, write the `Main` narration and the JUnit assertion together so they can't drift apart, then verify both `mvn -f talk/<short-name>/pom.xml test` and `mvn -f talk/<short-name>/pom.xml exec:java` actually work. Add `--8<--` markers around anything the corresponding `docs/talk/*.md` chapter should quote, and flag the one or two markers most worth reading in context with `link`.
 
 ## License
 

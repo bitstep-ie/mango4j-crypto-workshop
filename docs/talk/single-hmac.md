@@ -6,6 +6,12 @@ The Single HMAC Strategy
 
 It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
+The HMAC itself is unremarkable — a keyed hash, computed with whatever key happens to be current:
+
+```java
+--8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/HmacService.java:hmac"
+```
+
 ## The search problem
 
 Rotate the HMAC key and every existing record's HMAC was computed with the *old* key. A search hashes the term with the *new* key and gets a different value — the row simply isn't found, even though it exists. Play through the sequence:
@@ -17,7 +23,11 @@ Rotate the HMAC key and every existing record's HMAC was computed with the *old*
 5. Search results gradually improve as the job progresses.
 6. Only once the job finishes is search fully back online.
 
-A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key.
+A single HMAC key per tenant means a rotation causes a functional search outage for however long the rekey takes. Most production systems can't tolerate this, and it's unavoidable with only one active key. The naive search itself hashes with whatever key is current, and nothing else:
+
+```java
+--8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/UserStore.java:naive-search"
+```
 
 A partial fix exists: a **key start time**. Application instances typically cache their key configuration rather than reloading it on every request, so a newly introduced key doesn't reach every instance at once — it only takes effect, instance by instance, as each one's cache refreshes. A key start time accounts for this by setting the new key's start time to "now + the key cache duration," and holding off using it for *writes* until that time passes — guaranteeing every instance has picked it up before any of them relies on it. Searches, meanwhile, don't need to wait: as soon as an instance reloads its config and sees the new key, it starts hashing search terms with every known key, old and new, immediately. Because no record gets written with the new key until every instance is guaranteed to know about it, every record — old or freshly written — stays findable throughout.
 
@@ -33,6 +43,14 @@ This is the more consequential of the two. Say `userName` has a DB-level unique 
 6. Two users now exist with the same username.
 
 Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key *before every write*, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.
+
+The write path that lets this happen — a plain unique index on the single HMAC column:
+
+```java
+--8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/UserStore.java:unique-constraint"
+```
+
+The constraint only ever sees the hash value, so `createUser()` for the same username under two different keys looks, to the index, like two entirely unrelated rows. See [`talk/naive-single-hmac/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-single-hmac) for the full runnable demo that reproduces both the search outage and the duplicate.
 
 ## Verdict
 

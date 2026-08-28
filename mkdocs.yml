@@ -36,11 +36,15 @@ markdown_extensions:
   - pymdownx.snippets:
       base_path:
         - stages
+        - talk
       check_paths: true
       dedent_subsections: true
 
 plugins:
   - search
+
+hooks:
+  - hooks/snippet_links.py
 
 extra:
   version:

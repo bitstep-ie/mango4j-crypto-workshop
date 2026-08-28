@@ -64,3 +64,29 @@ jobs:
             python3 scripts/generate_stage.py "$(dirname "$template_dir")"
           done
           git diff --exit-code -- stages
+
+  talk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Test talk supporting samples
+        run: mvn -B -q -f talk/pom.xml test
+
+      - name: Run naive-approach demos
+        run: |
+          set -euo pipefail
+          for pom in talk/*/pom.xml; do
+            [ -e "$pom" ] || continue
+            if grep -q exec-maven-plugin "$pom"; then
+              echo "::group::$pom"
+              mvn -B -q -f "$pom" exec:java
+              echo "::endgroup::"
+            fi
+          done

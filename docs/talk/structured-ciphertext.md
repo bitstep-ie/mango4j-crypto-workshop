@@ -12,6 +12,20 @@ That gets you *an* opaque blob. But an opaque blob on its own can't answer the q
 
 Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, a single HMAC field stored the same ad hoc way for search, cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, and it's exactly the kind of design that makes [key rotation](key-rotation.md) and [multi-provider support](key-aliases.md) difficult to retrofit later.
 
+Here's that naive shape in code — an IV and the raw ciphertext bytes, and nothing that says which key produced them:
+
+```java
+--8<-- "naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveBlob.java:blob-shape"
+```
+
+Without a key ID, decrypting an old record after a key rotation means trying every key you still happen to have, one at a time, until one works:
+
+```java
+--8<-- "naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveVault.java:brute-force-decrypt"
+```
+
+That's `O(number of keys ever issued)` per read, forever — and once a key is retired and its material destroyed (as compliance often requires), there was never a way to query "which records still depend on this key?" to migrate them first. See [`talk/naive-ciphertext-blob/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-ciphertext-blob) for the full runnable demo, including that failure.
+
 ## The fix: a structured ciphertext format
 
 The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:
