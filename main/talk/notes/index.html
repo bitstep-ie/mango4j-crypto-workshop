@@ -1076,6 +1076,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-08-28
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1158,6 +1169,10 @@
 <li>Reordered "Key Rotation" to come after "Introducing HMACs": Key Rotation's discussion of search/findability during a rotation depends on HMAC concepts (search, uniqueness) that hadn't been introduced yet when it came first. Current order: Intro, Key Aliases, Structured Ciphertext, Transient vs. Encrypted Blobs, Introducing HMACs, Key Rotation, Single HMAC Strategy, List HMAC Strategy, Rekeying: Encryption, Rekeying: HMACs.</li>
 <li>Content fix in Key Rotation's data-retention paragraph: search does NOT actually break when old HMAC keys stay in the known-keys list — a search hashing the term with every known key (old and new) still finds old records. What actually breaks under the Single HMAC Strategy is unique-constraint enforcement (a duplicate can slip in under a different key), not search. Corrected the paragraph to stop conflating the two.</li>
 <li>All "Chapter N" prose references replaced with markdown links to the target chapter by name (no numbers), consistent with numbering being fully removed from the talk.</li>
+</ul>
+<h2 id="2026-08-28">2026-08-28</h2>
+<ul>
+<li>Content fix in Transient vs. Encrypted Blobs: the "double encrypt/decrypt" claim (also in the 2026-08-25 note above) was overstated. The transient/blob split does not stop application code from <em>calling</em> <code>encrypt()</code>/<code>decrypt()</code> more than once — that's still on application control flow. What it actually prevents is the consequence of calling the wrong operation on the wrong representation: data being multiply encrypted, and exceptions (or garbage) from decrypting something that isn't actually ciphertext. Also added the naive <code>save()</code>/<code>load()</code> pitfall this doesn't solve on its own: a hand-rolled single-column <code>save()</code> leaves the entity holding ciphertext where it had plaintext, so continuing to use the value afterward means remembering to call <code>decrypt()</code> again — the split just means <code>encrypt()</code> doesn't force that by destroying the transient field, not that the application is relieved of calling <code>decrypt()</code> where it's actually needed.</li>
 </ul>
 
 
