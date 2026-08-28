@@ -569,10 +569,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-failure-mode-this-avoids-double-encryptdecrypt" class="md-nav__link">
+  <a href="#the-failure-mode-this-avoids-and-the-one-it-doesnt-double-encryptdecrypt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The failure mode this avoids: double encrypt/decrypt
+        The failure mode this avoids, and the one it doesn't: double encrypt/decrypt
       
     </span>
   </a>
@@ -1151,10 +1151,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-failure-mode-this-avoids-double-encryptdecrypt" class="md-nav__link">
+  <a href="#the-failure-mode-this-avoids-and-the-one-it-doesnt-double-encryptdecrypt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The failure mode this avoids: double encrypt/decrypt
+        The failure mode this avoids, and the one it doesn't: double encrypt/decrypt
       
     </span>
   </a>
@@ -1222,12 +1222,49 @@
 <h2 id="why-this-separation-matters">Why this separation matters</h2>
 <p>If a field can hold either plaintext or ciphertext depending on when you look at it, every reader and writer has to infer its current representation. Keeping working and persisted values separate makes the intended boundary explicit and lets an ORM or persistence mapper exclude the plaintext field. That is a valuable safeguard, but it is not automatic: review serializers, ORM mappings, logs, caches, queues, traces, and diagnostic tooling as well. Any of them can still persist or expose plaintext if configured to inspect the working field.</p>
 <p>Encrypting a value doesn't need to destroy the working copy — the application can keep using the plaintext for the rest of its current operation. Decrypting, likewise, just repopulates the working representation from the stored blob; it doesn't need to touch the blob itself.</p>
-<h2 id="the-failure-mode-this-avoids-double-encryptdecrypt">The failure mode this avoids: double encrypt/decrypt</h2>
-<p>To be precise about what "avoids" means here: the split does <strong>not</strong> stop application code from <em>calling</em> <code>encrypt()</code> or <code>decrypt()</code> more than once. Nothing about having two fields enforces a call count, that's still entirely up to the application's control flow, and calling either operation redundantly is still a lifecycle-management concern the application has to own. What the split does prevent is the <em>consequence</em> of applying the wrong operation to the wrong representation:</p>
+<h2 id="the-failure-mode-this-avoids-and-the-one-it-doesnt-double-encryptdecrypt">The failure mode this avoids, and the one it doesn't: double encrypt/decrypt</h2>
+<p>To be precise about what "avoids" means here: the split does <strong>not</strong> stop application code from <em>calling</em> <code>encrypt()</code> or <code>decrypt()</code> more than once. Nothing about having two fields enforces a call count, that's still entirely up to the application's control flow, and calling either operation redundantly is still a lifecycle-management concern the application has to own. What the split does prevent is the <em>consequence</em> of applying the wrong operation to the wrong representation, but that consequence is not the same for both operations:</p>
 <ul>
-<li><strong>Data being multiply encrypted.</strong> <code>encrypt()</code> always reads from the transient field and writes into the blob field. Call it twice in a row and you just re-encrypt the same plaintext twice, producing a fresh (if wasteful) ciphertext each time, never ciphertext-of-ciphertext, because there's no path by which the blob field's contents feed back in as input to another <code>encrypt()</code> call.</li>
-<li><strong>Exceptions (or silent garbage) from decrypting something that isn't ciphertext.</strong> <code>decrypt()</code> always reads from the blob field and writes into the transient field. Call it twice and you just repopulate the same plaintext twice, never an attempt to decrypt a value that was already plaintext, which is exactly the call that throws (or produces garbage) in the naive single-column design below.</li>
+<li><strong>Calling <code>encrypt()</code> repeatedly is safe, just wasteful.</strong> It always reads from the transient field and writes into the blob field. Call it twice in a row and you just re-encrypt the same plaintext twice, producing a fresh (if unnecessary) ciphertext each time, never ciphertext-of-ciphertext, because there's no path by which the blob field's contents feed back in as input to another <code>encrypt()</code> call. The transient field is never touched, so there is nothing for a repeated <code>encrypt()</code> call to lose.</li>
+<li><strong>Calling <code>decrypt()</code> repeatedly is not 100% safe.</strong> It won't throw or produce garbage the way decrypting a value that isn't actually ciphertext would (that failure mode is genuinely gone), but it always overwrites the transient field with whatever the blob currently decodes to. If the application changed that field since the last <code>decrypt()</code>, for example by editing the entity in memory before saving, that change is silently discarded. The transient/blob split removes the corruption/exception risk; it does not make <code>decrypt()</code> idempotent or safe to call blindly.</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Model</th>
+<th>Safe to call more than once?</th>
+<th>What actually happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>encrypt()</code></td>
+<td>Transient/blob</td>
+<td>Yes, wasteful only</td>
+<td>Reads the transient field, writes a fresh blob each time; the transient field is never touched, so nothing can be lost</td>
+</tr>
+<tr>
+<td><code>decrypt()</code></td>
+<td>Transient/blob</td>
+<td>No</td>
+<td>Overwrites the transient field every time; any unsaved change made to it since the last <code>decrypt()</code> is silently lost, with no error</td>
+</tr>
+<tr>
+<td><code>encrypt()</code></td>
+<td>Direct-field (naive)</td>
+<td>No</td>
+<td>The first call turns the field into ciphertext; a second call re-encrypts that ciphertext as if it were plaintext, corrupting the value</td>
+</tr>
+<tr>
+<td><code>decrypt()</code></td>
+<td>Direct-field (naive)</td>
+<td>No</td>
+<td>Same silent data loss as the transient/blob version, and can also throw or produce garbage if the field didn't actually hold ciphertext at the time</td>
+</tr>
+</tbody>
+</table>
+<p>This is the same forced-overwrite risk covered below for <code>load()</code>, just stated for <code>decrypt()</code> directly: <code>load()</code> is unsafe to call blindly because it calls <code>decrypt()</code>, not because of anything specific to loading.</p>
 <h2 id="what-happens-without-this-discipline-encrypting-fields-directly-into-their-columns">What happens without this discipline: encrypting fields directly into their columns</h2>
 <p>The failure mode this design specifically guards against is the naive alternative: encrypting values directly in place, in their own columns, with no separate transient/blob distinction at all — hand-rolling encrypt/decrypt calls around a column that's sometimes plaintext and sometimes ciphertext depending on when you look at it. This tends to produce:</p>
 <ul>
