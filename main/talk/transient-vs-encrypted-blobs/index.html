@@ -588,6 +588,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What happens without this discipline: encrypting fields directly into their columns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-saveload-patterns-own-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The naive save()/load() pattern's own problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1153,6 +1170,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What happens without this discipline: encrypting fields directly into their columns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-saveload-patterns-own-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The naive save()/load() pattern's own problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1201,9 +1235,26 @@
 <li><strong>Schema churn every time a new field needs protecting</strong> — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of following one consistent pattern.</li>
 <li><strong>No consistent record of which key encrypted what</strong> — without a <a href="../structured-ciphertext/">structured ciphertext</a>, there's nowhere obvious to put that metadata, so it either doesn't exist or gets tracked out-of-band.</li>
 <li><strong>Every query/repository touching that column needs bespoke logic</strong> — because the column's meaning (plaintext or cipher) isn't guaranteed by the type system, every caller has to know the current state by convention.</li>
-<li><strong>A <code>save()</code>/<code>load()</code> pair fights its own state.</strong> The typical hand-rolled shape is a <code>save(entity)</code> that encrypts the column in place before persisting, and a <code>load(id)</code> that decrypts it after fetching. Because there's only one column, <code>save()</code> leaves the entity holding ciphertext where it previously held plaintext — so any code that needs to keep working with the value right after saving (rendering a confirmation, continuing the current request) has to remember to call <code>decrypt()</code> again just to get the entity back to a state the rest of the application can use. That's an easy step to forget, and it's exactly the kind of call application control flow has to get right on its own, even with a clean transient/blob split — the split removes the corruption/exception failure mode above, not the responsibility to call <code>decrypt()</code> wherever plaintext is actually needed again.</li>
+<li><strong>A hand-rolled <code>save()</code>/<code>load()</code> pair built around that one column has its own, distinct problems</strong> — covered separately below, because they're really about mutating a shared object in place, not about which representation a column holds at a given moment.</li>
 </ul>
-<p>The transient/encrypted-blob split is what makes the first four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens. It doesn't, by itself, save you from the last one: <code>encrypt()</code> doesn't destroy the transient field's plaintext (see above), precisely so that a <code>save()</code> built on it can keep using the value afterward without a follow-up <code>decrypt()</code> call — but only if <code>save()</code> is actually written that way.</p>
+<p>The transient/encrypted-blob split is what makes the first four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens.</p>
+<h3 id="the-naive-saveload-patterns-own-problems">The naive save()/load() pattern's own problems</h3>
+<p>A typical hand-rolled implementation looks something like:</p>
+<div class="highlight"><pre><span></span><code>save(entity):
+    encrypt relevant fields on entity, in place
+    persist entity (the real save)
+    decrypt those fields back, in place
+
+load(id):
+    entity = fetch entity from DB
+    decrypt relevant fields on entity, in place
+    return entity
+</code></pre></div>
+<p>This has two problems of its own, on top of (and independent of) the single-column ambiguity above:</p>
+<ul>
+<li><strong>A concurrency window inside <code>save()</code>.</strong> Between the encrypt step and the decrypt step, the <em>same</em> entity instance — not a copy — sits there with ciphertext in fields the rest of the application expects to hold plaintext. In a single-threaded flow that window is invisible and harmless. In a multi-threaded application where that entity can be read concurrently — shared across requests, held in a cache, referenced from another thread — any read that lands inside the window silently sees ciphertext where it expects plaintext. There's no lock, no exception, no signal that the object is mid-mutation; it just quietly hands out the wrong representation to whoever happens to read it at the wrong moment. This is exactly the failure mode a transient/blob split removes: because <code>encrypt()</code> writes the blob field without touching the transient field, there is no window where the working representation is anything other than plaintext, so a concurrent reader sees a consistent value throughout.</li>
+<li><strong><code>load()</code>'s decrypt is forced, and a forced decrypt can silently discard in-memory work.</strong> <code>load()</code>'s job is "fetch from the DB, then decrypt" — but if it runs against an entity instance that already has unsaved application changes (re-loading an entity that's still being edited, refreshing a cached instance, a second <code>load()</code> call for the same id mid-request), the freshly-decrypted DB values overwrite whatever was already there. There's no conflict check, no diff, no exception — the caller just loses whatever hadn't been saved yet, with no warning, and finds out only if they happen to notice the value changed. Unlike the concurrency window above, a transient/blob split does <strong>not</strong> fix this on its own: <code>decrypt()</code> still writes into the transient field regardless of what was there before, whether it's mango4j-crypto's <code>decrypt()</code> or a hand-rolled one. Avoiding it is a matter of <em>when</em> the application chooses to call <code>decrypt()</code>/<code>load()</code> at all — never blindly, against an entity that might carry pending changes — not something the ciphertext representation can enforce for you.</li>
+</ul>
 
 
 
