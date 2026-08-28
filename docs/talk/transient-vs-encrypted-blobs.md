@@ -30,6 +30,27 @@ The failure mode this design specifically guards against is the naive alternativ
 - **Schema churn every time a new field needs protecting** — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of following one consistent pattern.
 - **No consistent record of which key encrypted what** — without a [structured ciphertext](structured-ciphertext.md), there's nowhere obvious to put that metadata, so it either doesn't exist or gets tracked out-of-band.
 - **Every query/repository touching that column needs bespoke logic** — because the column's meaning (plaintext or cipher) isn't guaranteed by the type system, every caller has to know the current state by convention.
-- **A `save()`/`load()` pair fights its own state.** The typical hand-rolled shape is a `save(entity)` that encrypts the column in place before persisting, and a `load(id)` that decrypts it after fetching. Because there's only one column, `save()` leaves the entity holding ciphertext where it previously held plaintext — so any code that needs to keep working with the value right after saving (rendering a confirmation, continuing the current request) has to remember to call `decrypt()` again just to get the entity back to a state the rest of the application can use. That's an easy step to forget, and it's exactly the kind of call application control flow has to get right on its own, even with a clean transient/blob split — the split removes the corruption/exception failure mode above, not the responsibility to call `decrypt()` wherever plaintext is actually needed again.
+- **A hand-rolled `save()`/`load()` pair built around that one column has its own, distinct problems** — covered separately below, because they're really about mutating a shared object in place, not about which representation a column holds at a given moment.
 
-The transient/encrypted-blob split is what makes the first four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens. It doesn't, by itself, save you from the last one: `encrypt()` doesn't destroy the transient field's plaintext (see above), precisely so that a `save()` built on it can keep using the value afterward without a follow-up `decrypt()` call — but only if `save()` is actually written that way.
+The transient/encrypted-blob split is what makes the first four of those non-issues: the field's role tells you what it holds, and one consistent boundary — not scattered application code — owns the only place the conversion happens.
+
+### The naive save()/load() pattern's own problems
+
+A typical hand-rolled implementation looks something like:
+
+```
+save(entity):
+    encrypt relevant fields on entity, in place
+    persist entity (the real save)
+    decrypt those fields back, in place
+
+load(id):
+    entity = fetch entity from DB
+    decrypt relevant fields on entity, in place
+    return entity
+```
+
+This has two problems of its own, on top of (and independent of) the single-column ambiguity above:
+
+- **A concurrency window inside `save()`.** Between the encrypt step and the decrypt step, the *same* entity instance — not a copy — sits there with ciphertext in fields the rest of the application expects to hold plaintext. In a single-threaded flow that window is invisible and harmless. In a multi-threaded application where that entity can be read concurrently — shared across requests, held in a cache, referenced from another thread — any read that lands inside the window silently sees ciphertext where it expects plaintext. There's no lock, no exception, no signal that the object is mid-mutation; it just quietly hands out the wrong representation to whoever happens to read it at the wrong moment. This is exactly the failure mode a transient/blob split removes: because `encrypt()` writes the blob field without touching the transient field, there is no window where the working representation is anything other than plaintext, so a concurrent reader sees a consistent value throughout.
+- **`load()`'s decrypt is forced, and a forced decrypt can silently discard in-memory work.** `load()`'s job is "fetch from the DB, then decrypt" — but if it runs against an entity instance that already has unsaved application changes (re-loading an entity that's still being edited, refreshing a cached instance, a second `load()` call for the same id mid-request), the freshly-decrypted DB values overwrite whatever was already there. There's no conflict check, no diff, no exception — the caller just loses whatever hadn't been saved yet, with no warning, and finds out only if they happen to notice the value changed. Unlike the concurrency window above, a transient/blob split does **not** fix this on its own: `decrypt()` still writes into the transient field regardless of what was there before, whether it's mango4j-crypto's `decrypt()` or a hand-rolled one. Avoiding it is a matter of *when* the application chooses to call `decrypt()`/`load()` at all — never blindly, against an entity that might carry pending changes — not something the ciphertext representation can enforce for you.
