@@ -1,3 +1,7 @@
 What's `CryptoShield`?
 
 The central class applications interact with: `cryptoShield.encrypt(entity)` and `cryptoShield.decrypt(entity)`. It's configured once, at startup, with a `CryptoKeyProvider`, the list of annotated entity classes it should know about, and the Encryption Service Delegates available to it.
+
+## Gaps
+
+- **No protection against concurrent `encrypt()`/`decrypt()` calls on the same entity instance.** Both methods are plain reflective field reads/writes, with no locking, no `volatile`, and no version or dirty check anywhere in the class. `encrypt()` never writes to the source (`@Encrypt`) fields, so a concurrent reader can never observe raw ciphertext there, but `decrypt()`'s `field.set(...)` on those fields is unconditional: it never checks whether the field already holds an unsaved in-memory value before overwriting it. Two threads calling `encrypt()` and `decrypt()` on the same entity concurrently, or two `decrypt()` calls racing, is an ordinary unsynchronized data race, with no protection at any layer of the library. See [Transient vs. Encrypted Blobs](../transient-vs-encrypted-blobs.md) for the underlying mechanism and a runnable demo of the equivalent race. Avoiding it is the calling application's responsibility: don't share a mutable entity instance across threads or requests without your own synchronization, or scope entities to a single request or transaction.
