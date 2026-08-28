@@ -15,12 +15,21 @@ If a field can hold either plaintext or ciphertext depending on when you look at
 
 Encrypting a value doesn't need to destroy the working copy — the application can keep using the plaintext for the rest of its current operation. Decrypting, likewise, just repopulates the working representation from the stored blob; it doesn't need to touch the blob itself.
 
-## The failure mode this avoids: double encrypt/decrypt
+## The failure mode this avoids, and the one it doesn't: double encrypt/decrypt
 
-To be precise about what "avoids" means here: the split does **not** stop application code from *calling* `encrypt()` or `decrypt()` more than once. Nothing about having two fields enforces a call count, that's still entirely up to the application's control flow, and calling either operation redundantly is still a lifecycle-management concern the application has to own. What the split does prevent is the *consequence* of applying the wrong operation to the wrong representation:
+To be precise about what "avoids" means here: the split does **not** stop application code from *calling* `encrypt()` or `decrypt()` more than once. Nothing about having two fields enforces a call count, that's still entirely up to the application's control flow, and calling either operation redundantly is still a lifecycle-management concern the application has to own. What the split does prevent is the *consequence* of applying the wrong operation to the wrong representation, but that consequence is not the same for both operations:
 
-- **Data being multiply encrypted.** `encrypt()` always reads from the transient field and writes into the blob field. Call it twice in a row and you just re-encrypt the same plaintext twice, producing a fresh (if wasteful) ciphertext each time, never ciphertext-of-ciphertext, because there's no path by which the blob field's contents feed back in as input to another `encrypt()` call.
-- **Exceptions (or silent garbage) from decrypting something that isn't ciphertext.** `decrypt()` always reads from the blob field and writes into the transient field. Call it twice and you just repopulate the same plaintext twice, never an attempt to decrypt a value that was already plaintext, which is exactly the call that throws (or produces garbage) in the naive single-column design below.
+- **Calling `encrypt()` repeatedly is safe, just wasteful.** It always reads from the transient field and writes into the blob field. Call it twice in a row and you just re-encrypt the same plaintext twice, producing a fresh (if unnecessary) ciphertext each time, never ciphertext-of-ciphertext, because there's no path by which the blob field's contents feed back in as input to another `encrypt()` call. The transient field is never touched, so there is nothing for a repeated `encrypt()` call to lose.
+- **Calling `decrypt()` repeatedly is not 100% safe.** It won't throw or produce garbage the way decrypting a value that isn't actually ciphertext would (that failure mode is genuinely gone), but it always overwrites the transient field with whatever the blob currently decodes to. If the application changed that field since the last `decrypt()`, for example by editing the entity in memory before saving, that change is silently discarded. The transient/blob split removes the corruption/exception risk; it does not make `decrypt()` idempotent or safe to call blindly.
+
+| Operation | Model | Safe to call more than once? | What actually happens |
+|---|---|---|---|
+| `encrypt()` | Transient/blob | Yes, wasteful only | Reads the transient field, writes a fresh blob each time; the transient field is never touched, so nothing can be lost |
+| `decrypt()` | Transient/blob | No | Overwrites the transient field every time; any unsaved change made to it since the last `decrypt()` is silently lost, with no error |
+| `encrypt()` | Direct-field (naive) | No | The first call turns the field into ciphertext; a second call re-encrypts that ciphertext as if it were plaintext, corrupting the value |
+| `decrypt()` | Direct-field (naive) | No | Same silent data loss as the transient/blob version, and can also throw or produce garbage if the field didn't actually hold ciphertext at the time |
+
+This is the same forced-overwrite risk covered below for `load()`, just stated for `decrypt()` directly: `load()` is unsafe to call blindly because it calls `decrypt()`, not because of anything specific to loading.
 
 ## What happens without this discipline: encrypting fields directly into their columns
 
