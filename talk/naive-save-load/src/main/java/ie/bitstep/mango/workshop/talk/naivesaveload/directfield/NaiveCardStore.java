@@ -9,11 +9,12 @@ import java.util.Map;
 /**
  * The naive hand-rolled shape from {@code docs/talk/transient-vs-encrypted-blobs.md}:
  * {@code save()} manually encrypts {@code cardNumber} in place, persists the entity,
- * then manually decrypts it back so the caller can keep using it. {@code load()} is
- * simpler: fetch the managed entity, decrypt {@code cardNumber} directly on it. There
- * is no separate domain-level/db-level POJO and no DTO standing in for a row,
- * {@code table} holds {@code NaiveCardEntity} instances directly, and calling
- * {@code load()} on one that {@code save()} already decrypted is a double decrypt.
+ * then restores {@code cardNumber} for the caller to keep using, from the plaintext it
+ * already captured before encrypting, not by decrypting the ciphertext it just produced.
+ * {@code load()} is simpler: fetch the managed entity, decrypt {@code cardNumber}
+ * directly on it. There is no separate domain-level/db-level POJO and no DTO standing
+ * in for a row, {@code table} holds {@code NaiveCardEntity} instances directly, and
+ * calling {@code load()} on one that {@code save()} already restored is a double decrypt.
  */
 public final class NaiveCardStore {
 
@@ -43,7 +44,8 @@ public final class NaiveCardStore {
 
         duringCiphertextWindow.run();                      // a concurrent reader could land here
 
-        entity.setCardNumber(Crypto.decryptDetached(encrypted.ciphertext(), encrypted.iv(), encryptionKey));
+        entity.setCardNumber(plaintext);                    // restore directly, no need to decrypt
+                                                             // what's already sitting in a local variable
     }
     // --8<-- [end:naive-card-save]
 

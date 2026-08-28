@@ -32,7 +32,7 @@ class NaiveCardStorePitfallTest {
         store.save(entity, encryptionKey, hmacKey);
 
         assertEquals(CARD_NUMBER, entity.cardNumber(),
-                "save() should have decrypted cardNumber back for the caller to keep using");
+                "save() should have restored cardNumber back for the caller to keep using");
     }
 
     @Test
@@ -75,12 +75,12 @@ class NaiveCardStorePitfallTest {
         NaiveCardStore store = new NaiveCardStore();
         NaiveCardEntity entity = new NaiveCardEntity(1L, CARD_NUMBER);
 
-        store.save(entity, encryptionKey, hmacKey);   // save() already decrypted cardNumber as its last step
+        store.save(entity, encryptionKey, hmacKey);   // save() already restored cardNumber as its last step
 
         // load() blindly decrypts whatever cardNumber currently holds, with no way to
-        // know save() already did that. It's not valid ciphertext any more, so this
-        // second decrypt fails, the exact same root cause as a silent overwrite would
-        // have, just a louder symptom of it: decrypt() has no way to know it isn't safe to run.
+        // know save() already restored it. It's not valid ciphertext any more, so this
+        // decrypt fails, the exact same root cause as a silent overwrite would have,
+        // just a louder symptom of it: decrypt() has no way to know it isn't safe to run.
         assertThrows(IllegalStateException.class, () -> store.load(1L, encryptionKey));
     }
 

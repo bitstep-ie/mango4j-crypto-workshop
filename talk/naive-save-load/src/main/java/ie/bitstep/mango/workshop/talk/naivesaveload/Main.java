@@ -82,7 +82,7 @@ public final class Main {
         NaiveCardEntity entity = new NaiveCardEntity(1L, "4111-1111-1111-1111");
 
         store.save(entity, encryptionKey, hmacKey);
-        System.out.println("save() already decrypted cardNumber for continued use: " + entity.cardNumber());
+        System.out.println("save() already restored cardNumber for continued use: " + entity.cardNumber());
 
         System.out.println("The same method, a few lines later, calls load() for the same id anyway.");
         try {
@@ -90,7 +90,7 @@ public final class Main {
             System.out.println("(this line should not be reached)");
         } catch (IllegalStateException e) {
             System.out.println("PITFALL: load() blew up: " + e.getCause());
-            System.out.println("It blindly tried to decrypt cardNumber, but save() already decrypted it,");
+            System.out.println("It blindly tried to decrypt cardNumber, but save() already restored it,");
             System.out.println("so it's not valid ciphertext any more. load() has no way to know that.");
         }
     }

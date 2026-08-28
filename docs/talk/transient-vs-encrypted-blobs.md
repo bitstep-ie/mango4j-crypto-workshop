@@ -45,11 +45,13 @@ The transient/encrypted-blob split is what makes the first four of those non-iss
 
 ### The naive save()/load() pattern's own problems
 
-A typical hand-rolled `save()` encrypts `cardNumber` in place, persists the entity (`iv` and `cardNumberHmac` travel along as ordinary sibling columns), then decrypts `cardNumber` back:
+A typical hand-rolled `save()` encrypts `cardNumber` in place, persists the entity (`iv` and `cardNumberHmac` travel along as ordinary sibling columns), then restores `cardNumber` for the caller:
 
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-save"
 ```
+
+That restore reassigns the plaintext `save()` already captured before encrypting, it doesn't decrypt the ciphertext it just produced. There's no reason to: the plaintext is still sitting right there in a local variable, so decrypting it back would just be `encrypt()`'s wasted work from earlier in this page, paying for a cryptographic operation to recover a value already in hand.
 
 This has a problem the transient/blob split actually fixes:
 
