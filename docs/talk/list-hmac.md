@@ -19,6 +19,22 @@ This is the trade-off — it forces relational DBs into a multi-table design. In
 
 A field's HMAC is no longer "for lookup" or "for uniqueness" implicitly by which column it's in — each field is explicitly marked for one purpose, the other, or both, and the write path is responsible for populating the right table(s) accordingly. Critically, an update must *replace* the full current set of HMAC entries for a record, not append to it — otherwise stale entries from a previous version of the value would linger and stay matchable.
 
+Here's an update that gets that wrong:
+
+```java
+--8<-- "naive-list-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivelisthmac/LookupStore.java:naive-list-hmac-update"
+```
+<!-- link -->
+
+It only ever adds an entry for the new value; the entry for whatever the value used to be just sits there, still matchable, forever. Fixing it means removing every existing entry for the record before adding the new one, replacing the set rather than appending to it:
+
+```java
+--8<-- "naive-list-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivelisthmac/LookupStore.java:replacing-list-hmac-update"
+```
+<!-- link -->
+
+See [`talk/naive-list-hmac/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-list-hmac) for the full runnable demo: renaming a user and then searching for both their old and new name against each version of `update`.
+
 On a document DB (like MongoDB), the lookups/unique-values lists are just embedded arrays on the same document — no extra tables needed, which is part of why this strategy is a particularly good fit for document databases. On a relational DB you pay for it with up to three writes per update and a join on search.
 
 ## Why this closes both Single HMAC Strategy gaps

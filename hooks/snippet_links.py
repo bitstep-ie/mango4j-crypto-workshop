@@ -26,8 +26,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BASE_PATHS = ("stages", "talk")
 
+# `(?P<indent>[ \t]*)` plus backreferences to it lets this match a fence nested inside a
+# list item (indented) as well as a top-level one, as long as the fence, the include
+# line, the closing fence, and the optional directive all share the same indentation.
 SNIPPET_INCLUDE_RE = re.compile(
-    r'```[a-zA-Z0-9_+-]*\n--8<-- "([^"\n]+)"\n```(\n<!--\s*link\s*-->)?'
+    r'(?P<indent>[ \t]*)```[a-zA-Z0-9_+-]*\n'
+    r'(?P=indent)--8<-- "(?P<path>[^"\n]+)"\n'
+    r'(?P=indent)```'
+    r'(?P<link>\n(?P=indent)<!--\s*link\s*-->)?'
 )
 
 # Same section-marker pattern pymdownx.snippets itself matches on, so a marker line
@@ -79,13 +85,13 @@ def on_page_markdown(markdown, page, config, files):
         return markdown
 
     def add_link(match):
-        wants_link = match.group(2)
+        wants_link = match.group("link")
         whole = match.group(0)
         fence_only = whole[:len(whole) - len(wants_link)] if wants_link else whole
         if not wants_link:
             return fence_only
 
-        source_file, rel_path, label = _resolve_source(match.group(1))
+        source_file, rel_path, label = _resolve_source(match.group("path"))
         if source_file is None or label is None:
             return fence_only
 
@@ -96,6 +102,7 @@ def on_page_markdown(markdown, page, config, files):
         start, end = line_range
         anchor = f"L{start}" if start == end else f"L{start}-L{end}"
         url = f"{repo_url}/blob/main/{rel_path}#{anchor}"
-        return f'{fence_only}\n<small>[View on GitHub]({url})</small>\n'
+        indent = match.group("indent")
+        return f'{fence_only}\n{indent}<small>[View on GitHub]({url})</small>\n'
 
     return SNIPPET_INCLUDE_RE.sub(add_link, markdown)

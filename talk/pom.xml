@@ -14,6 +14,9 @@
         <module>naive-ciphertext-blob</module>
         <module>naive-single-hmac</module>
         <module>naive-save-load</module>
+        <module>naive-migration</module>
+        <module>naive-list-hmac</module>
+        <module>naive-hmac-rekey</module>
     </modules>
 
     <properties>

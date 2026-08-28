@@ -15,6 +15,22 @@ This additive requirement is exactly why HMAC rekeying, in practice, tends to on
     - Any record that *has* HMACs for a key you're trying to remove but *lacks* them for the new key — the common case for a targeted, passive rotation.
 4. **For each matching record**: decrypt it, compute HMAC(s) under the new key, and *add* those entries to the lookup/unique-value collections. Existing HMAC entries for other keys are left completely untouched — this is strictly additive, never a replace.
 5. **Wait for the sweep to finish**, then remove the old key from the active key list.
+
+    This step is where getting the ordering wrong bites. Removing a key is a one-liner:
+
+    ```java
+    --8<-- "naive-hmac-rekey/src/main/java/ie/bitstep/mango/workshop/talk/naivehmacrekey/HmacRekeyStore.java:remove-active-key"
+    ```
+    <!-- link -->
+
+    and search only ever hashes with whatever's currently in the active list:
+
+    ```java
+    --8<-- "naive-hmac-rekey/src/main/java/ie/bitstep/mango/workshop/talk/naivehmacrekey/HmacRekeyStore.java:hmac-rekey-search"
+    ```
+    <!-- link -->
+
+    Nothing in either method checks whether the sweep has actually finished. Call `removeActiveKey` while even one record is still unswept, and search stops trying that key entirely, so a record whose only lookup entry is sitting under it silently drops out of every future search, with no error anywhere. See [`talk/naive-hmac-rekey/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-hmac-rekey) for the full runnable demo, comparing removing the key too early against removing it once the sweep has actually reached everyone.
 6. **Wait for cache expiry again**, so no instance is still generating HMACs — or worse, still trying to *validate* against — the old key.
 7. **Clean up**: remove the now-orphaned old-key HMAC entries from the lookup/unique-value tables. Leaving them doesn't break anything functionally, but stale HMAC material sitting in your database is itself a security exposure worth avoiding, especially for long-lived data.
 8. **Only now** delete the old HMAC key from wherever key material is stored.

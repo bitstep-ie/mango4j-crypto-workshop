@@ -31,6 +31,22 @@ Everything above assumes the field was already encrypted, just under an old key.
 
 This transitional state deserves explicit support rather than being handled ad hoc. A field mid-migration is deliberately *not yet* meeting the normal rule that a confidential field only ever exists as a [working](transient-vs-encrypted-blobs.md) value — it's still readable and writable in its old, unencrypted, persisted form while the backfill completes. Treating that as a tracked, temporary exception — with an owner, a justification, and a target date by which it should be gone — rather than a silent gap in the data model, is what keeps a migration from quietly becoming permanent. Making the exception loud (a startup warning that escalates to an error past the target date, for example) is what turns the deadline into an actual forcing function rather than a comment nobody revisits.
 
+Here's what a read path looks like if it just assumes every row is already encrypted:
+
+```java
+--8<-- "naive-migration/src/main/java/ie/bitstep/mango/workshop/talk/naivemigration/EmailStore.java:naive-migration-load"
+```
+<!-- link -->
+
+That works fine for rows the backfill has already reached, and throws for every row it hasn't, because it's decrypting whatever's in the column regardless of whether it's actually ciphertext yet. The fix is exactly the tracked exception described above: check the flag before deciding whether there's anything to decrypt.
+
+```java
+--8<-- "naive-migration/src/main/java/ie/bitstep/mango/workshop/talk/naivemigration/EmailStore.java:migration-aware-load"
+```
+<!-- link -->
+
+See [`talk/naive-migration/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-migration) for the full runnable demo, seeding one already-migrated row and one not, and reading both rows both ways.
+
 ## Production impact of single-key, single-HMAC designs
 
 Rotation and migration are where the limitations of single-key, single-HMAC designs ([Single HMAC Strategy](single-hmac.md)) become visible in production:
