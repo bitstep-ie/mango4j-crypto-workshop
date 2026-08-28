@@ -45,7 +45,9 @@ A handful of terms come up constantly when discussing ALE — worth having a sha
 :   Per-operation input used by an encryption scheme. Depending on the scheme, it must be random, unique, or both; it is normally stored with the ciphertext and is not secret. Correct nonce handling prevents repeated encryptions of the same value from revealing an avoidable pattern. With the usual randomized or nonce-based encryption schemes, you therefore cannot find a record by encrypting a search term and comparing ciphertext.
 
 **HMAC**
-:   A hash computed using a secret key. Unlike encryption, a HMAC is *deterministic*: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on, and it's exactly the gap left open by the IV above. More on why in a later chapter.
+:   A hash computed using a secret key. Unlike encryption, a HMAC is *deterministic*: the same input with the same key always produces the same output. That property is exactly what makes HMACs — not encrypted values — the thing you actually search and enforce uniqueness on, and it's exactly the gap left open by the IV above.
+
+    **Why you need it:** the IV is what makes an encryption scheme non-deterministic in the first place, encrypting the same plaintext twice, with two different IVs, produces two different ciphertexts. That's the point of the IV (it stops an attacker from spotting repeated values by comparing ciphertext), but it also means equality search and unique constraints can't run against the ciphertext column: the value you'd compute for a search term will practically never match what's already stored, even for an identical plaintext. A HMAC (or any keyed hash with the same determinism property) sidesteps that entirely, since it isn't per-operation and doesn't use an IV, hashing the same plaintext with the same key always produces the same output, so it's what you actually search and enforce uniqueness on instead of the ciphertext. More on the specific strategies for storing and rotating them in a later chapter.
 
 ## Why do we still need it?
 
