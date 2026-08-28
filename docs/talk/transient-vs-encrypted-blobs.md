@@ -26,14 +26,14 @@ To be precise about what "avoids" means here: the split does **not** stop applic
 |---|---|---|---|
 | `encrypt()` | Transient/blob | Yes, wasteful only | Reads the transient field, writes a fresh blob each time; the transient field is never touched, so nothing can be lost |
 | `decrypt()` | Transient/blob | No | Overwrites the transient field every time; any unsaved change made to it since the last `decrypt()` is silently lost, with no error |
-| `encrypt()` | Direct-field (naive) | No | The first call turns the field into ciphertext; a second call re-encrypts that ciphertext as if it were plaintext, corrupting the value |
-| `decrypt()` | Direct-field (naive) | No | Same silent data loss as the transient/blob version, and can also throw or produce garbage if the field didn't actually hold ciphertext at the time |
+| `encrypt()` | Naive entity | No | The first call turns the field into ciphertext; a second call re-encrypts that ciphertext as if it were plaintext, corrupting the value |
+| `decrypt()` | Naive entity | No | Same silent data loss as the transient/blob version, and can also throw or produce garbage if the field didn't actually hold ciphertext at the time |
 
 This is the same forced-overwrite risk covered below for `load()`, just stated for `decrypt()` directly: `load()` is unsafe to call blindly because it calls `decrypt()`, not because of anything specific to loading.
 
 ## What happens without this discipline: encrypting fields directly into their columns
 
-The failure mode this design specifically guards against is the naive alternative: encrypting values directly in place, in their own columns, with no separate transient/blob distinction at all — hand-rolling encrypt/decrypt calls around a column that's sometimes plaintext and sometimes ciphertext depending on when you look at it. This tends to produce:
+The failure mode this design specifically guards against is the naive alternative: a single entity that is both the domain object and the thing an ORM maps straight to columns, with no separate transient/blob distinction at all. Something like a `cardNumber` field, an `iv` sibling column, and a `cardNumberHmac` sibling column for search or uniqueness (the same "bolted on ad hoc" shape [Structured Ciphertext](structured-ciphertext.md) opens with) but critically, no separate field for the ciphertext: `cardNumber` itself is hand-rolled to hold plaintext most of the time and ciphertext for whichever part of the code just encrypted it. This tends to produce:
 
 - **No single source of truth for "what's encrypted"** — you have to go read the code (or worse, ask around) to know whether a given column currently holds plaintext or ciphertext.
 - **Schema churn every time a new field needs protecting** — every field that becomes confidential needs its own bespoke encrypt/decrypt wiring, instead of following one consistent pattern.
@@ -45,10 +45,10 @@ The transient/encrypted-blob split is what makes the first four of those non-iss
 
 ### The naive save()/load() pattern's own problems
 
-A typical hand-rolled `save()` encrypts the column in place, persists, then decrypts it back:
+A typical hand-rolled `save()` encrypts `cardNumber` in place, persists the entity (`iv` and `cardNumberHmac` travel along as ordinary sibling columns), then decrypts `cardNumber` back:
 
 ```java
---8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/DirectFieldStore.java:direct-field-save"
+--8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-save"
 ```
 
 This has a problem the transient/blob split actually fixes:
@@ -66,7 +66,7 @@ It reads the transient field and writes the blob field, and never touches the tr
 The other naive `save()`/`load()` problem isn't fixed by the split at all. Here's the naive `load()`:
 
 ```java
---8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/DirectFieldStore.java:direct-field-load"
+--8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-load"
 ```
 
 And here's the transient/blob version, doing the same thing:

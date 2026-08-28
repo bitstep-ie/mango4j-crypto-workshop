@@ -13,31 +13,33 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Proves the two pitfalls the naive single-column save()/load() shape has, using real
- * threads with {@link CountDownLatch}-based ordering (deterministic, no sleeps) rather
- * than a timing-dependent race.
+ * Proves the two pitfalls of a single entity that reuses cardNumber for both plaintext
+ * and ciphertext (no separate transient/blob split), using real threads with
+ * {@link CountDownLatch}-based ordering (deterministic, no sleeps) rather than a
+ * timing-dependent race.
  */
-class DirectFieldStorePitfallTest {
+class NaiveCardStorePitfallTest {
 
-    private static final String USERNAME = "john.doe@test.com";
+    private static final String CARD_NUMBER = "4111-1111-1111-1111";
 
     @Test
     void concurrentReaderCanObserveCiphertextDuringSave() throws InterruptedException {
-        SecretKey key = Crypto.newKey();
-        DirectFieldStore store = new DirectFieldStore();
-        DirectFieldAccount account = new DirectFieldAccount(1L, USERNAME);
+        SecretKey encryptionKey = Crypto.newKey();
+        SecretKey hmacKey = Crypto.newHmacKey();
+        NaiveCardStore store = new NaiveCardStore();
+        NaiveCardEntity entity = new NaiveCardEntity(1L, CARD_NUMBER);
 
         CountDownLatch ciphertextWritten = new CountDownLatch(1);
         CountDownLatch readerDone = new CountDownLatch(1);
         String[] observedByReader = new String[1];
 
-        Thread saver = new Thread(() -> store.save(account, key, () -> {
+        Thread saver = new Thread(() -> store.save(entity, encryptionKey, hmacKey, () -> {
             ciphertextWritten.countDown();
             await(readerDone);
         }));
         Thread reader = new Thread(() -> {
             await(ciphertextWritten);
-            observedByReader[0] = account.username();
+            observedByReader[0] = entity.cardNumber();
             readerDone.countDown();
         });
 
@@ -47,26 +49,27 @@ class DirectFieldStorePitfallTest {
         reader.join(5_000);
         assertTrue(!saver.isAlive() && !reader.isAlive(), "both threads should have finished within the timeout");
 
-        assertNotEquals(USERNAME, observedByReader[0],
+        assertNotEquals(CARD_NUMBER, observedByReader[0],
                 "a concurrent reader landing mid-save() should have observed ciphertext");
-        assertEquals(USERNAME, account.username(),
+        assertEquals(CARD_NUMBER, entity.cardNumber(),
                 "after save() completes, the field should be restored to plaintext");
     }
 
     @Test
     void loadOverwritesPendingInMemoryChangesWithNoWarning() {
-        SecretKey key = Crypto.newKey();
-        DirectFieldStore store = new DirectFieldStore();
-        DirectFieldAccount saved = new DirectFieldAccount(1L, "old-address@test.com");
-        store.save(saved, key);
+        SecretKey encryptionKey = Crypto.newKey();
+        SecretKey hmacKey = Crypto.newHmacKey();
+        NaiveCardStore store = new NaiveCardStore();
+        NaiveCardEntity saved = new NaiveCardEntity(1L, CARD_NUMBER);
+        store.save(saved, encryptionKey, hmacKey);
 
-        DirectFieldAccount loaded = store.load(1L, key);
-        loaded.setUsername("still-typing-a-new-address@test.com");
+        NaiveCardEntity loaded = store.load(1L, encryptionKey);
+        loaded.setCardNumber("4222-2222-2222-2222");
 
-        DirectFieldAccount reloaded = store.load(1L, key);
+        NaiveCardEntity reloaded = store.load(1L, encryptionKey);
 
-        assertSame(loaded, reloaded, "load() should have returned the same cached instance");
-        assertEquals("old-address@test.com", reloaded.username(),
+        assertSame(loaded, reloaded, "load() should have returned the same managed instance");
+        assertEquals(CARD_NUMBER, reloaded.cardNumber(),
                 "the pending in-memory edit should have been silently discarded");
     }
 
