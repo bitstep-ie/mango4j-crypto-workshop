@@ -29,7 +29,7 @@ public final class Main {
         transientBlobConcurrencyDemo(encryptionKey);
         System.out.println();
 
-        System.out.println("== Naive card entity: load()'s forced overwrite ==");
+        System.out.println("== Naive card entity: load() after save() is a double decrypt ==");
         naiveCardLoadDemo(encryptionKey, hmacKey);
         System.out.println();
 
@@ -79,19 +79,20 @@ public final class Main {
 
     private static void naiveCardLoadDemo(SecretKey encryptionKey, SecretKey hmacKey) {
         NaiveCardStore store = new NaiveCardStore();
-        NaiveCardEntity saved = new NaiveCardEntity(1L, "4111-1111-1111-1111");
-        store.save(saved, encryptionKey, hmacKey);
+        NaiveCardEntity entity = new NaiveCardEntity(1L, "4111-1111-1111-1111");
 
-        NaiveCardEntity loaded = store.load(1L, encryptionKey);
-        System.out.println("First load(): " + loaded.cardNumber());
+        store.save(entity, encryptionKey, hmacKey);
+        System.out.println("save() already decrypted cardNumber for continued use: " + entity.cardNumber());
 
-        loaded.setCardNumber("4222-2222-2222-2222");
-        System.out.println("Application makes an in-memory edit, not yet saved: " + loaded.cardNumber());
-
-        NaiveCardEntity reloaded = store.load(1L, encryptionKey);
-        System.out.println("Something else in the app calls load() again for the same id.");
-        System.out.println("Result: " + reloaded.cardNumber());
-        System.out.println("PITFALL: the in-memory edit is gone, silently, no warning, no exception.");
+        System.out.println("Something else in the app, not knowing that, calls load() for the same id.");
+        try {
+            store.load(1L, encryptionKey);
+            System.out.println("(this line should not be reached)");
+        } catch (IllegalStateException e) {
+            System.out.println("PITFALL: load() blew up: " + e.getCause());
+            System.out.println("It blindly tried to decrypt cardNumber, but save() already decrypted it,");
+            System.out.println("so it's not valid ciphertext any more. load() has no way to know that.");
+        }
     }
 
     private static void transientBlobLoadDemo(SecretKey key) {

@@ -8,23 +8,16 @@ import java.util.Map;
 
 /**
  * The naive hand-rolled shape from {@code docs/talk/transient-vs-encrypted-blobs.md}:
- * {@code save()} manually encrypts {@code cardNumber} in place before persisting, then
- * manually decrypts it back; {@code load()} fetches and manually decrypts. There is no
- * separate domain-level/db-level POJO split, {@code NaiveCardEntity} is both.
- *
- * <p>{@code table} models the actual persisted bytes (what a real database holds,
- * unaffected by in-memory edits until something calls {@code save()} again), while
- * {@code managed} models the kind of session-level identity map a real ORM keeps, so a
- * second {@code load()} for the same id returns the same live instance rather than a
- * disconnected copy.
+ * {@code save()} manually encrypts {@code cardNumber} in place, persists the entity,
+ * then manually decrypts it back so the caller can keep using it. {@code load()} is
+ * simpler: fetch the managed entity, decrypt {@code cardNumber} directly on it. There
+ * is no separate domain-level/db-level POJO and no DTO standing in for a row,
+ * {@code table} holds {@code NaiveCardEntity} instances directly, and calling
+ * {@code load()} on one that {@code save()} already decrypted is a double decrypt.
  */
 public final class NaiveCardStore {
 
-    private record Row(String cardNumber, String iv, String cardNumberHmac) {
-    }
-
-    private final Map<Long, Row> table = new HashMap<>();
-    private final Map<Long, NaiveCardEntity> managed = new HashMap<>();
+    private final Map<Long, NaiveCardEntity> table = new HashMap<>();
 
     public void save(NaiveCardEntity entity, SecretKey encryptionKey, SecretKey hmacKey) {
         save(entity, encryptionKey, hmacKey, () -> {
@@ -33,7 +26,7 @@ public final class NaiveCardStore {
 
     /**
      * Same as {@link #save(NaiveCardEntity, SecretKey, SecretKey)}, but runs
-     * {@code duringCiphertextWindow} at the exact point where {@code cardNumber} holds
+     * {@code duringCiphertextWindow} at the point where {@code cardNumber} holds
      * ciphertext, standing in for a concurrent reader landing in that window.
      */
     // --8<-- [start:naive-card-save] link
@@ -46,38 +39,25 @@ public final class NaiveCardStore {
         entity.setIv(encrypted.iv());
         entity.setCardNumberHmac(Crypto.hmac(plaintext, hmacKey));
 
-        table.put(entity.id(), new Row(entity.cardNumber(), entity.iv(), entity.cardNumberHmac()));
-        managed.put(entity.id(), entity);
+        table.put(entity.id(), entity);                   // the real persist, same instance, no row type
 
-        duringCiphertextWindow.run();                     // a concurrent reader could land here
+        duringCiphertextWindow.run();                      // a concurrent reader could land here
 
         entity.setCardNumber(Crypto.decryptDetached(encrypted.ciphertext(), encrypted.iv(), encryptionKey));
     }
     // --8<-- [end:naive-card-save]
 
     /**
-     * Fetches from the persisted table and decrypts {@code cardNumber} back in place.
-     * If this id is already managed (held from an earlier {@code load()}), that same
-     * instance is overwritten rather than a fresh one being handed back.
+     * Fetches the managed entity and decrypts {@code cardNumber} directly on it. Since
+     * {@link #save} already leaves {@code cardNumber} decrypted, calling {@code load()}
+     * on an entity {@code save()} already handled is a double decrypt, and it throws:
+     * the field no longer holds valid ciphertext for this key to decrypt.
      */
-    // --8<-- [start:naive-card-load]
+    // --8<-- [start:naive-card-load] link
     public NaiveCardEntity load(long id, SecretKey encryptionKey) {
-        Row row = table.get(id);
-        String plaintext = Crypto.decryptDetached(row.cardNumber(), row.iv(), encryptionKey);
-
-        NaiveCardEntity existing = managed.get(id);
-        if (existing != null) {
-            existing.setCardNumber(plaintext);   // forced overwrite, no check, no warning
-            existing.setIv(row.iv());
-            existing.setCardNumberHmac(row.cardNumberHmac());
-            return existing;
-        }
-
-        NaiveCardEntity fresh = new NaiveCardEntity(id, plaintext);
-        fresh.setIv(row.iv());
-        fresh.setCardNumberHmac(row.cardNumberHmac());
-        managed.put(id, fresh);
-        return fresh;
+        NaiveCardEntity entity = table.get(id);
+        entity.setCardNumber(Crypto.decryptDetached(entity.cardNumber(), entity.iv(), encryptionKey));
+        return entity;
     }
     // --8<-- [end:naive-card-load]
 }

@@ -9,18 +9,31 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Proves the two pitfalls of a single entity that reuses cardNumber for both plaintext
- * and ciphertext (no separate transient/blob split), using real threads with
+ * Proves the pitfalls of a single entity that reuses cardNumber for both plaintext and
+ * ciphertext (no separate transient/blob split), using real threads with
  * {@link CountDownLatch}-based ordering (deterministic, no sleeps) rather than a
  * timing-dependent race.
  */
 class NaiveCardStorePitfallTest {
 
     private static final String CARD_NUMBER = "4111-1111-1111-1111";
+
+    @Test
+    void saveRestoresCardNumberToPlaintextForContinuedUse() {
+        SecretKey encryptionKey = Crypto.newKey();
+        SecretKey hmacKey = Crypto.newHmacKey();
+        NaiveCardStore store = new NaiveCardStore();
+        NaiveCardEntity entity = new NaiveCardEntity(1L, CARD_NUMBER);
+
+        store.save(entity, encryptionKey, hmacKey);
+
+        assertEquals(CARD_NUMBER, entity.cardNumber(),
+                "save() should have decrypted cardNumber back for the caller to keep using");
+    }
 
     @Test
     void concurrentReaderCanObserveCiphertextDuringSave() throws InterruptedException {
@@ -56,21 +69,19 @@ class NaiveCardStorePitfallTest {
     }
 
     @Test
-    void loadOverwritesPendingInMemoryChangesWithNoWarning() {
+    void loadRightAfterSaveIsADoubleDecryptAndThrows() {
         SecretKey encryptionKey = Crypto.newKey();
         SecretKey hmacKey = Crypto.newHmacKey();
         NaiveCardStore store = new NaiveCardStore();
-        NaiveCardEntity saved = new NaiveCardEntity(1L, CARD_NUMBER);
-        store.save(saved, encryptionKey, hmacKey);
+        NaiveCardEntity entity = new NaiveCardEntity(1L, CARD_NUMBER);
 
-        NaiveCardEntity loaded = store.load(1L, encryptionKey);
-        loaded.setCardNumber("4222-2222-2222-2222");
+        store.save(entity, encryptionKey, hmacKey);   // save() already decrypted cardNumber as its last step
 
-        NaiveCardEntity reloaded = store.load(1L, encryptionKey);
-
-        assertSame(loaded, reloaded, "load() should have returned the same managed instance");
-        assertEquals(CARD_NUMBER, reloaded.cardNumber(),
-                "the pending in-memory edit should have been silently discarded");
+        // load() blindly decrypts whatever cardNumber currently holds, with no way to
+        // know save() already did that. It's not valid ciphertext any more, so this
+        // second decrypt fails, the exact same root cause as a silent overwrite would
+        // have, just a louder symptom of it: decrypt() has no way to know it isn't safe to run.
+        assertThrows(IllegalStateException.class, () -> store.load(1L, encryptionKey));
     }
 
     private static void await(CountDownLatch latch) {

@@ -27,7 +27,7 @@ To be precise about what "avoids" means here: the split does **not** stop applic
 | `encrypt()` | Transient/blob | Yes, wasteful only | Reads the transient field, writes a fresh blob each time; the transient field is never touched, so nothing can be lost |
 | `decrypt()` | Transient/blob | No | Overwrites the transient field every time; any unsaved change made to it since the last `decrypt()` is silently lost, with no error |
 | `encrypt()` | Naive entity | No | The first call turns the field into ciphertext; a second call re-encrypts that ciphertext as if it were plaintext, corrupting the value |
-| `decrypt()` | Naive entity | No | Same silent data loss as the transient/blob version, and can also throw or produce garbage if the field didn't actually hold ciphertext at the time |
+| `decrypt()` | Naive entity | No | Throws rather than losing data silently, decrypting a field that's already plaintext (or holds a pending edit) fails outright, since it's no longer valid ciphertext |
 
 This is the same forced-overwrite risk covered below for `load()`, just stated for `decrypt()` directly: `load()` is unsafe to call blindly because it calls `decrypt()`, not because of anything specific to loading.
 
@@ -63,18 +63,20 @@ Compare that to `save()` built on the transient/blob split:
 
 It reads the transient field and writes the blob field, and never touches the transient field at all, so there is no window where the working representation is anything other than plaintext. A concurrent reader sees a consistent value throughout. That's the concurrency problem genuinely solved, not just made harder to trigger.
 
-The other naive `save()`/`load()` problem isn't fixed by the split at all. Here's the naive `load()`:
+The other naive `save()`/`load()` problem isn't fixed by the split, it just changes shape. Here's the naive `load()`, on the same single entity `save()` just used:
 
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-load"
 ```
 
-And here's the transient/blob version, doing the same thing:
+`save()` already decrypted `cardNumber` back for the caller as its last step. Call `load()` on that same id afterward (another part of the app, not knowing it was just saved a moment ago) and it's a double decrypt: `cardNumber` no longer holds valid ciphertext, so the decrypt inside `load()` throws outright. It fails loudly rather than losing anything.
+
+Here's the transient/blob version of `load()`, doing the equivalent fetch-then-decrypt:
 
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/transientblob/TransientBlobStore.java:transient-blob-load"
 ```
 
-- **`load()`'s decrypt is forced, and a forced decrypt can silently discard in-memory work, in both versions.** `load()`'s job is "fetch from the DB, then decrypt", but if it runs against an entity instance that already has unsaved application changes (re-loading an entity that's still being edited, refreshing a cached instance, a second `load()` call for the same id mid-request) the freshly-decrypted DB values overwrite whatever was already there. There's no conflict check, no diff, no exception; the caller just loses whatever hadn't been saved yet, with no warning, and finds out only if they happen to notice the value changed. `decrypt()` writes into the transient field regardless of what was there before, whether it's mango4j-crypto's `decrypt()` or a hand-rolled one, so having a separate transient field doesn't change this outcome at all. Avoiding it is a matter of *when* the application chooses to call `decrypt()`/`load()` at all, never blindly, against an entity that might carry pending changes, not something the ciphertext representation can enforce for you.
+- **`load()`'s decrypt is forced in both versions, but the failure looks different.** `load()`'s job is "fetch, then decrypt", but if it runs against an entity that already has unsaved application changes (re-loading an entity that's still being edited, refreshing a cached instance, a second `load()` call for the same id mid-request) there's no conflict check, no diff, nothing stopping it. In the naive entity, `cardNumber` is the same field decrypt() is about to overwrite, so if it isn't currently valid ciphertext, the decrypt call throws and the caller finds out immediately. In the transient/blob version, `decrypt()` reads the separate blob field (still perfectly valid ciphertext, untouched by any in-memory edit) and unconditionally overwrites the transient field with whatever that decodes to, so it never throws, it just silently discards whatever was on the transient field, with no warning. Neither version is safe to call blindly; one just fails loudly and the other doesn't. Avoiding it is a matter of *when* the application chooses to call `decrypt()`/`load()` at all, never against an entity that might carry pending changes, not something either representation can enforce for you.
 
 See [`talk/naive-save-load/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-save-load) for the full runnable demo of both variants, including a real-thread reproduction of the concurrency window.
