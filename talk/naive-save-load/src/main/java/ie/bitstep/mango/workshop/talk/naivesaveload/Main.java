@@ -84,7 +84,7 @@ public final class Main {
         store.save(entity, encryptionKey, hmacKey);
         System.out.println("save() already decrypted cardNumber for continued use: " + entity.cardNumber());
 
-        System.out.println("Something else in the app, not knowing that, calls load() for the same id.");
+        System.out.println("The same method, a few lines later, calls load() for the same id anyway.");
         try {
             store.load(1L, encryptionKey);
             System.out.println("(this line should not be reached)");
@@ -107,7 +107,7 @@ public final class Main {
         System.out.println("Application makes an in-memory edit, not yet saved: " + loaded.username());
 
         TransientBlobAccount reloaded = store.load(1L, key);
-        System.out.println("Something else in the app calls load() again for the same id.");
+        System.out.println("The same method, a few lines later, calls load() again for the same id.");
         System.out.println("Result: " + reloaded.username());
         System.out.println("PITFALL: same as the naive design, the transient/blob split doesn't fix this one.");
     }
