@@ -6,7 +6,7 @@ The Single HMAC Strategy
 
 It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 
-The HMAC itself is unremarkable — a keyed hash, computed with whatever key happens to be current:
+The HMAC itself is unremarkable: a keyed hash, computed with whatever key happens to be current.
 
 ```java
 --8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/HmacService.java:hmac"
@@ -44,7 +44,7 @@ This is the more consequential of the two. Say `userName` has a DB-level unique 
 
 Adding key start time doesn't fix this — it only narrows the window to a race condition, and even that requires an extra step: searching for the value under every known key *before every write*, to catch a record that might already exist under an old key. That search-before-write step has its own performance cost, and it makes the database's own unique constraint largely redundant for the cases it's meant to catch, since the application is now the one enforcing uniqueness. Even with it, a race remains: two requests for the same username, arriving on either side of the key-start-time boundary, can each search first, find nothing, and then write concurrently — one under the old key, one under the new one — leaving the same username duplicated in the system.
 
-The write path that lets this happen — a plain unique index on the single HMAC column:
+The write path that lets this happen: a plain unique index on the single HMAC column.
 
 ```java
 --8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/UserStore.java:unique-constraint"

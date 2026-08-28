@@ -13,6 +13,7 @@
     <modules>
         <module>naive-ciphertext-blob</module>
         <module>naive-single-hmac</module>
+        <module>naive-save-load</module>
     </modules>
 
     <properties>
