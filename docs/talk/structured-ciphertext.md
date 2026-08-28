@@ -23,6 +23,7 @@ Without a key ID, decrypting an old record after a key rotation means trying eve
 ```java
 --8<-- "naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveVault.java:brute-force-decrypt"
 ```
+<!-- link -->
 
 That's `O(number of keys ever issued)` per read, forever, and once a key is retired and its material destroyed (as compliance often requires), there was never a way to query "which records still depend on this key?" to migrate them first. See [`talk/naive-ciphertext-blob/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-ciphertext-blob) for the full runnable demo, including that failure.
 

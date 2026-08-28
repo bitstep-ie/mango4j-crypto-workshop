@@ -30,7 +30,7 @@ public final class NaiveCardStore {
      * {@code duringCiphertextWindow} at the point where {@code cardNumber} holds
      * ciphertext, standing in for a concurrent reader landing in that window.
      */
-    // --8<-- [start:naive-card-save] link
+    // --8<-- [start:naive-card-save]
     public void save(NaiveCardEntity entity, SecretKey encryptionKey, SecretKey hmacKey,
                       Runnable duringCiphertextWindow) {
         String plaintext = entity.cardNumber();     // might not actually be plaintext: save() has
@@ -62,7 +62,7 @@ public final class NaiveCardStore {
      * on an entity {@code save()} already handled is a double decrypt, and it throws:
      * the field no longer holds valid ciphertext for this key to decrypt.
      */
-    // --8<-- [start:naive-card-load] link
+    // --8<-- [start:naive-card-load]
     public NaiveCardEntity load(long id, SecretKey encryptionKey) {
         NaiveCardEntity entity = table.get(id);
         entity.setCardNumber(Crypto.decryptDetached(entity.cardNumber(), entity.iv(), encryptionKey));

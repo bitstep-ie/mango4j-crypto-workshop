@@ -49,6 +49,7 @@ The write path that lets this happen: a plain unique index on the single HMAC co
 ```java
 --8<-- "naive-single-hmac/src/main/java/ie/bitstep/mango/workshop/talk/naivesinglehmac/UserStore.java:unique-constraint"
 ```
+<!-- link -->
 
 The constraint only ever sees the hash value, so `createUser()` for the same username under two different keys looks, to the index, like two entirely unrelated rows. See [`talk/naive-single-hmac/`](https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-single-hmac) for the full runnable demo that reproduces both the search outage and the duplicate.
 

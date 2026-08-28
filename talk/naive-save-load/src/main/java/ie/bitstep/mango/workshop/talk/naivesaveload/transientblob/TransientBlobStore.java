@@ -28,7 +28,7 @@ public final class TransientBlobStore {
 
     /** Same forced-overwrite shape as {@code DirectFieldStore.load()}: an id already
      * held elsewhere gets its transient field overwritten in place, unconditionally. */
-    // --8<-- [start:transient-blob-load] link
+    // --8<-- [start:transient-blob-load]
     public TransientBlobAccount load(long id, SecretKey key) {
         String blob = db.get(id);
         String plaintext = Crypto.decrypt(blob, key);

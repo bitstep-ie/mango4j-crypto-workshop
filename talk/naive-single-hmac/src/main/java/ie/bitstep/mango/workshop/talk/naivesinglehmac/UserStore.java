@@ -16,7 +16,7 @@ public final class UserStore {
     private final List<UserRecord> rows = new ArrayList<>();
     private final Set<String> uniqueHmacIndex = new HashSet<>();
 
-    // --8<-- [start:unique-constraint] link
+    // --8<-- [start:unique-constraint]
     public void createUser(String username, String usernameHmac) {
         // Mirrors a DB unique index on USERNAME_HMAC: it can only ever see the hash
         // value itself, so two different hashes for the same underlying username

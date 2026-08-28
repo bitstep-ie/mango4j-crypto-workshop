@@ -62,7 +62,7 @@ public final class NaiveVault {
      * encrypted it, decryption means trying every key you still happen to have,
      * until one of them works (or none do).
      */
-    // --8<-- [start:brute-force-decrypt] link
+    // --8<-- [start:brute-force-decrypt]
     public String decryptByBruteForce(NaiveBlob blob, Map<String, SecretKey> allKnownKeysNewestFirst) {
         for (SecretKey candidate : allKnownKeysNewestFirst.values()) {
             String plaintext = tryDecrypt(blob, candidate);

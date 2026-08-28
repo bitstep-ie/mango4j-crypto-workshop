@@ -50,6 +50,7 @@ A typical hand-rolled `save()` encrypts `cardNumber` in place, persists the enti
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-save"
 ```
+<!-- link -->
 
 That restore reassigns the plaintext `save()` already captured before encrypting, it doesn't decrypt the ciphertext it just produced. There's no reason to: the plaintext is still sitting right there in a local variable, so decrypting it back would just be `encrypt()`'s wasted work from earlier in this page, paying for a cryptographic operation to recover a value already in hand.
 
@@ -70,6 +71,7 @@ The other naive `save()`/`load()` problem isn't fixed by the split, it just chan
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java:naive-card-load"
 ```
+<!-- link -->
 
 `save()` already decrypted `cardNumber` back for the caller as its last step. This doesn't need multiple threads, a shared cache, or a session boundary to go wrong, a single method, on one thread, calling `save(entity)` and then, a few lines later in the same call, `load(entity.id(), key)` again (maybe defensively, maybe out of habit) is already a double decrypt: `cardNumber` no longer holds valid ciphertext, so the decrypt inside `load()` throws outright. It fails loudly rather than losing anything.
 
@@ -78,6 +80,7 @@ Here's the transient/blob version of `load()`, doing the equivalent fetch-then-d
 ```java
 --8<-- "naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/transientblob/TransientBlobStore.java:transient-blob-load"
 ```
+<!-- link -->
 
 - **`load()`'s decrypt is forced in both versions, but the failure looks different.** `load()`'s job is "fetch, then decrypt", but it has no way to check whether the field it's about to overwrite already holds something the caller needs, whether that's a pending edit or a value `save()` already restored a moment earlier in the exact same call path. In the naive entity, `cardNumber` is the same field decrypt() is about to overwrite, so if it isn't currently valid ciphertext, the decrypt call throws and the caller finds out immediately. In the transient/blob version, `decrypt()` reads the separate blob field (still perfectly valid ciphertext, unaffected by anything happening on the transient field) and unconditionally overwrites the transient field with whatever that decodes to, so it never throws, it just silently discards whatever was on the transient field, with no warning. Neither version is safe to call blindly; one just fails loudly and the other doesn't. Avoiding it is a matter of *when* the application chooses to call `decrypt()`/`load()` at all, not something either representation can enforce for you.
 
