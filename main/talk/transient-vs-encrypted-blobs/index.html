@@ -1279,7 +1279,14 @@
 <p>A typical hand-rolled <code>save()</code> encrypts <code>cardNumber</code> in place, persists the entity (<code>iv</code> and <code>cardNumberHmac</code> travel along as ordinary sibling columns), then restores <code>cardNumber</code> for the caller:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">NaiveCardEntity</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">SecretKey</span><span class="w"> </span><span class="n">encryptionKey</span><span class="p">,</span><span class="w"> </span><span class="n">SecretKey</span><span class="w"> </span><span class="n">hmacKey</span><span class="p">,</span>
 <span class="w">                  </span><span class="n">Runnable</span><span class="w"> </span><span class="n">duringCiphertextWindow</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">plaintext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="na">cardNumber</span><span class="p">();</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">plaintext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="na">cardNumber</span><span class="p">();</span><span class="w">     </span><span class="c1">// might not actually be plaintext: save() has</span>
+<span class="w">                                                 </span><span class="c1">// no way to verify that, so an entity that</span>
+<span class="w">                                                 </span><span class="c1">// picked up ciphertext some other way (e.g.</span>
+<span class="w">                                                 </span><span class="c1">// built from raw persisted bytes without going</span>
+<span class="w">                                                 </span><span class="c1">// through load()) gets silently double-encrypted</span>
+<span class="w">                                                 </span><span class="c1">// here, the mirror of load()'s double decrypt,</span>
+<span class="w">                                                 </span><span class="c1">// except encrypting ciphertext-as-plaintext never</span>
+<span class="w">                                                 </span><span class="c1">// throws, so there's no loud failure to notice</span>
 <span class="w">    </span><span class="n">Crypto</span><span class="p">.</span><span class="na">EncryptedValue</span><span class="w"> </span><span class="n">encrypted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Crypto</span><span class="p">.</span><span class="na">encryptDetached</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span><span class="w"> </span><span class="n">encryptionKey</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">entity</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="n">encrypted</span><span class="p">.</span><span class="na">ciphertext</span><span class="p">());</span><span class="w">     </span><span class="c1">// the SAME field now holds ciphertext</span>
@@ -1294,7 +1301,7 @@
 <span class="w">                                                         </span><span class="c1">// what's already sitting in a local variable</span>
 <span class="p">}</span>
 </code></pre></div>
-<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java#L34-L49">View on GitHub</a></small></p>
+<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java#L34-L56">View on GitHub</a></small></p>
 <p>That restore reassigns the plaintext <code>save()</code> already captured before encrypting, it doesn't decrypt the ciphertext it just produced. There's no reason to: the plaintext is still sitting right there in a local variable, so decrypting it back would just be <code>encrypt()</code>'s wasted work from earlier in this page, paying for a cryptographic operation to recover a value already in hand.</p>
 <p>This has a problem the transient/blob split actually fixes:</p>
 <ul>
@@ -1315,7 +1322,7 @@
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">entity</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
-<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java#L59-L63">View on GitHub</a></small></p>
+<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-save-load/src/main/java/ie/bitstep/mango/workshop/talk/naivesaveload/directfield/NaiveCardStore.java#L66-L70">View on GitHub</a></small></p>
 <p><code>save()</code> already decrypted <code>cardNumber</code> back for the caller as its last step. This doesn't need multiple threads, a shared cache, or a session boundary to go wrong, a single method, on one thread, calling <code>save(entity)</code> and then, a few lines later in the same call, <code>load(entity.id(), key)</code> again (maybe defensively, maybe out of habit) is already a double decrypt: <code>cardNumber</code> no longer holds valid ciphertext, so the decrypt inside <code>load()</code> throws outright. It fails loudly rather than losing anything.</p>
 <p>Here's the transient/blob version of <code>load()</code>, doing the equivalent fetch-then-decrypt:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">TransientBlobAccount</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">SecretKey</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
