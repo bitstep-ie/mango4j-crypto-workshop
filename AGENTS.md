@@ -8,7 +8,7 @@ This repository is a step-by-step workshop teaching the **mango4j** crypto frame
 
 ## Current status
 
-Docs-site scaffolding (MkDocs), `stages/01-Getting-Started/` (a plain stage: adds the `mango4j-crypto` dependency), and `stages/02-Encrypt-a-Field/` (a starter/complete stage: encrypts a single `cardNumber` field) exist, plus `.github/workflows/ci.yml` which builds/verifies every stage; later stages are not yet written. `talk/` holds supporting code samples for the conceptual talk that precedes the hands-on workshop (see [Talk supporting samples](#talk-supporting-samples) below). The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
+Docs-site scaffolding (MkDocs), `stages/01-Getting-Started/` (a plain stage: adds the `mango4j-crypto` dependency), `stages/02-Encrypt-a-Field/` (a starter/complete stage: encrypts a single `cardNumber` field), and `stages/03-Real-Encryption/` (a starter/complete stage: swaps the Base64 test delegate for the real `PBKDF2EncryptionService`, configuring the mechanism via the `CryptoKey`'s `type`/`configuration`) exist, plus `.github/workflows/ci.yml` which builds/verifies every stage; later stages are not yet written. `talk/` holds supporting code samples for the conceptual talk that precedes the hands-on workshop (see [Talk supporting samples](#talk-supporting-samples) below). The `.gitignore` targets a Java/Maven project (`*.class`, `*.jar`, `*.war`, `target/`, etc.), so workshop code is implemented in Java/Maven.
 
 ## Workshop structure: folder-per-stage + MkDocs
 

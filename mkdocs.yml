@@ -67,6 +67,7 @@ nav:
       - Introduction: stages/00-intro.md
       - "Getting Started": stages/01-getting-started.md
       - "Encrypting a Field": stages/02-encrypting-a-field.md
+      - "Real Encryption": stages/03-real-encryption.md
   - How This Workshop Works: how-it-works.md
   - FAQ:
       - ALE: talk/faq-ale.md
