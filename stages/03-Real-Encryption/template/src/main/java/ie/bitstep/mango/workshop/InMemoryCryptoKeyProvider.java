@@ -67,7 +67,20 @@ public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
          *    system these values (and a real passphrase) come from configuration
          *    or a secret store, never a hardcoded literal.
          */
+
+        // Name the mechanism this key uses. mango4j-crypto compares this string to
+        // every registered delegate's supportedCryptoKeyType() and routes encrypt /
+        // decrypt for this key to the one that matches - here, PBKDF2EncryptionService
+        // (see Main, where that delegate is registered). Changing "BASE_64" to
+        // "PBKDF2" is the whole switch from the fake test cipher to real AES/GCM.
         keyType = "PBKDF2";
+
+        // Supply the parameters that mechanism needs to operate. This map is passed
+        // straight to the delegate; PBKDF2EncryptionService reads the cipher settings
+        // (AES/GCM/NoPadding, 256-bit key, 128-bit GCM tag, 16-byte IV) and the
+        // passphrase + salt it derives the AES key from. It is configuration, not key
+        // material - and in a real deployment the passphrase comes from a secret
+        // store, never a literal like this.
         keyConfiguration = Map.of(
                 "algorithm", "AES",
                 "mode", "GCM",
