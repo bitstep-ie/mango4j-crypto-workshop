@@ -1243,7 +1243,7 @@ Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field/starter</code> a
 </code></pre></div>
 <h2 id="encrypting-and-decrypting">Encrypting and decrypting</h2>
 <div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
-<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"4111111111111111"</span><span class="p">);</span>
+<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
 
 <span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
 <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"cardNumber (still in memory): "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">card</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
@@ -1260,14 +1260,14 @@ Using an IDE instead? Just open <code>stages/02-Encrypt-a-Field/starter</code> a
 <p><code>decrypt()</code> does the reverse: given only the ciphertext, it reconstructs <code>cardNumber</code>. This is what "loading an entity back from storage" looks like in practice — you'd load a row containing only <code>encryptedData</code>, then call <code>decrypt()</code> to get the real value back.</p>
 <h2 id="running-it">Running it</h2>
 <p>Run <code>starter/</code> now, before making any changes, and you'll see:</p>
-<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 4111111111111111
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
 encryptedData:                null
 decrypted cardNumber:         null
 </code></pre></div>
 <p>Nothing's encrypted yet — that's expected, <code>PaymentCardEntity</code> isn't annotated. Once you've added the two annotations, run it again and you should see:</p>
-<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 4111111111111111
-encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
-decrypted cardNumber:         4111111111111111
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
+encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNTExMTExMTExMTExMTExMSJ9"}}
+decrypted cardNumber:         5111111111111111
 </code></pre></div>
 <p>That's <code>complete/</code> — if yours doesn't match, compare against it.</p>
 

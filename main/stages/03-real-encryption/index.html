@@ -1255,9 +1255,15 @@ Using an IDE instead? Open <code>stages/03-Real-Encryption/starter</code> as its
 <span class="c1">// that just Base64-encodes the payload so the ciphertext is trivially readable.</span>
 <span class="n">EncryptionServiceDelegate</span><span class="w"> </span><span class="n">delegate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Base64EncryptionService</span><span class="p">();</span>
 
+<span class="c1">// Swap the fake test delegate for a real one. A delegate is the thing that</span>
+<span class="c1">// actually performs encrypt / decrypt; the Builder below takes a list of them,</span>
+<span class="c1">// and CryptoShield picks one per operation by matching a key's type against</span>
+<span class="c1">// each delegate's supportedCryptoKeyType(). PBKDF2EncryptionService reports</span>
+<span class="c1">// "PBKDF2", which is exactly the type we set on the key in</span>
+<span class="c1">// InMemoryCryptoKeyProvider - that pairing is what routes this key here.</span>
 <span class="n">delegate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PBKDF2EncryptionService</span><span class="p">();</span>
 </code></pre></div>
-<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/03-Real-Encryption/complete/src/main/java/ie/bitstep/mango/workshop/Main.java#L14-L18">View on GitHub</a></small></p>
+<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/03-Real-Encryption/complete/src/main/java/ie/bitstep/mango/workshop/Main.java#L14-L24">View on GitHub</a></small></p>
 <p><code>PBKDF2EncryptionService</code> ships with <code>mango4j-crypto</code>. It uses the JDK's own cryptography (AES in GCM mode here) with the AES key derived from a passphrase, so it is real encryption you can run locally with no external key service. A production system would more likely use a KMS-backed delegate, but the wiring is identical: <code>CryptoShield</code> picks a delegate per operation by matching the key's <code>type</code> against each delegate's <code>supportedCryptoKeyType()</code>.</p>
 <p><strong>Your turn:</strong> in <code>starter/src/main/java/ie/bitstep/mango/workshop/Main.java</code>, reassign <code>delegate</code> to a <code>new PBKDF2EncryptionService()</code>.</p>
 <h2 id="configuring-the-key">Configuring the key</h2>
@@ -1266,7 +1272,19 @@ Using an IDE instead? Open <code>stages/03-Real-Encryption/starter</code> as its
 <span class="n">String</span><span class="w"> </span><span class="n">keyType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"BASE_64"</span><span class="p">;</span>
 <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">keyConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">();</span>
 
+<span class="c1">// Name the mechanism this key uses. mango4j-crypto compares this string to</span>
+<span class="c1">// every registered delegate's supportedCryptoKeyType() and routes encrypt /</span>
+<span class="c1">// decrypt for this key to the one that matches - here, PBKDF2EncryptionService</span>
+<span class="c1">// (see Main, where that delegate is registered). Changing "BASE_64" to</span>
+<span class="c1">// "PBKDF2" is the whole switch from the fake test cipher to real AES/GCM.</span>
 <span class="n">keyType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PBKDF2"</span><span class="p">;</span>
+
+<span class="c1">// Supply the parameters that mechanism needs to operate. This map is passed</span>
+<span class="c1">// straight to the delegate; PBKDF2EncryptionService reads the cipher settings</span>
+<span class="c1">// (AES/GCM/NoPadding, 256-bit key, 128-bit GCM tag, 16-byte IV) and the</span>
+<span class="c1">// passphrase + salt it derives the AES key from. It is configuration, not key</span>
+<span class="c1">// material - and in a real deployment the passphrase comes from a secret</span>
+<span class="c1">// store, never a literal like this.</span>
 <span class="n">keyConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
 <span class="w">        </span><span class="s">"algorithm"</span><span class="p">,</span><span class="w"> </span><span class="s">"AES"</span><span class="p">,</span>
 <span class="w">        </span><span class="s">"mode"</span><span class="p">,</span><span class="w"> </span><span class="s">"GCM"</span><span class="p">,</span>
@@ -1288,7 +1306,7 @@ Using an IDE instead? Open <code>stages/03-Real-Encryption/starter</code> as its
 <h2 id="encrypting-and-decrypting">Encrypting and decrypting</h2>
 <p>The calls are unchanged:</p>
 <div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
-<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"4111111111111111"</span><span class="p">);</span>
+<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
 
 <span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
 <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"cardNumber (still in memory): "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">card</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
@@ -1307,12 +1325,12 @@ Using an IDE instead? Open <code>stages/03-Real-Encryption/starter</code> as its
 <p><code>decrypt()</code> only receives the <code>encryptedData</code> blob. It reads the <code>cryptoKeyId</code> recorded inside it, asks the provider for that key by ID, and gets back the configuration it needs to reverse the operation. Nothing in the calling code has to know the encryption is PBKDF2, or that a key rotation might later make this key no longer "current".</p>
 <h2 id="running-it">Running it</h2>
 <p>Run <code>starter/</code> before making changes and you get the previous stage's output: <code>encryptedData</code> is Base64 that decodes straight back to the plaintext JSON.</p>
-<div class="highlight"><pre><span></span><code>encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
+<div class="highlight"><pre><span></span><code>encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNTExMTExMTExMTExMTExMSJ9"}}
 </code></pre></div>
 <p>After both changes, run it again:</p>
-<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 4111111111111111
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
 encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"iv":"...","cipherText":"...","algorithm":"AES","mode":"GCM","keySize":256,"gcmTagLength":128,"iterations":10000,"padding":"NoPadding"}}
-decrypted cardNumber:         4111111111111111
+decrypted cardNumber:         5111111111111111
 </code></pre></div>
 <p>The <code>cipherText</code> is now real AES/GCM output, and the <code>iv</code> sits alongside it because decryption cannot reverse the operation without it. The exact bytes change on every run, since a fresh IV is generated each time.</p>
 
