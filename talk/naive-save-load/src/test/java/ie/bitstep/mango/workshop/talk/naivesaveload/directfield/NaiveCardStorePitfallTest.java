@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class NaiveCardStorePitfallTest {
 
-    private static final String CARD_NUMBER = "4111-1111-1111-1111";
+    private static final String CARD_NUMBER = "5111-1111-1111-1111";
 
     @Test
     void saveRestoresCardNumberToPlaintextForContinuedUse() {

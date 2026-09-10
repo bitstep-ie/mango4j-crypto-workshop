@@ -29,7 +29,7 @@ public class Main {
                 .build();
 
         PaymentCardEntity card = new PaymentCardEntity();
-        card.setCardNumber("4111111111111111");
+        card.setCardNumber("5111111111111111");
 
         cryptoShield.encrypt(card);
         System.out.println("cardNumber (still in memory): " + card.getCardNumber());

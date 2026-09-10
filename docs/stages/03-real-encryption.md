@@ -65,15 +65,15 @@ The calls are unchanged:
 Run `starter/` before making changes and you get the previous stage's output: `encryptedData` is Base64 that decodes straight back to the plaintext JSON.
 
 ```
-encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
+encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNTExMTExMTExMTExMTExMSJ9"}}
 ```
 
 After both changes, run it again:
 
 ```
-cardNumber (still in memory): 4111111111111111
+cardNumber (still in memory): 5111111111111111
 encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"iv":"...","cipherText":"...","algorithm":"AES","mode":"GCM","keySize":256,"gcmTagLength":128,"iterations":10000,"padding":"NoPadding"}}
-decrypted cardNumber:         4111111111111111
+decrypted cardNumber:         5111111111111111
 ```
 
 The `cipherText` is now real AES/GCM output, and the `iv` sits alongside it because decryption cannot reverse the operation without it. The exact bytes change on every run, since a fresh IV is generated each time.
