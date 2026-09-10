@@ -61,7 +61,7 @@ For this stage, [`InMemoryCryptoKeyProvider`](https://github.com/bitstep-ie/mang
 Run `starter/` now, before making any changes, and you'll see:
 
 ```
-cardNumber (still in memory): 4111111111111111
+cardNumber (still in memory): 5111111111111111
 encryptedData:                null
 decrypted cardNumber:         null
 ```
@@ -69,9 +69,9 @@ decrypted cardNumber:         null
 Nothing's encrypted yet — that's expected, `PaymentCardEntity` isn't annotated. Once you've added the two annotations, run it again and you should see:
 
 ```
-cardNumber (still in memory): 4111111111111111
-encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNDExMTExMTExMTExMTExMSJ9"}}
-decrypted cardNumber:         4111111111111111
+cardNumber (still in memory): 5111111111111111
+encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"cipherText":"eyJjYXJkTnVtYmVyIjoiNTExMTExMTExMTExMTExMSJ9"}}
+decrypted cardNumber:         5111111111111111
 ```
 
 That's `complete/` — if yours doesn't match, compare against it.

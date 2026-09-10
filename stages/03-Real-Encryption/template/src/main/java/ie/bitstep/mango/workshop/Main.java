@@ -23,6 +23,13 @@ public class Main {
          * with mango4j-crypto and needs no external service, so it's a realistic
          * delegate you can run locally. Reassign `delegate` to a new instance of it:
          */
+
+        // Swap the fake test delegate for a real one. A delegate is the thing that
+        // actually performs encrypt / decrypt; the Builder below takes a list of them,
+        // and CryptoShield picks one per operation by matching a key's type against
+        // each delegate's supportedCryptoKeyType(). PBKDF2EncryptionService reports
+        // "PBKDF2", which is exactly the type we set on the key in
+        // InMemoryCryptoKeyProvider - that pairing is what routes this key here.
         delegate = new PBKDF2EncryptionService();
         // TODO:END swap-delegate
         // --8<-- [end:choose-delegate]
@@ -37,7 +44,7 @@ public class Main {
 
         // --8<-- [start:encrypt]
         PaymentCardEntity card = new PaymentCardEntity();
-        card.setCardNumber("4111111111111111");
+        card.setCardNumber("5111111111111111");
 
         cryptoShield.encrypt(card);
         System.out.println("cardNumber (still in memory): " + card.getCardNumber());

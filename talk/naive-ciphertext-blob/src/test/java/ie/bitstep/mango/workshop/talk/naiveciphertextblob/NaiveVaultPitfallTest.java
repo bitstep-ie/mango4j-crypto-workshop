@@ -24,14 +24,14 @@ class NaiveVaultPitfallTest {
         SecretKey keyV1 = NaiveVault.newKey();
         SecretKey keyV2 = NaiveVault.newKey();
 
-        NaiveBlob blob = vault.encrypt("4111-1111-1111-1111", keyV1);
+        NaiveBlob blob = vault.encrypt("5111-1111-1111-1111", keyV1);
 
         Map<String, SecretKey> knownKeysNewestFirst = new LinkedHashMap<>();
         knownKeysNewestFirst.put("keyV2", keyV2);
         knownKeysNewestFirst.put("keyV1", keyV1);
 
         // Works, but only because the caller happened to try every key it knows about.
-        assertEquals("4111-1111-1111-1111", vault.decryptByBruteForce(blob, knownKeysNewestFirst));
+        assertEquals("5111-1111-1111-1111", vault.decryptByBruteForce(blob, knownKeysNewestFirst));
 
         // The blob itself never says "keyV1" anywhere - there is nothing to query on.
         assertEquals(-1, blob.toString().indexOf("keyV1"));
@@ -42,7 +42,7 @@ class NaiveVaultPitfallTest {
         SecretKey keyV1 = NaiveVault.newKey();
         SecretKey keyV2 = NaiveVault.newKey();
 
-        NaiveBlob blob = vault.encrypt("4111-1111-1111-1111", keyV1);
+        NaiveBlob blob = vault.encrypt("5111-1111-1111-1111", keyV1);
 
         // keyV1 is destroyed (e.g. compliance-mandated key deletion). Nothing about
         // the blob could have flagged it as "still depends on keyV1" beforehand.

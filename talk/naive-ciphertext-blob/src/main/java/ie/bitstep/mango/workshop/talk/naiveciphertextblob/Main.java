@@ -20,7 +20,7 @@ public final class Main {
 
         // Year one: everything is encrypted with keyV1. Nobody thinks about rotation yet.
         SecretKey keyV1 = NaiveVault.newKey();
-        NaiveBlob cardNumberRecord = vault.encrypt("4111-1111-1111-1111", keyV1);
+        NaiveBlob cardNumberRecord = vault.encrypt("5111-1111-1111-1111", keyV1);
         System.out.println("Encrypted a card number under keyV1: " + cardNumberRecord);
         System.out.println("Stored in the database: just the blob above. No key ID next to it.");
         System.out.println();

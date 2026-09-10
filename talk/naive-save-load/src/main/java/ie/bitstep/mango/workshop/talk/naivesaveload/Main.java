@@ -39,7 +39,7 @@ public final class Main {
 
     private static void naiveCardConcurrencyDemo(SecretKey encryptionKey, SecretKey hmacKey) throws InterruptedException {
         NaiveCardStore store = new NaiveCardStore();
-        NaiveCardEntity entity = new NaiveCardEntity(1L, "4111-1111-1111-1111");
+        NaiveCardEntity entity = new NaiveCardEntity(1L, "5111-1111-1111-1111");
 
         CountDownLatch ciphertextWritten = new CountDownLatch(1);
         CountDownLatch readerDone = new CountDownLatch(1);
@@ -79,7 +79,7 @@ public final class Main {
 
     private static void naiveCardLoadDemo(SecretKey encryptionKey, SecretKey hmacKey) {
         NaiveCardStore store = new NaiveCardStore();
-        NaiveCardEntity entity = new NaiveCardEntity(1L, "4111-1111-1111-1111");
+        NaiveCardEntity entity = new NaiveCardEntity(1L, "5111-1111-1111-1111");
 
         store.save(entity, encryptionKey, hmacKey);
         System.out.println("save() already restored cardNumber for continued use: " + entity.cardNumber());
