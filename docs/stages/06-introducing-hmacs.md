@@ -51,19 +51,29 @@ The class-level `@SingleHmacStrategy` annotation (already on `PaymentCardEntity`
 `starter/` before your changes compiles and runs, but with `cardNumber` not yet `@Hmac`'d, `PaymentCardEntity` has no HMAC field at all as far as the library can see - both `cardNumberHmac` and `hmacKeyId` stay `null`:
 
 ```
+first  encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"tvTNkl2Uv1ZVY9VPMuWtRg==",...}}
+second encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"sNhAfqK95k1b4DzZWj+tPQ==",...}}
+same ciphertext?       false
+
 first  cardNumberHmac: null
 second cardNumberHmac: null
 same HMAC?              true
+
 hmacKeyId:             null
 ```
 
 After all three changes:
 
 ```
+first  encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"lk6cOpz/b67KmKY9yxG3ng==",...}}
+second encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"...",...}}
+same ciphertext?       false
+
 first  cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
 second cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
 same HMAC?              true
+
 hmacKeyId:             workshop-hmac-key
 ```
 
-The interesting comparison is against `encryptedData`, printed just above: two entities built from the identical card number get two different ciphertexts (fresh IV each time) but the exact same HMAC, every run. That determinism is the whole reason HMAC - not encryption - is what search and uniqueness end up built on.
+The interesting comparison is between the two blocks above: two entities built from the identical card number get two different ciphertexts (fresh IV each time, so `same ciphertext?` is `false`) but the exact same HMAC, every run (`same HMAC?` is `true` in both runs - only the *value* becomes non-null once `@Hmac` is wired up). That determinism is the whole reason HMAC - not encryption - is what search and uniqueness end up built on.
