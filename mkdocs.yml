@@ -68,6 +68,15 @@ nav:
       - "Getting Started": stages/01-getting-started.md
       - "Encrypting a Field": stages/02-encrypting-a-field.md
       - "Real Encryption": stages/03-real-encryption.md
+      - "Key Aliases & Key Configs": stages/04-key-aliases-and-configs.md
+      - "AWS KMS Delegate": stages/05-aws-kms-delegate.md
+      - "Introducing HMACs": stages/06-introducing-hmacs.md
+      - "Single HMAC Strategy": stages/07-single-hmac-strategy.md
+      - "List HMAC Strategy": stages/08-list-hmac-strategy.md
+      - "Key Rotation": stages/09-key-rotation.md
+      - "Rekeying: Encryption": stages/10-rekeying-encryption.md
+      - "Rekeying: HMACs": stages/11-rekeying-hmacs.md
+      - "Migrating Unencrypted Fields": stages/12-migrating-unencrypted-fields.md
   - How This Workshop Works: how-it-works.md
   - FAQ:
       - ALE: talk/faq-ale.md
