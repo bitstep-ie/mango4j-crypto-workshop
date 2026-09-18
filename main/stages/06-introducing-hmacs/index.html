@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#a-field-can-be-both-confidential-and-searchable" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -944,6 +949,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing HMACs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -960,6 +983,67 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-field-can-be-both-confidential-and-searchable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A field can be both confidential and searchable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-single-hmac-strategy-needs-on-the-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Single HMAC Strategy needs on the entity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-key-thats-just-for-hmacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A key that's just for HMACs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1385,58 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-field-can-be-both-confidential-and-searchable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A field can be both confidential and searchable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-single-hmac-strategy-needs-on-the-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Single HMAC Strategy needs on the entity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-key-thats-just-for-hmacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A key that's just for HMACs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1460,63 @@
 <p>Introducing HMACs</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>Encrypted fields can't be searched or uniqueness-checked directly: the IV makes ciphertext non-deterministic, so the same plaintext encrypts differently every time. This stage introduces <code>@Hmac</code>/<code>@HmacKeyId</code>, mango4j-crypto's answer, before choosing between the two storage strategies in later stages. Facilitators should pair this with <a href="../../talk/introducing-hmacs/">Introducing HMACs</a>, which explains why HMAC (not encryption) is the right primitive for this: it's deterministic and doesn't use an IV.</p>
+<p>Encrypted fields can't be searched or uniqueness-checked directly: the IV makes ciphertext non-deterministic, so the same plaintext encrypts differently every time. This stage introduces <code>@Hmac</code>/<code>@HmacKeyId</code>, mango4j-crypto's answer, before choosing between the two storage strategies in later stages. Facilitators should pair this with <a href="../../talk/introducing-hmacs/">Introducing HMACs</a>, which explains why HMAC (not encryption) is the right primitive for this: it's deterministic and doesn't use an IV. Be explicit that this stage stops at proving determinism - it doesn't yet <em>use</em> the HMAC for search or uniqueness. That's <a href="../07-single-hmac-strategy/">Single HMAC Strategy</a>, next.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li><code>@Hmac</code> added to <code>cardNumber</code> alongside the existing <code>@Encrypt</code>, and an <code>@HmacKeyId</code>/HMAC storage field on the entity</li>
-<li>A dedicated HMAC key (separate from the encryption key) resolved through the <code>CryptoKeyProvider</code>, per <a href="../../talk/key-aliases/">Key Aliases &amp; Key Configs</a></li>
-<li>Output showing the HMAC value is stable across repeated runs for the same plaintext, unlike <code>encryptedData</code>'s ciphertext</li>
-<li>A closing note that this stage stops short of <em>using</em> the HMAC for search/uniqueness — that's Single HMAC Strategy and List HMAC Strategy, next</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but <code>cardNumber</code> isn't <code>@Hmac</code>'d yet, so both HMAC fields come back <code>null</code>. Look for the <code>// TODO</code> comments.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, with a working HMAC.</li>
 </ul>
-<p>Likely a starter/complete stage, since it's an exercise (add the annotation, wire the key) rather than pure configuration.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/06-Introducing-HMACs/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/06-Introducing-HMACs/starter</code> as its own project.</p>
 </div>
+<h2 id="a-field-can-be-both-confidential-and-searchable">A field can be both confidential and searchable</h2>
+<p><code>@Hmac</code> is independent of <code>@Encrypt</code> - a field can carry both. Where <code>@Encrypt</code> says "hide this," <code>@Hmac</code> says "also compute a deterministic fingerprint of this," and mango4j-crypto happily does both in the same <code>encrypt()</code> call.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Hmac</span>
+</code></pre></div>
+<p><strong>Your turn:</strong> in <code>starter/.../PaymentCardEntity.java</code>, add <code>@Hmac</code> above <code>cardNumber</code>, alongside the existing <code>@Encrypt</code>.</p>
+<h2 id="what-the-single-hmac-strategy-needs-on-the-entity">What the Single HMAC Strategy needs on the entity</h2>
+<p>The class-level <code>@SingleHmacStrategy</code> annotation (already on <code>PaymentCardEntity</code>) picks the simplest of mango4j-crypto's HMAC storage strategies - what it's good for, and where it falls short, is next stage's topic. For now, it requires two things per <code>@Hmac</code> field:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// The Single HMAC Strategy requires this field to exist, named after</span>
+<span class="c1">// the source field plus "Hmac" (mandatory naming convention). The</span>
+<span class="c1">// library writes the computed HMAC value here.</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumberHmac</span><span class="p">;</span>
+
+<span class="nd">@HmacKeyId</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">hmacKeyId</span><span class="p">;</span>
+</code></pre></div>
+<p><code>cardNumberHmac</code> is already there - a plain persisted field, named after the source field plus <code>Hmac</code>, where the library writes the computed value. <code>hmacKeyId</code> needs its <code>@HmacKeyId</code> annotation, playing the same role for HMACs that <code>@EncryptionKeyId</code>-style tracking plays for encryption: recording which key produced the value.</p>
+<p><strong>Your turn:</strong> add <code>@HmacKeyId</code> above <code>hmacKeyId</code>.</p>
+<h2 id="a-key-thats-just-for-hmacs">A key that's just for HMACs</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoKey</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getCurrentHmacKeys</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The previous stages' answer: no HMAC keys, because nothing needed one.</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">CryptoKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">currentHmacKeys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">currentHmacKeys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">getById</span><span class="p">(</span><span class="n">CURRENT_HMAC_KEY_ID</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">currentHmacKeys</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>getCurrentHmacKeys()</code> is resolved the exact same way <code>getCurrentEncryptionKey()</code> was in the previous stage: by id, through <code>getById()</code>. It returns a <code>List</code> - not because this stage uses more than one, but because <a href="../08-list-hmac-strategy/">List HMAC Strategy</a> will. The key itself (<code>workshop-hmac-key</code>) is entirely separate from <code>workshop-encryption-key</code>: encryption and HMAC keys are never the same key.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../InMemoryCryptoKeyProvider.java</code>, return <code>List.of(getById(CURRENT_HMAC_KEY_ID))</code> instead of the empty list.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your changes compiles and runs, but with <code>cardNumber</code> not yet <code>@Hmac</code>'d, <code>PaymentCardEntity</code> has no HMAC field at all as far as the library can see - both <code>cardNumberHmac</code> and <code>hmacKeyId</code> stay <code>null</code>:</p>
+<div class="highlight"><pre><span></span><code>first  cardNumberHmac: null
+second cardNumberHmac: null
+same HMAC?              true
+hmacKeyId:             null
+</code></pre></div>
+<p>After all three changes:</p>
+<div class="highlight"><pre><span></span><code>first  cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
+second cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
+same HMAC?              true
+hmacKeyId:             workshop-hmac-key
+</code></pre></div>
+<p>The interesting comparison is against <code>encryptedData</code>, printed just above: two entities built from the identical card number get two different ciphertexts (fresh IV each time) but the exact same HMAC, every run. That determinism is the whole reason HMAC - not encryption - is what search and uniqueness end up built on.</p>
 
 
 

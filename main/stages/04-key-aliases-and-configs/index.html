@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-shortcut-the-previous-stages-got-away-with" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -888,6 +893,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Key Aliases & Key Configs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -904,6 +927,89 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-shortcut-the-previous-stages-got-away-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shortcut the previous stages got away with
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolving-a-key-by-id-for-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving a key by id, for real
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-is-just-another-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Current" is just another lookup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-known-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two known keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proving-it-two-shields-one-archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proving it: two shields, one archive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1407,80 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-shortcut-the-previous-stages-got-away-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shortcut the previous stages got away with
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolving-a-key-by-id-for-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving a key by id, for real
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-is-just-another-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Current" is just another lookup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-known-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two known keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proving-it-two-shields-one-archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proving it: two shields, one archive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1504,119 @@
 <p>Key Aliases &amp; Crypto Key Configs</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>So far the workshop has used a single hardcoded key ID. This stage introduces the alias indirection from <a href="../../talk/key-aliases/">Key Aliases &amp; Key Configs</a>: application code asks the <code>CryptoKeyProvider</code> for "the current encryption key" by role, not by ID, and the provider resolves that to a concrete <code>CryptoKey</code>. Facilitators should walk through why this matters before learners start: it's what makes swapping providers, and later rotating keys, a configuration change rather than a code change.</p>
+<p>Every stage so far has had exactly one key, so <code>getById()</code> could get away with ignoring the id it was asked for and always returning that same key. This stage makes that shortcut visible by introducing a second key: <code>getCurrentEncryptionKey()</code> now answers "which key is current" by alias (an id, resolved through <code>getById()</code>) rather than by being the only option in existence. Facilitators should pair this with <a href="../../talk/key-aliases/">Key Aliases &amp; Key Configs</a>, and be explicit up front that this stage is not key rotation - it's the indirection mechanism rotation depends on, covered on its own so <a href="../09-key-rotation/">Key Rotation</a> can later be "just repoint the alias" instead of introducing two ideas at once.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners a <code>CryptoKeyProvider</code> backed by more than one configured key, and have them:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>Add a second key config alongside the existing one, with a distinct key ID</li>
-<li>Resolve "the current encryption key" through an alias/role lookup rather than a hardcoded ID</li>
-<li>Resolve an arbitrary key by ID (not just "current"), since decryption always needs this regardless of which key is current</li>
-<li>Observe that switching which key is "current" doesn't require touching <code>Main.java</code>'s encrypt/decrypt calls</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but both "shields" it builds point at the same key, so nothing demonstrates the alias yet. Look for the <code>// TODO</code> comments.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, with two independently-configured shields.</li>
 </ul>
-<p>Likely a plain stage (not starter/complete), since the exercise is mostly configuration rather than a TODO'd algorithm step. Decide once drafted.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/04-Key-Aliases-and-Configs/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/04-Key-Aliases-and-Configs/starter</code> as its own project.</p>
 </div>
+<h2 id="the-shortcut-the-previous-stages-got-away-with">The shortcut the previous stages got away with</h2>
+<p><code>PaymentCardEntity</code> is untouched again - the entity never knows how many keys exist. What changes is <code>InMemoryCryptoKeyProvider</code>: instead of one hardcoded key returned unconditionally, it now holds two.</p>
+<h2 id="resolving-a-key-by-id-for-real">Resolving a key by id, for real</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">CryptoKey</span><span class="w"> </span><span class="nf">getById</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cryptoKeyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The previous stage's shortcut: ignore the id asked for, just</span>
+<span class="w">    </span><span class="c1">// return the one key that exists.</span>
+<span class="w">    </span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">resolved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KEYS_BY_ID</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">currentEncryptionKeyId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">resolved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KEYS_BY_ID</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">cryptoKeyId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">resolved</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>getById()</code> is what <code>decrypt()</code> calls with whatever key id is recorded inside the ciphertext it's reading - current or not. A provider with only one key can ignore its argument and still be correct by accident. With two keys, that stops being true, which is exactly why this stage adds a second one: it's the smallest change that turns "ignore the id" from a harmless simplification into a bug.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../InMemoryCryptoKeyProvider.java</code>, make <code>getById()</code> look <code>cryptoKeyId</code> up in the key map instead of defaulting to the current key.</p>
+<h2 id="current-is-just-another-lookup">"Current" is just another lookup</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Override</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">CryptoKey</span><span class="w"> </span><span class="nf">getCurrentEncryptionKey</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// "Current" is answered by alias, not by a dedicated field: whichever</span>
+<span class="w">    </span><span class="c1">// id this provider was configured with is looked up exactly the same</span>
+<span class="w">    </span><span class="c1">// way any other key id is. Nothing about encrypt() has to know or</span>
+<span class="w">    </span><span class="c1">// care that this particular lookup is the "current" one.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">currentEncryptionKeyId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>getCurrentEncryptionKey()</code> doesn't hold its own copy of a key - it asks <code>getById()</code> for whichever id this provider instance was configured with. That id is the alias: application code (and <code>CryptoShield</code>) never sees it, they just ask for "the current encryption key" and "a specific key by id," and both questions are answered by the same lookup.</p>
+<h2 id="the-two-known-keys">The two known keys</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">CryptoKey</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">buildKeys</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">archiveKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildEncryptionKey</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"workshop-archive-key"</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"workshop-archive-passphrase-do-not-use-in-production"</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"workshop-archive-salt"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">currentKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildEncryptionKey</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"workshop-encryption-key"</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"workshop-demo-passphrase-do-not-use-in-production"</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"workshop-demo-salt"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">archiveKey</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">archiveKey</span><span class="p">,</span><span class="w"> </span><span class="n">currentKey</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">currentKey</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>workshop-archive-key</code> and <code>workshop-encryption-key</code> are both real, resolvable <code>CryptoKey</code>s - the only difference between them, from the provider's point of view, is which one a given instance was told is "current."</p>
+<h2 id="proving-it-two-shields-one-archive">Proving it: two shields, one archive</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Before this stage there was only ever one shield/provider - both</span>
+<span class="c1">// start out as the same thing, both pointed at the current key.</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">lastYearsShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="s">"workshop-encryption-key"</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">todaysShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lastYearsShield</span><span class="p">;</span>
+
+<span class="n">lastYearsShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="s">"workshop-archive-key"</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="n">todaysShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="s">"workshop-encryption-key"</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, build <code>lastYearsShield</code> with <code>"workshop-archive-key"</code> as current and <code>todaysShield</code> with <code>"workshop-encryption-key"</code> as current - two providers sharing the same known keys, disagreeing only about which one is "current."</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Simulate a record encrypted a while ago, back when the archive key</span>
+<span class="c1">// was current.</span>
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">archived</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">archived</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">lastYearsShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">archived</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"archived encryptedData:  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">archived</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+
+<span class="c1">// Today's shield has a different "current" key, but can still</span>
+<span class="c1">// decrypt it: decrypt() reads the key id recorded on the ciphertext</span>
+<span class="c1">// and resolves it by id via getById(), current or not.</span>
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">loaded</span><span class="p">.</span><span class="na">setEncryptedData</span><span class="p">(</span><span class="n">archived</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+<span class="n">todaysShield</span><span class="p">.</span><span class="na">decrypt</span><span class="p">(</span><span class="n">loaded</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"decrypted by today's shield: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loaded</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
+</code></pre></div>
+<p><code>lastYearsShield</code> encrypts as if the archive key were still current - simulating a record written a while ago. <code>todaysShield</code>, with a completely different "current" key, decrypts it anyway: decrypt reads the key id off the ciphertext and resolves it by id, not by asking what's current right now.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// New writes go out under whichever key is current for the shield</span>
+<span class="c1">// doing the writing.</span>
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">fresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">fresh</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">todaysShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">fresh</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"fresh encryptedData:     "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fresh</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+</code></pre></div>
+<p>New writes, in contrast, always go out under whichever key <em>is</em> current for the shield doing the writing.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your changes builds two shields that are actually the same object, so the run succeeds but proves nothing about aliasing - it would succeed even if <code>getById()</code> were still broken:</p>
+<div class="highlight"><pre><span></span><code>archived encryptedData:  {"cryptoKeyId":"workshop-encryption-key",...}
+decrypted by today's shield: 5111111111111111
+fresh encryptedData:     {"cryptoKeyId":"workshop-encryption-key",...}
+</code></pre></div>
+<p>After both changes, the archived record is genuinely encrypted under a different key than the fresh one, and <code>todaysShield</code> still decrypts it correctly:</p>
+<div class="highlight"><pre><span></span><code>archived encryptedData:  {"cryptoKeyId":"workshop-archive-key",...}
+decrypted by today's shield: 5111111111111111
+fresh encryptedData:     {"cryptoKeyId":"workshop-encryption-key",...}
+</code></pre></div>
+<p>The <code>cryptoKeyId</code> on each line is the tell: two different values, one successful cross-key decrypt.</p>
 
 
 
