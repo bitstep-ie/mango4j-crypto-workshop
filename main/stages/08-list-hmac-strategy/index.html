@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#from-one-field-to-two-lists" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1000,6 +1005,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1016,6 +1039,67 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-one-field-to-two-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From one field to two lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-comparison-across-two-lists-not-two-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A comparison across two lists, not two strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proving-the-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proving the fix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1385,58 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-one-field-to-two-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From one field to two lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-comparison-across-two-lists-not-two-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A comparison across two lists, not two strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proving-the-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proving the fix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1460,90 @@
 <p>List HMAC Strategy</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>This stage replaces the single HMAC column from the previous stage with a list of HMACs per record, one per active/known key, fixing the rotation-time uniqueness gap that motivated it. Facilitators should lead with <a href="../../talk/list-hmac/">List HMAC Strategy</a>'s core rule: updates must <em>replace</em> the list of HMACs for a value, never just append to it, or old entries make a value findable under a stale value forever (the exact pitfall <code>talk/naive-list-hmac/</code> demonstrates).</p>
+<p>This stage replaces the previous stage's single HMAC field with a list of HMACs per record - one entry per currently-active key - and shows it closing the exact gap <a href="../07-single-hmac-strategy/">Single HMAC Strategy</a> left open: a duplicate submitted while a key rotation is in progress is now correctly rejected. Facilitators should lead with <a href="../../talk/list-hmac/">List HMAC Strategy</a>, and be clear about scope: mango4j-crypto's own <code>ListHmacFieldStrategy</code> manages the list correctly (it replaces each active key's entry on every write and only ever retains entries for keys no longer current), so the append-vs-replace bug <a href="../../talk/list-hmac/">List HMAC Strategy</a> warns about isn't something this stage's exercise can reproduce - that's what <code>talk/naive-list-hmac/</code> is for, a hand-rolled implementation that gets it wrong on purpose. This stage's exercise is the comparison logic an application still has to write: matching across a list.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>The single HMAC column replaced by a list-valued HMAC store (one entry per known HMAC key)</li>
-<li>A search function that checks the search term's HMAC under any known key, not just the current one</li>
-<li>A uniqueness check across the full list, showing it doesn't have Single HMAC Strategy's rotation gap</li>
-<li>An update path exercise that deliberately breaks the append-only version first (mirroring <code>talk/naive-list-hmac/</code>) before fixing it to replace-on-update</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but <code>PaymentCardStore</code>'s list comparison always reports no match, so nothing is ever found and nothing is ever rejected. Look for the <code>// TODO</code> comment.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, including the rotation fix working live.</li>
 </ul>
-<p>Consider whether this should be a starter/complete stage specifically so the append-vs-replace bug is something learners fix themselves, not just read about.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/08-List-HMAC-Strategy/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/08-List-HMAC-Strategy/starter</code> as its own project.</p>
 </div>
+<h2 id="from-one-field-to-two-lists">From one field to two lists</h2>
+<p><code>cardNumberHmac</code>/<code>hmacKeyId</code> are gone. In their place, <code>PaymentCardEntity</code> implements <code>Lookup</code> and <code>Unique</code> - the interfaces <code>ListHmacFieldStrategy</code> requires - and <code>@Hmac</code>'s <code>purposes</code> says which list <code>cardNumber</code>'s HMACs feed:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@ListHmacStrategy</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PaymentCardEntity</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Lookup</span><span class="p">,</span><span class="w"> </span><span class="n">Unique</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="nd">@Hmac</span><span class="p">(</span><span class="n">purposes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">LOOKUP</span><span class="p">,</span><span class="w"> </span><span class="n">UNIQUE</span><span class="p">})</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+</code></pre></div>
+<p><code>setLookups()</code>/<code>setUniqueValues()</code> are called by the library, not application code - on every <code>encrypt()</code>, it computes one <code>CryptoShieldHmacHolder</code> per currently-active HMAC key and hands you the list. Compare that to the previous stage's single <code>cardNumberHmac</code>: this is a list because <a href="../06-introducing-hmacs/"><code>getCurrentHmacKeys()</code></a> can now return more than one key at once, and every one of them gets represented.</p>
+<h2 id="a-comparison-across-two-lists-not-two-strings">A comparison across two lists, not two strings</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">anyValueMatches</span><span class="p">(</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">CryptoShieldHmacHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The previous stage's shortcut, degenerated to a list: nothing</span>
+<span class="w">    </span><span class="c1">// ever matches, since there's no comparison at all yet.</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">matches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">anyMatch</span><span class="p">(</span><span class="n">holderA</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">anyMatch</span><span class="p">(</span><span class="n">holderB</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">holderA</span><span class="p">.</span><span class="na">getValue</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="n">holderB</span><span class="p">.</span><span class="na">getValue</span><span class="p">())));</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">matches</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is the actual new mechanic. The previous stage's store compared <code>cardNumberHmac.equals(otherCardNumberHmac)</code> - one value against one value. Here, two records only need to share <em>one</em> matching entry across their lists to count as the same value, regardless of whether their lists are otherwise different lengths or cover different keys.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../PaymentCardStore.java</code>, make <code>anyValueMatches()</code> actually compare the two collections instead of always returning <code>false</code>.</p>
+<h2 id="proving-the-fix">Proving the fix</h2>
+<div class="highlight"><pre><span></span><code><span class="n">CryptoShield</span><span class="w"> </span><span class="n">originalShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"workshop-hmac-key"</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardStore</span><span class="p">();</span>
+
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">originalShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">searchProbe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">searchProbe</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">originalShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"search found the record?                       "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">findByLookup</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">).</span><span class="na">isPresent</span><span class="p">());</span>
+</code></pre></div>
+<p>Search still works exactly as before - HMAC the term, look for a match.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Rotate the HMAC key the way Key Rotation recommends: add the new</span>
+<span class="c1">// key while the old one stays active, rather than swapping outright</span>
+<span class="c1">// the way the previous stage's shield did.</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">rotatingShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"workshop-hmac-key"</span><span class="p">,</span><span class="w"> </span><span class="s">"workshop-hmac-key-v2"</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">duplicateDuringRotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">duplicateDuringRotation</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">rotatingShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">duplicateDuringRotation</span><span class="p">);</span>
+<span class="kt">boolean</span><span class="w"> </span><span class="n">acceptedDuringRotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">duplicateDuringRotation</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"duplicate accepted while old key still active? "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">acceptedDuringRotation</span><span class="p">);</span>
+</code></pre></div>
+<p><code>rotatingShield</code> is configured the way <a href="../09-key-rotation/">Key Rotation</a> recommends: the new key is added <em>alongside</em> the old one, not swapped in outright the way the previous stage's <code>rotatedShield</code> was. <code>card</code>'s stored <code>uniqueValues</code> only has an entry for <code>workshop-hmac-key</code> (it was written before the rotation), but <code>duplicateDuringRotation</code>'s <code>uniqueValues</code> has entries for <em>both</em> keys - including one computed under <code>workshop-hmac-key</code>, which matches <code>card</code>'s entry exactly. One shared key in the comparison is enough.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your change:</p>
+<div class="highlight"><pre><span></span><code>search found the record?                       false
+duplicate accepted while old key still active? true
+</code></pre></div>
+<p><code>anyValueMatches()</code> always returning <code>false</code> makes every comparison look like "no relationship at all" - search finds nothing, and nothing is ever a duplicate.</p>
+<p>After your change:</p>
+<div class="highlight"><pre><span></span><code>search found the record?                       true
+duplicate accepted while old key still active? false
+</code></pre></div>
+<p>The second line is the point of this stage: the exact scenario that slipped through in <a href="../07-single-hmac-strategy/">Single HMAC Strategy</a> - a duplicate submitted mid-rotation - is now correctly caught, because keeping the old key active kept the original record findable.</p>
 
 
 
