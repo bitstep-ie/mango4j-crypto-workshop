@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-sweep-itself" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1056,6 +1061,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rekeying: Encryption
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1072,6 +1095,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-sweep-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The sweep itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-under-the-old-key-rotating-then-sweeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing under the old key, rotating, then sweeping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1374,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-sweep-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The sweep itself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-under-the-old-key-rotating-then-sweeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing under the old key, rotating, then sweeping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1323,19 +1437,78 @@
 
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>Key Rotation switched new writes to a new key but left existing data under the old one. This stage is phase 2: sweeping existing records, decrypting under their recorded key and re-encrypting under the current one. Facilitators should pair this with <a href="../../talk/rekeying-encryption/">Rekeying: Encryption</a>, and be explicit that this stage covers ciphertext only — HMACs are rekeyed separately, next, because they're a distinct operation with a different retirement rule for the old key.</p>
+<p><a href="../09-key-rotation/">Key Rotation</a> switched new writes to a new key but left existing data exactly where it was: still encrypted under the old one. This stage is phase 2 - sweeping already-persisted records, decrypting each under whichever key it was actually written with and re-encrypting it under the current one. Facilitators should pair this with <a href="../../talk/rekeying-encryption/">Rekeying: Encryption</a>, and be explicit that this stage covers ciphertext only: HMACs get rekeyed separately, next, because they're a distinct operation with a different retirement rule for the old key.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>A sweep/batch job over existing records that decrypts each with its recorded <code>cryptoKeyId</code> and re-encrypts with the current key</li>
-<li>Confirmation that the old key must stay resolvable throughout the sweep (nothing about the sweep itself removes the old key from the provider)</li>
-<li>A record-level check for "already on the current key" so the sweep is safely re-runnable/idempotent</li>
-<li>A forward note that removing the old key entirely is a later, separate decision, not part of this stage</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, and the sweep correctly rekeys every record on its first pass - but running it a second time rekeys them all over again instead of doing nothing. Look for the <code>// TODO</code> comment.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, where a second sweep is a safe no-op.</li>
 </ul>
-<p>Likely a starter/complete stage: the sweep loop is a natural TODO exercise.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/10-Rekeying-Encryption/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/10-Rekeying-Encryption/starter</code> as its own project.</p>
 </div>
+<h2 id="the-sweep-itself">The sweep itself</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isAlreadyOnKey</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The previous stages' sweep-free world: nothing was ever "already</span>
+<span class="w">    </span><span class="c1">// on" a key, so this always says no, and every record gets</span>
+<span class="w">    </span><span class="c1">// rekeyed - correct, but wasteful, and not actually idempotent.</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">alreadyOnKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">alreadyOnKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">"\"cryptoKeyId\":\""</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">keyId</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"\""</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alreadyOnKey</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The actual rekey - <code>decrypt()</code> then <code>encrypt()</code> again - is only two lines, given in full in <code>RekeySweep.run()</code>: nothing new, the exact same calls every previous stage has already used. What's new is deciding <em>whether</em> to bother: without a check, re-running the sweep after it's already finished would decrypt and re-encrypt every record all over again, for no reason.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../RekeySweep.java</code>, make <code>isAlreadyOnKey()</code> actually check whether <code>record</code>'s <code>encryptedData</code> already carries <code>keyId</code>.</p>
+<h2 id="writing-under-the-old-key-rotating-then-sweeping">Writing under the old key, rotating, then sweeping</h2>
+<div class="highlight"><pre><span></span><code><span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardStore</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">,</span><span class="w"> </span><span class="s">"5222222222222226"</span><span class="p">,</span><span class="w"> </span><span class="s">"5333333333333335"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="w">    </span><span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="n">cardNumber</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<span class="w">    </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Key Rotation already happened - new writes go out under the new</span>
+<span class="c1">// key - but these three records are still sitting there under the</span>
+<span class="c1">// old one, exactly like beforeRotation was in that stage.</span>
+<span class="n">provider</span><span class="p">.</span><span class="na">rotateEncryptionKeyTo</span><span class="p">(</span><span class="s">"workshop-encryption-key-v2"</span><span class="p">);</span>
+</code></pre></div>
+<p>Three records, written before the rotation - exactly <code>beforeRotation</code>'s situation from <a href="../09-key-rotation/">Key Rotation</a>, just three of them in a store instead of one loose variable.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">rekeyedCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RekeySweep</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">provider</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"records rekeyed on first sweep:  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rekeyedCount</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The first sweep has to do real work: none of the three records are on the current key yet, so all three get decrypted and re-encrypted.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Running it again should be a safe no-op: every record is already</span>
+<span class="c1">// on the current key, so nothing should be decrypted/re-encrypted</span>
+<span class="c1">// a second time.</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">secondSweepCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RekeySweep</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">provider</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"records rekeyed on second sweep: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">secondSweepCount</span><span class="p">);</span>
+</code></pre></div>
+<p>The second sweep, run immediately after with nothing else having changed, should find nothing left to do.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your change: the first sweep works correctly, but the second one doesn't know it's already finished:</p>
+<div class="highlight"><pre><span></span><code>records rekeyed on first sweep:  3
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+records rekeyed on second sweep: 3
+</code></pre></div>
+<p>After your change:</p>
+<div class="highlight"><pre><span></span><code>records rekeyed on first sweep:  3
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+  {"cryptoKeyId":"workshop-encryption-key-v2",...}
+records rekeyed on second sweep: 0
+</code></pre></div>
+<p>Only the last line changes. That's the point: correctness (every record ends up on the new key) was never in question, even in <code>starter/</code>. What <code>isAlreadyOnKey()</code> buys you is being able to run the sweep on a schedule, or resume it after an interruption, without redoing - or re-paying for - work that's already done. The old key still has to stay resolvable via <code>getById()</code> for as long as any record in the store hasn't been swept yet; nothing in this stage removes it.</p>
 
 
 
