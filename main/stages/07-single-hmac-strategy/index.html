@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-entity-hasnt-changed" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -972,6 +977,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single HMAC Strategy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -988,6 +1011,78 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-entity-hasnt-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entity hasn't changed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-store-that-never-sees-plaintext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A store that never sees plaintext
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search-and-duplicate-rejection-working-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search and duplicate rejection, working correctly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-single-hmac-strategy-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Single HMAC Strategy breaks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1396,69 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-entity-hasnt-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entity hasn't changed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-store-that-never-sees-plaintext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A store that never sees plaintext
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search-and-duplicate-rejection-working-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search and duplicate rejection, working correctly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-single-hmac-strategy-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Single HMAC Strategy breaks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1482,103 @@
 <p>Single HMAC Strategy</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>With an HMAC column in place, this stage puts it to work: searching for a record by plaintext value, and enforcing a uniqueness constraint, both via an equality lookup against the single HMAC column. Facilitators should walk through <a href="../../talk/single-hmac/">Single HMAC Strategy</a> first, especially the unique-constraint failure mode it flags: because the strategy stores exactly one HMAC per record, a value's HMAC changes the moment its key rotates, and enforcement anomalies follow directly from that.</p>
+<p>With an HMAC field in place, this stage puts it to work: searching for a record by plaintext value, and enforcing a uniqueness constraint, both via an equality lookup against the stored HMAC. Facilitators should walk through <a href="../../talk/single-hmac/">Single HMAC Strategy</a> first, especially the unique-constraint failure mode it flags: because the strategy stores exactly one HMAC per record, a value's HMAC changes the moment its key rotates, and enforcement anomalies follow directly from that. This stage doesn't just describe that failure - it reproduces it, in code, on the last line of <code>Main.java</code>.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>A search function that HMACs the search term and looks up by equality against the stored HMAC column</li>
-<li>A uniqueness check (e.g. a unique DB constraint on the HMAC column) and a demonstration that it works under normal operation</li>
-<li>A worked example (or forward reference) of the failure mode <a href="../../talk/single-hmac/">Single HMAC Strategy</a> describes: a duplicate slipping in under a different key during rotation</li>
-<li>A clear framing that this is the simpler of the two strategies, and List HMAC Strategy (next) exists specifically to fix what this one can't</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but <code>PaymentCardStore.findByHmac()</code> always reports no match, so search fails and nothing is ever treated as a duplicate. Look for the <code>// TODO</code> comment.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, including the rotation failure mode reproduced live.</li>
 </ul>
-<p>Probably reuses the entity from Introducing HMACs rather than introducing a new one — decide when drafting whether this stage needs its own starter/complete split or can stay plain.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/07-Single-HMAC-Strategy/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/07-Single-HMAC-Strategy/starter</code> as its own project.</p>
 </div>
+<h2 id="the-entity-hasnt-changed">The entity hasn't changed</h2>
+<p><code>PaymentCardEntity</code> is exactly what <a href="../06-introducing-hmacs/">Introducing HMACs</a> left it: <code>cardNumber</code> is <code>@Encrypt</code> and <code>@Hmac</code>, <code>cardNumberHmac</code> and <code>hmacKeyId</code> carry the computed value and the key that produced it. The entity never knows what its HMAC gets used for - that's entirely up to the code around it, which is this stage's actual subject.</p>
+<h2 id="a-store-that-never-sees-plaintext">A store that never sees plaintext</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByHmac</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">hmac</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The previous stages had no HMAC to search by at all.</span>
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">empty</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">record</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getCardNumberHmac</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="n">hmac</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="na">findFirst</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">match</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>PaymentCardStore</code> stands in for a real table/column. It never touches <code>cardNumber</code> or <code>encryptedData</code> - only <code>cardNumberHmac</code>. Because that value is deterministic, an equality filter against it is enough to find a match. The same filter against <code>encryptedData</code> could never work: two encryptions of the identical card number produce different ciphertext every time.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../PaymentCardStore.java</code>, make <code>findByHmac()</code> actually search <code>records</code> instead of always returning empty.</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * Enforces uniqueness the same way search works: by HMAC equality.</span>
+<span class="cm"> * Returns false (and doesn't save) if a record with the same HMAC</span>
+<span class="cm"> * already exists.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">entity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">findByHmac</span><span class="p">(</span><span class="n">entity</span><span class="p">.</span><span class="na">getCardNumberHmac</span><span class="p">()).</span><span class="na">isPresent</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">records</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">entity</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Uniqueness reuses the exact same lookup: <code>save()</code> rejects anything whose HMAC is already present. Search and uniqueness aren't two mechanisms here, they're one mechanism used twice.</p>
+<h2 id="search-and-duplicate-rejection-working-correctly">Search and duplicate rejection, working correctly</h2>
+<div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">originalShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+
+<span class="c1">// Searching means: HMAC the search term under the same key, then</span>
+<span class="c1">// look it up by equality - encryptedData never enters into it.</span>
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">searchProbe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">searchProbe</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">originalShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">);</span>
+<span class="n">Optional</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">findByHmac</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">.</span><span class="na">getCardNumberHmac</span><span class="p">());</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"search found the record?               "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">found</span><span class="p">.</span><span class="na">isPresent</span><span class="p">());</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// A second entity with the same card number hashes to the same</span>
+<span class="c1">// HMAC under the same key, so it's correctly rejected as a duplicate.</span>
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">duplicate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">duplicate</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">originalShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">duplicate</span><span class="p">);</span>
+<span class="kt">boolean</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">duplicate</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"duplicate accepted (same key)?         "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">saved</span><span class="p">);</span>
+</code></pre></div>
+<p>Under a single, unchanging HMAC key, both work exactly as expected: the search probe finds the saved record, and a genuine duplicate is rejected before it's ever added to the store.</p>
+<h2 id="where-single-hmac-strategy-breaks">Where Single HMAC Strategy breaks</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Now simulate an HMAC key rotation: a shield built after the HMAC</span>
+<span class="c1">// key changed, querying the same store, which still only holds</span>
+<span class="c1">// "card"'s HMAC computed under the old key - nothing has rekeyed it.</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">rotatedShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">(</span><span class="s">"workshop-hmac-key-v2"</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">duplicateAfterRotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">duplicateAfterRotation</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">rotatedShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">duplicateAfterRotation</span><span class="p">);</span>
+<span class="kt">boolean</span><span class="w"> </span><span class="n">acceptedAfterRotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">duplicateAfterRotation</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"duplicate accepted (after key rotation)? "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">acceptedAfterRotation</span><span class="p">);</span>
+</code></pre></div>
+<p><code>rotatedShield</code> is built with a different "current" HMAC key - simulating a key rotation that's happened since <code>card</code> was first saved. The duplicate encrypted under the new key hashes to a completely different <code>cardNumberHmac</code>, so <code>findByHmac()</code> genuinely finds nothing: as far as the store can tell, this is a brand new value, not a repeat of one it already has.</p>
+<p>This isn't a bug in <code>PaymentCardStore</code> - it's the structural limit <a href="../../talk/single-hmac/">Single HMAC Strategy</a> describes. The strategy stores exactly one HMAC per record, computed under whatever key was current at the time. Checking uniqueness against records written under an older key would mean recomputing the candidate's HMAC under every key that's ever been active and comparing each - something this strategy has no mechanism for. <a href="../08-list-hmac-strategy/">List HMAC Strategy</a>, next, stores one HMAC per active key instead of one HMAC per record, closing exactly this gap.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your change:</p>
+<div class="highlight"><pre><span></span><code>search found the record?               false
+duplicate accepted (same key)?         true
+duplicate accepted (after key rotation)? true
+</code></pre></div>
+<p>Nothing is ever found, and nothing is ever rejected - <code>findByHmac()</code> always reporting "no match" makes every save look like the first one.</p>
+<p>After your change:</p>
+<div class="highlight"><pre><span></span><code>search found the record?               true
+duplicate accepted (same key)?         false
+duplicate accepted (after key rotation)? true
+</code></pre></div>
+<p>The middle line is the fix working: a genuine duplicate, same key, correctly rejected. The last line is the point of this stage: the exact same duplicate, encrypted under a rotated key, is silently accepted.</p>
 
 
 
