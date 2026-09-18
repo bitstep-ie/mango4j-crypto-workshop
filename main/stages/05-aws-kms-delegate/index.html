@@ -11,24 +11,28 @@
       
       
       
+        <link rel="prev" href="../04-key-aliases-and-configs/">
+      
+      
+        <link rel="next" href="../06-introducing-hmacs/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/favicon.ico">
+      <link rel="icon" href="../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Hmac for uniqueness - ALE Workshop</title>
+        <title>AWS KMS Delegate - ALE Workshop</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -85,9 +89,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../.." title="ALE Workshop" class="md-header__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="../../../assets/mango-black.png" alt="logo">
+  <img src="../../assets/mango-black.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -104,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Hmac for uniqueness
+              AWS KMS Delegate
             
           </span>
         </div>
@@ -217,7 +221,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../intro/" class="md-tabs__link">
+        <a href="../../talk/intro/" class="md-tabs__link">
           
   
   
@@ -233,11 +237,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../stages/00-intro/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../00-intro/" class="md-tabs__link">
           
   
   
@@ -255,7 +261,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../how-it-works/" class="md-tabs__link">
+      <a href="../../how-it-works/" class="md-tabs__link">
         
   
   
@@ -276,7 +282,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../faq-ale/" class="md-tabs__link">
+        <a href="../../talk/faq-ale/" class="md-tabs__link">
           
   
   
@@ -310,9 +316,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
+    <a href="../.." title="ALE Workshop" class="md-nav__button md-logo" aria-label="ALE Workshop" data-md-component="logo">
       
-  <img src="../../../assets/mango-black.png" alt="logo">
+  <img src="../../assets/mango-black.png" alt="logo">
 
     </a>
     ALE Workshop
@@ -391,7 +397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../intro/" class="md-nav__link">
+      <a href="../../talk/intro/" class="md-nav__link">
         
   
   
@@ -419,7 +425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../key-aliases/" class="md-nav__link">
+      <a href="../../talk/key-aliases/" class="md-nav__link">
         
   
   
@@ -447,7 +453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../structured-ciphertext/" class="md-nav__link">
+      <a href="../../talk/structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -475,7 +481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../transient-vs-encrypted-blobs/" class="md-nav__link">
+      <a href="../../talk/transient-vs-encrypted-blobs/" class="md-nav__link">
         
   
   
@@ -503,7 +509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../introducing-hmacs/" class="md-nav__link">
+      <a href="../../talk/introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -531,7 +537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../key-rotation/" class="md-nav__link">
+      <a href="../../talk/key-rotation/" class="md-nav__link">
         
   
   
@@ -559,7 +565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../single-hmac/" class="md-nav__link">
+      <a href="../../talk/single-hmac/" class="md-nav__link">
         
   
   
@@ -587,7 +593,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../list-hmac/" class="md-nav__link">
+      <a href="../../talk/list-hmac/" class="md-nav__link">
         
   
   
@@ -615,7 +621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rekeying-encryption/" class="md-nav__link">
+      <a href="../../talk/rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -643,7 +649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rekeying-hmacs/" class="md-nav__link">
+      <a href="../../talk/rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -671,7 +677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security-and-operational-considerations/" class="md-nav__link">
+      <a href="../../talk/security-and-operational-considerations/" class="md-nav__link">
         
   
   
@@ -703,26 +709,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -740,7 +751,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -758,7 +769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/00-intro/" class="md-nav__link">
+      <a href="../00-intro/" class="md-nav__link">
         
   
   
@@ -786,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/01-getting-started/" class="md-nav__link">
+      <a href="../01-getting-started/" class="md-nav__link">
         
   
   
@@ -814,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/02-encrypting-a-field/" class="md-nav__link">
+      <a href="../02-encrypting-a-field/" class="md-nav__link">
         
   
   
@@ -842,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/03-real-encryption/" class="md-nav__link">
+      <a href="../03-real-encryption/" class="md-nav__link">
         
   
   
@@ -870,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/04-key-aliases-and-configs/" class="md-nav__link">
+      <a href="../04-key-aliases-and-configs/" class="md-nav__link">
         
   
   
@@ -895,10 +906,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../stages/05-aws-kms-delegate/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -914,6 +932,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -926,7 +945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/06-introducing-hmacs/" class="md-nav__link">
+      <a href="../06-introducing-hmacs/" class="md-nav__link">
         
   
   
@@ -954,7 +973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/07-single-hmac-strategy/" class="md-nav__link">
+      <a href="../07-single-hmac-strategy/" class="md-nav__link">
         
   
   
@@ -982,7 +1001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/08-list-hmac-strategy/" class="md-nav__link">
+      <a href="../08-list-hmac-strategy/" class="md-nav__link">
         
   
   
@@ -1010,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/09-key-rotation/" class="md-nav__link">
+      <a href="../09-key-rotation/" class="md-nav__link">
         
   
   
@@ -1038,7 +1057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/10-rekeying-encryption/" class="md-nav__link">
+      <a href="../10-rekeying-encryption/" class="md-nav__link">
         
   
   
@@ -1066,7 +1085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/11-rekeying-hmacs/" class="md-nav__link">
+      <a href="../11-rekeying-hmacs/" class="md-nav__link">
         
   
   
@@ -1094,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../stages/12-migrating-unencrypted-fields/" class="md-nav__link">
+      <a href="../12-migrating-unencrypted-fields/" class="md-nav__link">
         
   
   
@@ -1129,7 +1148,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../how-it-works/" class="md-nav__link">
+      <a href="../../how-it-works/" class="md-nav__link">
         
   
   
@@ -1208,7 +1227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../faq-ale/" class="md-nav__link">
+      <a href="../../talk/faq-ale/" class="md-nav__link">
         
   
   
@@ -1236,7 +1255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../faq-mango4j/" class="md-nav__link">
+      <a href="../../talk/faq-mango4j/" class="md-nav__link">
         
   
   
@@ -1300,10 +1319,24 @@
   
 
 
-  <h1>Hmac for uniqueness</h1>
+  <h1>AWS KMS Delegate</h1>
 
-<p>Why do I need to HMAC data to enforce a unique constraint?</p>
-<p>Same root cause as search: a database unique constraint on a ciphertext column is useless, because two records holding the identical plaintext value never produce identical ciphertext. Put the constraint on a HMAC column instead — the same plaintext always produces the same HMAC, so a real duplicate produces a real HMAC collision the database can catch. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
+<p>AWS KMS Delegate</p>
+<div class="admonition abstract">
+<p class="admonition-title">Overview</p>
+<p>Stage 3 swapped the fake Base64 delegate for <code>PBKDF2EncryptionService</code>, a real but local-only cryptographic provider. This stage swaps again, this time for <code>mango4j-crypto-aws-kms-delegate</code>, showing that moving to a production key management service is the same shape of change: a different delegate, a different <code>CryptoKey.type</code>/<code>configuration</code>, and nothing else. Facilitators should frame this as proof that the delegate abstraction from <a href="../../talk/key-aliases/">Key Aliases &amp; Key Configs</a> holds up against a real external provider, not just the local PBKDF2 example.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Content coming soon</p>
+<p>This stage is a placeholder. It should give learners:</p>
+<ul>
+<li>A local or mocked AWS KMS setup runnable without real AWS credentials (e.g. LocalStack, or a documented "point this at your own KMS key" fallback) so CI and self-serve learners aren't blocked on cloud access</li>
+<li>The <code>mango4j-crypto-aws-kms-delegate</code> dependency added alongside the existing ones</li>
+<li>A <code>CryptoKey</code> configured with the KMS key ARN/ID instead of a PBKDF2 passphrase</li>
+<li>Confirmation that <code>encrypt()</code>/<code>decrypt()</code> call sites in <code>Main.java</code> are unchanged from stage 3</li>
+</ul>
+<p>Needs a decision on the CI story (LocalStack container vs. skip in CI) before this can move from placeholder to real content — check with the maintainers of <code>../mango4j-crypto-aws-kms-delegate</code> for the recommended local testing setup.</p>
+</div>
 
 
 
@@ -1328,6 +1361,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../04-key-aliases-and-configs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Aliases &amp; Key Configs">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Key Aliases & Key Configs
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-introducing-hmacs/" class="md-footer__link md-footer__link--next" aria-label="Next: Introducing HMACs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Introducing HMACs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1355,10 +1426,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
