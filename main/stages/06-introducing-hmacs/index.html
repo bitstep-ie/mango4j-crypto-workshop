@@ -1505,18 +1505,28 @@ Using an IDE instead? Open <code>stages/06-Introducing-HMACs/starter</code> as i
 <p><strong>Your turn:</strong> in <code>starter/.../InMemoryCryptoKeyProvider.java</code>, return <code>List.of(getById(CURRENT_HMAC_KEY_ID))</code> instead of the empty list.</p>
 <h2 id="running-it">Running it</h2>
 <p><code>starter/</code> before your changes compiles and runs, but with <code>cardNumber</code> not yet <code>@Hmac</code>'d, <code>PaymentCardEntity</code> has no HMAC field at all as far as the library can see - both <code>cardNumberHmac</code> and <code>hmacKeyId</code> stay <code>null</code>:</p>
-<div class="highlight"><pre><span></span><code>first  cardNumberHmac: null
+<div class="highlight"><pre><span></span><code>first  encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"tvTNkl2Uv1ZVY9VPMuWtRg==",...}}
+second encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"sNhAfqK95k1b4DzZWj+tPQ==",...}}
+same ciphertext?       false
+
+first  cardNumberHmac: null
 second cardNumberHmac: null
 same HMAC?              true
+
 hmacKeyId:             null
 </code></pre></div>
 <p>After all three changes:</p>
-<div class="highlight"><pre><span></span><code>first  cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
+<div class="highlight"><pre><span></span><code>first  encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"lk6cOpz/b67KmKY9yxG3ng==",...}}
+second encryptedData: {"cryptoKeyId":"workshop-encryption-key","data":{...,"iv":"...",...}}
+same ciphertext?       false
+
+first  cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
 second cardNumberHmac: vqGr/6T0RMdQlvu2bP9FTH9nx2vqNW6Nh2NaKHLnbmQ=
 same HMAC?              true
+
 hmacKeyId:             workshop-hmac-key
 </code></pre></div>
-<p>The interesting comparison is against <code>encryptedData</code>, printed just above: two entities built from the identical card number get two different ciphertexts (fresh IV each time) but the exact same HMAC, every run. That determinism is the whole reason HMAC - not encryption - is what search and uniqueness end up built on.</p>
+<p>The interesting comparison is between the two blocks above: two entities built from the identical card number get two different ciphertexts (fresh IV each time, so <code>same ciphertext?</code> is <code>false</code>) but the exact same HMAC, every run (<code>same HMAC?</code> is <code>true</code> in both runs - only the <em>value</em> becomes non-null once <code>@Hmac</code> is wired up). That determinism is the whole reason HMAC - not encryption - is what search and uniqueness end up built on.</p>
 
 
 
