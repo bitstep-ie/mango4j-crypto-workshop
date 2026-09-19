@@ -1014,6 +1014,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#switching-from-fakekmsclient-to-a-real-kms-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching from FakeKmsClient to a real KMS endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1447,6 +1458,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#switching-from-fakekmsclient-to-a-real-kms-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching from FakeKmsClient to a real KMS endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1631,11 +1653,7 @@ Using an IDE instead? Open <code>stages/05-AWS-KMS-Delegate/starter</code> as it
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>FakeKmsClient</code> implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since <code>Decrypt</code> requests never specify one (see the class's own comments for why). This is the same trick <a href="../01-getting-started/">Getting Started</a>'s <code>Base64EncryptionService</code> and <a href="../03-real-encryption/">Real Encryption</a>'s comparison used: real enough to prove the wiring, not real infrastructure behind it. In a real deployment, this is the one line that changes:</p>
-<div class="highlight"><pre><span></span><code><span class="n">KmsClient</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">build</span><span class="p">()</span><span class="w">   </span><span class="c1">// real AWS, talking to real KMS</span>
-<span class="k">new</span><span class="w"> </span><span class="n">FakeKmsClient</span><span class="p">()</span><span class="w">           </span><span class="c1">// this workshop</span>
-</code></pre></div>
-<p>Everything else - the delegate, the key configuration shape, the <code>encrypt()</code>/<code>decrypt()</code> call sites - is identical either way.</p>
+<p><code>FakeKmsClient</code> implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since <code>Decrypt</code> requests never specify one (see the class's own comments for why). This is the same trick <a href="../01-getting-started/">Getting Started</a>'s <code>Base64EncryptionService</code> and <a href="../03-real-encryption/">Real Encryption</a>'s comparison used: real enough to prove the wiring, not real infrastructure behind it.</p>
 <h2 id="choosing-a-delegate">Choosing a delegate</h2>
 <div class="highlight"><pre><span></span><code><span class="c1">// The previous stage's delegate: PBKDF2EncryptionService, real</span>
 <span class="c1">// cryptography with no external service to talk to.</span>
@@ -1687,6 +1705,27 @@ Using an IDE instead? Open <code>stages/05-AWS-KMS-Delegate/starter</code> as it
 <span class="n">cryptoShield</span><span class="p">.</span><span class="na">decrypt</span><span class="p">(</span><span class="n">loaded</span><span class="p">);</span>
 <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"decrypted cardNumber:         "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loaded</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
 </code></pre></div>
+<h2 id="switching-from-fakekmsclient-to-a-real-kms-endpoint">Switching from <code>FakeKmsClient</code> to a real KMS endpoint</h2>
+<p><div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * This is the only line that changes to go from this stage's</span>
+<span class="cm"> * {@link FakeKmsClient} to a real deployment - everything else</span>
+<span class="cm"> * ({@code AwsKmsEncryptionServiceDelegate}, the {@code CryptoKey}</span>
+<span class="cm"> * configuration, the {@code encrypt()}/{@code decrypt()} call sites)</span>
+<span class="cm"> * stays identical. {@code KmsClient.builder().build()} resolves</span>
+<span class="cm"> * credentials and region from the standard AWS SDK default chain</span>
+<span class="cm"> * (environment variables, {@code ~/.aws/credentials}, an EC2/ECS/Lambda</span>
+<span class="cm"> * IAM role, and so on) - override either explicitly when that default</span>
+<span class="cm"> * isn't what you want, as shown here.</span>
+<span class="cm"> */</span>
+<span class="kd">static</span><span class="w"> </span><span class="n">KmsClient</span><span class="w"> </span><span class="nf">realKmsClient</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">KmsClient</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="na">region</span><span class="p">(</span><span class="n">Region</span><span class="p">.</span><span class="na">EU_WEST_1</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/RealAwsKmsClientExample.java#L20-L35">View on GitHub</a></small></p>
+<p><code>RealAwsKmsClientExample</code> isn't called from <code>Main</code> - CI compiles it (proving the construction is genuinely valid) but never runs it, since actually calling <code>realKmsClient()</code>'s result would need a real AWS account, real credentials, and network access to a real KMS endpoint, none of which this workshop requires. That's the entire difference between this stage's demo and a real deployment: swap <code>new FakeKmsClient()</code> for <code>KmsClient.builder()...build()</code> where <code>AwsKmsEncryptionServiceDelegate</code> gets constructed in <code>Main</code>, and leave everything else - the delegate itself, the <code>CryptoKey</code> configuration, the <code>encrypt()</code>/<code>decrypt()</code> call sites - untouched.</p>
+<p><code>KmsClient.builder().build()</code> alone (no <code>.region(...)</code>) resolves both region and credentials from the AWS SDK's standard default chain - environment variables, <code>~/.aws/credentials</code>, an EC2/ECS/Lambda IAM role, and so on - which is usually the right choice in a real deployment rather than hardcoding either. <code>.region(Region.EU_WEST_1)</code> is shown here only to match this stage's example ARN; a real key's ARN already names its own region, so that override is often unnecessary too.</p>
 <h2 id="running-it">Running it</h2>
 <p><code>starter/</code> before your changes still runs on PBKDF2:</p>
 <div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
