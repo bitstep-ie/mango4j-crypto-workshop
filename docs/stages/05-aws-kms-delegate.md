@@ -63,7 +63,17 @@ The calls are unchanged, again:
 ```
 <!-- link -->
 
-`RealAwsKmsClientExample` isn't called from `Main` - CI compiles it (proving the construction is genuinely valid) but never runs it, since actually calling `realKmsClient()`'s result would need a real AWS account, real credentials, and network access to a real KMS endpoint, none of which this workshop requires. That's the entire difference between this stage's demo and a real deployment: swap `new FakeKmsClient()` for `KmsClient.builder()...build()` where `AwsKmsEncryptionServiceDelegate` gets constructed in `Main`, and leave everything else - the delegate itself, the `CryptoKey` configuration, the `encrypt()`/`decrypt()` call sites - untouched.
+`RealAwsKmsClientExample` isn't called from `Main` - CI compiles it (proving the construction is genuinely valid) but never runs it, since actually calling `realKmsClient()`'s result would need a real AWS account, real credentials, and network access to a real KMS endpoint, none of which this workshop requires. Going from this stage's demo to a real deployment means two edits, both in `Main`:
+
+```java
+// this stage
+delegate = new AwsKmsEncryptionServiceDelegate(new FakeKmsClient());
+
+// a real deployment
+delegate = new AwsKmsEncryptionServiceDelegate(RealAwsKmsClientExample.realKmsClient());
+```
+
+Everything else - the delegate class itself, the `CryptoKey` configuration, the `encrypt()`/`decrypt()` call sites - stays untouched either way.
 
 `KmsClient.builder().build()` alone (no `.region(...)`) resolves both region and credentials from the AWS SDK's standard default chain - environment variables, `~/.aws/credentials`, an EC2/ECS/Lambda IAM role, and so on - which is usually the right choice in a real deployment rather than hardcoding either. `.region(Region.EU_WEST_1)` is shown here only to match this stage's example ARN; a real key's ARN already names its own region, so that override is often unnecessary too.
 
