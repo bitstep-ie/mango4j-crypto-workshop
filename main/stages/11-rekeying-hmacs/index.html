@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#refreshing-hmacs-is-the-same-call-as-everything-else" class="md-skip">
+        <a href="#phase-one-bring-the-new-key-on" class="md-skip">
           Skip to content
         </a>
       
@@ -1138,10 +1138,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#refreshing-hmacs-is-the-same-call-as-everything-else" class="md-nav__link">
+  <a href="#phase-one-bring-the-new-key-on" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Refreshing HMACs is the same call as everything else
+        Phase one: bring the new key on
       
     </span>
   </a>
@@ -1149,10 +1149,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-the-new-key-then-a-sweep-that-doesnt-finish" class="md-nav__link">
+  <a href="#phase-two-retire-the-old-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding the new key, then a sweep that doesn't finish
+        Phase two: retire the old key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-doesnt-happen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What doesn't happen
       
     </span>
   </a>
@@ -1381,10 +1392,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#refreshing-hmacs-is-the-same-call-as-everything-else" class="md-nav__link">
+  <a href="#phase-one-bring-the-new-key-on" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Refreshing HMACs is the same call as everything else
+        Phase one: bring the new key on
       
     </span>
   </a>
@@ -1392,10 +1403,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-the-new-key-then-a-sweep-that-doesnt-finish" class="md-nav__link">
+  <a href="#phase-two-retire-the-old-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding the new key, then a sweep that doesn't finish
+        Phase two: retire the old key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-doesnt-happen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What doesn't happen
       
     </span>
   </a>
@@ -1437,12 +1459,12 @@
 
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>The final stage of the rotation story: regenerating HMACs under a new key and safely retiring the old one. Facilitators should lead with <a href="../../talk/rekeying-hmacs/">Rekeying: HMACs</a>'s teardown ordering rule: removing the old HMAC key from the active list before every record has been swept makes unswept records silently unfindable in search - exactly what this stage's <code>starter/</code> reproduces, and what <code>talk/naive-hmac-rekey/</code> demonstrates in a hand-rolled implementation.</p>
+<p>The final stage of the rotation story: regenerating HMACs under a new key and safely retiring the old one, using mango4j-crypto's real <code>RekeyScheduler</code> again - the HMAC side of what <a href="../10-rekeying-encryption/">Rekeying: Encryption</a> already introduced for ciphertext. Facilitators should lead with <a href="../../talk/rekeying-hmacs/">Rekeying: HMACs</a>'s teardown ordering rule, and note that this stage's two-phase shape (bring the new key on, <em>then</em> retire the old one, as two separate scheduler-driven passes) is the real operational sequence, not a workshop simplification.</p>
 </div>
 <p>This stage comes as two projects:</p>
 <ul>
-<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but the old HMAC key is retired before the sweep reaches every record, so the last record becomes unfindable. Look for the <code>// TODO</code> comment.</li>
-<li><strong><code>complete/</code></strong> - the finished reference, where the sweep finishes first and nothing is lost.</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but neither key ever gets its <code>rekeyMode</code> set, so both scheduler passes find nothing to do and time out. Look for the <code>// TODO</code> comments.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, where both phases actually run.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Follow along</p>
@@ -1450,71 +1472,65 @@
 </code></pre></div>
 Using an IDE instead? Open <code>stages/11-Rekeying-HMACs/starter</code> as its own project.</p>
 </div>
-<h2 id="refreshing-hmacs-is-the-same-call-as-everything-else">Refreshing HMACs is the same call as everything else</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.CryptoShield</span><span class="p">;</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Refreshing a record's HMACs is the same encrypt() call every previous</span>
-<span class="cm"> * stage has already used - mango4j-crypto doesn't expose a separate</span>
-<span class="cm"> * "HMACs only" path, so calling encrypt() again also re-encrypts</span>
-<span class="cm"> * cardNumber. That's harmless here, since this stage doesn't rotate the</span>
-<span class="cm"> * encryption key (just a fresh IV and ciphertext bytes for the same</span>
-<span class="cm"> * plaintext under the same key) - but it's worth knowing that Rekeying:</span>
-<span class="cm"> * Encryption and Rekeying: HMACs being conceptually separate operations</span>
-<span class="cm"> * doesn't mean calling one never touches what the other is responsible</span>
-<span class="cm"> * for.</span>
-<span class="cm"> */</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RekeyHmacSweep</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">CryptoShield</span><span class="w"> </span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">records</span><span class="p">.</span><span class="na">forEach</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">::</span><span class="n">encrypt</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+<h2 id="phase-one-bring-the-new-key-on">Phase one: bring the new key on</h2>
+<div class="highlight"><pre><span></span><code><span class="n">provider</span><span class="p">.</span><span class="na">getById</span><span class="p">(</span><span class="s">"workshop-hmac-key-v2"</span><span class="p">).</span><span class="na">setRekeyMode</span><span class="p">(</span><span class="n">CryptoKey</span><span class="p">.</span><span class="na">RekeyMode</span><span class="p">.</span><span class="na">KEY_ON</span><span class="p">);</span>
+</code></pre></div>
+<p>Marking the new HMAC key <code>KEY_ON</code> tells <code>RekeyScheduler</code> to sweep every record onto it - additive, alongside whatever HMAC entries already exist, exactly <a href="../08-list-hmac-strategy/">List HMAC Strategy</a>'s semantics, just driven by the scheduler instead of a hand-written loop.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, mark <code>"workshop-hmac-key-v2"</code> <code>KEY_ON</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">boolean</span><span class="w"> </span><span class="n">newKeyOn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKeyOnLatch</span><span class="p">.</span><span class="na">await</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"new key brought on within timeout? "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">newKeyOn</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"  lookups: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">keyIdsOf</span><span class="p">(</span><span class="n">record</span><span class="p">));</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>mango4j-crypto doesn't expose an "HMACs only" path - <code>encrypt()</code> is <code>encrypt()</code>, the same call every previous stage has used. Calling it again on an already-encrypted record also re-encrypts <code>cardNumber</code>, which is harmless here since this stage doesn't rotate the encryption key (fresh IV, same key, same plaintext), but it's worth knowing: Rekeying: Encryption and Rekeying: HMACs being conceptually separate doesn't mean calling one never touches what the other owns.</p>
-<h2 id="adding-the-new-key-then-a-sweep-that-doesnt-finish">Adding the new key, then a sweep that doesn't finish</h2>
-<div class="highlight"><pre><span></span><code><span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardStore</span><span class="p">();</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">,</span><span class="w"> </span><span class="s">"5222222222222226"</span><span class="p">,</span><span class="w"> </span><span class="s">"5333333333333335"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
-<span class="w">    </span><span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="n">cardNumber</span><span class="p">);</span>
-<span class="w">    </span><span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
-<span class="w">    </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<h2 id="phase-two-retire-the-old-key">Phase two: retire the old key</h2>
+<div class="highlight"><pre><span></span><code><span class="n">provider</span><span class="p">.</span><span class="na">getById</span><span class="p">(</span><span class="s">"workshop-hmac-key-v2"</span><span class="p">).</span><span class="na">setRekeyMode</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="n">provider</span><span class="p">.</span><span class="na">getById</span><span class="p">(</span><span class="s">"workshop-hmac-key"</span><span class="p">).</span><span class="na">setRekeyMode</span><span class="p">(</span><span class="n">CryptoKey</span><span class="p">.</span><span class="na">RekeyMode</span><span class="p">.</span><span class="na">KEY_OFF</span><span class="p">);</span>
+</code></pre></div>
+<p>Two things happen here, not one: <code>workshop-hmac-key-v2</code>'s <code>rekeyMode</code> gets cleared (it's not "being brought on" anymore, it's just the ordinary current key now), and <code>workshop-hmac-key</code> gets marked <code>KEY_OFF</code>. Only after that does <code>RekeyScheduler</code> retire it - the same "don't remove the old key until the sweep genuinely reaches everything" rule the earlier hand-rolled version of this stage enforced manually, now the framework's job.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, clear <code>"workshop-hmac-key-v2"</code>'s <code>rekeyMode</code> and mark <code>"workshop-hmac-key"</code> <code>KEY_OFF</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">boolean</span><span class="w"> </span><span class="n">oldKeyRetired</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldKeyRetiredLatch</span><span class="p">.</span><span class="na">await</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"old key retired within timeout?    "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">oldKeyRetired</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"  lookups: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">keyIdsOf</span><span class="p">(</span><span class="n">record</span><span class="p">));</span>
 <span class="p">}</span>
-
-<span class="c1">// Add the new HMAC key alongside the old one - the old key stays</span>
-<span class="c1">// active, exactly as List HMAC Strategy's rotation scenario did.</span>
-<span class="n">provider</span><span class="p">.</span><span class="na">addActiveHmacKey</span><span class="p">(</span><span class="s">"workshop-hmac-key-v2"</span><span class="p">);</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// The sweep only reaches the first two records, simulating a</span>
-<span class="c1">// rekey job that's still in progress - the third record hasn't</span>
-<span class="c1">// been touched yet.</span>
-<span class="n">List</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allRecords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">();</span>
-<span class="n">RekeyHmacSweep</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">allRecords</span><span class="p">.</span><span class="na">subList</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<h2 id="what-doesnt-happen">What doesn't happen</h2>
+<p>Running <code>complete/</code> shows something worth calling out explicitly: after phase two, every record's <code>lookups</code> list still has an entry for <code>workshop-hmac-key</code> - the key that was just retired:</p>
+<div class="highlight"><pre><span></span><code>lookups: [workshop-hmac-key-v2, workshop-hmac-key]
 </code></pre></div>
-<p>Three records, written while only the old key was active. The new key is added alongside it - so far, identical to <a href="../08-list-hmac-strategy/">List HMAC Strategy</a>'s setup. Then the sweep runs, but only over the first two records: a stand-in for a rekey job that got interrupted, ran out of time, or simply hasn't gotten to everything yet.</p>
-<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, finish the sweep - rekey the remaining record(s) too, before moving on.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Only remove the old key from the active list once every record</span>
-<span class="c1">// has been swept - this line assumes that's already true.</span>
-<span class="n">provider</span><span class="p">.</span><span class="na">removeActiveHmacKey</span><span class="p">(</span><span class="s">"workshop-hmac-key"</span><span class="p">);</span>
-</code></pre></div>
-<p>This line assumes the sweep is completely finished. It's given, unconditional, in both <code>starter/</code> and <code>complete/</code> - the bug isn't in this line, it's in whether the sweep actually finished before it ran.</p>
-<h2 id="running-it">Running it</h2>
+<p>Retiring a key removes it from the <code>CryptoKeyProvider</code> (nothing can resolve it by id anymore), but it does <strong>not</strong> reach into every record and strip its now-stale entry. mango4j-crypto has a separate event for that - <code>RekeyEvent.Type.PURGE_REDUNDANT_HMACS_ASSOCIATED_WITH_KEY</code> - a distinct cleanup step this stage doesn't cover. The stale entry is harmless (nothing can ever compute a matching HMAC under a deleted key again, so it can never produce a false match), just not free of the storage it occupies until something purges it.</p>
 <div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">searchProbe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
-<span class="n">searchProbe</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5333333333333335"</span><span class="p">);</span>
+<span class="n">searchProbe</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
 <span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">);</span>
-<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"previously-unswept record still findable? "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">findByLookup</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">).</span><span class="na">isPresent</span><span class="p">());</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"search still finds the record?     "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">findByLookup</span><span class="p">(</span><span class="n">searchProbe</span><span class="p">).</span><span class="na">isPresent</span><span class="p">());</span>
 </code></pre></div>
-<p><code>starter/</code> before your change - the third record's <code>lookups</code> only ever had an entry for the old key, which is now gone from the active list. A search probe, computed only under the remaining (new) key, has nothing to match:</p>
-<div class="highlight"><pre><span></span><code>previously-unswept record still findable? false
+<p>Search still works throughout, exactly the way <a href="../08-list-hmac-strategy/">List HMAC Strategy</a> demonstrated: a probe built against whatever's current finds every record, before and after the rotation.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your changes: neither key ever gets a <code>rekeyMode</code>, so both scheduler passes log "no re-keying needed" and do nothing. Both waits time out after 10 seconds each (about 20 seconds total):</p>
+<div class="highlight"><pre><span></span><code>new key brought on within timeout? false
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+old key retired within timeout?    false
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+search still finds the record?     false
 </code></pre></div>
-<p>After your change - the third record picked up a new-key entry during the (now complete) sweep, before the old key was retired:</p>
-<div class="highlight"><pre><span></span><code>previously-unswept record still findable? true
+<p>The last line fails too: the search probe is built against <code>workshop-hmac-key-v2</code> (the "current" this stage's shield always uses), which nothing in the store has yet.</p>
+<p>After all your changes:</p>
+<div class="highlight"><pre><span></span><code>new key brought on within timeout? true
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+old key retired within timeout?    true
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+search still finds the record?     true
 </code></pre></div>
-<p>That's the entire rotation story end to end: <a href="../09-key-rotation/">Key Rotation</a> pointed new writes at a new key while old data kept working under the old one; <a href="../10-rekeying-encryption/">Rekeying: Encryption</a> swept existing ciphertext onto the new key, safely re-runnable; this stage swept existing HMACs the same way, with one added constraint neither of the others had - the old key can't be retired until the sweep genuinely reaches everything, or exactly the records still waiting become invisible to search.</p>
+<p>That's the entire rotation story end to end, using the actual framework mechanism throughout: <a href="../09-key-rotation/">Key Rotation</a> pointed new writes at a new key while old data kept working under the old one; <a href="../10-rekeying-encryption/">Rekeying: Encryption</a> used <code>RekeyScheduler</code> to sweep existing ciphertext onto the new key; this stage used the same scheduler, via <code>RekeyListHmacFieldStrategy</code>, to sweep existing HMACs the same way - with the one added constraint neither of the others had: the old key can't be retired until the sweep genuinely reaches everything, or exactly the records still waiting become invisible to search.</p>
 
 
 
