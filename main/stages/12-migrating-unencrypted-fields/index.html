@@ -1199,6 +1199,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backfilling-whats-already-there" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backfilling what's already there
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#completing-the-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completing the cutover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1436,6 +1458,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backfilling-whats-already-there" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backfilling what's already there
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#completing-the-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completing the cutover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1550,15 +1594,99 @@ SEVERE: Field OverdueMigrationEntity.cardNumber is marked with @EnableMigrationS
 <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"overdue field still encrypts fine:     "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">overdue</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
 </code></pre></div>
 <p>Neither log level blocks anything. <code>@EnableMigrationSupport</code> is a paper trail for whoever's watching application logs or alerting on <code>SEVERE</code>-level messages, not a circuit breaker - the deadline passing is a signal for a person to act on, not a safety mechanism the library enforces on its own.</p>
+<h2 id="backfilling-whats-already-there">Backfilling what's already there</h2>
+<p><code>@EnableMigrationSupport</code> only covers records going through <code>CryptoShield</code> right now. Everything already sitting in the table - rows fetched, until this point, straight off the old plaintext column - still needs <code>encryptedData</code> populated at least once:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// A handful of "legacy" records: plaintext already sitting in</span>
+<span class="c1">// cardNumber (as if freshly loaded from the old plaintext column),</span>
+<span class="c1">// no encryptedData yet. Backfilling one is exactly one encrypt()</span>
+<span class="c1">// call - there's no ciphertext to decrypt first, since there was</span>
+<span class="c1">// never any ciphertext.</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">InProgressMigrationEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">legacyRecords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">        </span><span class="n">newLegacyRecord</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">newLegacyRecord</span><span class="p">(</span><span class="s">"5222222222222226"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">newLegacyRecord</span><span class="p">(</span><span class="s">"5333333333333335"</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="n">legacyRecords</span><span class="p">.</span><span class="na">forEach</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">::</span><span class="n">encrypt</span><span class="p">);</span>
+
+<span class="kt">long</span><span class="w"> </span><span class="n">backfilledCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">legacyRecords</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">filter</span><span class="p">(</span><span class="n">record</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">).</span><span class="na">count</span><span class="p">();</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"legacy records backfilled: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">backfilledCount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" / "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">legacyRecords</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+</code></pre></div>
+<p>Unlike <a href="../10-rekeying-encryption/">Rekeying: Encryption</a>'s sweep, there's nothing to decrypt first - these records only ever had a plaintext value, never any ciphertext, so backfilling one is a single <code>encrypt()</code> call.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, backfill <code>legacyRecords</code>: call <code>cryptoShield.encrypt()</code> on each one.</p>
+<h2 id="completing-the-cutover">Completing the cutover</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.annotations.Encrypt</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.annotations.EncryptedData</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The other side of the cutover: cardNumber is transient again, with no</span>
+<span class="cm"> * {@code @EnableMigrationSupport} needed, because nothing outside</span>
+<span class="cm"> * CryptoShield reads it directly anymore. This is identical in shape to</span>
+<span class="cm"> * every entity from Real Encryption onward - successfully migrating a</span>
+<span class="cm"> * field means ending up back at the normal, unremarkable case, not at some</span>
+<span class="cm"> * new permanent state.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MigratedEntity</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Encrypt</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@EncryptedData</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getCardNumber</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setCardNumber</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">cardNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getEncryptedData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setEncryptedData</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">encryptedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encryptedData</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Once every record in the system - not just these three - has <code>encryptedData</code> populated, the migration is actually done, and <code>@EnableMigrationSupport</code> has served its purpose. <code>MigratedEntity</code> is what <code>cardNumber</code> looks like on the other side of that cutover: <code>transient</code> again, no migration annotation, identical in shape to every entity since <a href="../03-real-encryption/">Real Encryption</a>. Two things happen together at cutover, in code and in the schema:</p>
+<ol>
+<li>The field goes back to plain <code>@Encrypt private transient String cardNumber;</code> - <code>@EnableMigrationSupport</code> comes off entirely, not just its deadline pushed out.</li>
+<li>The now-unused plaintext column gets dropped from the database. Nothing in this workshop's plain Java entities has an actual schema to alter, but the code change is the signal that it's safe to: once nothing maps <code>cardNumber</code> to a persisted column anymore, nothing is reading that column either, and keeping a dropped field's data around is pure liability with no upside.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Once every record - not just these three - has been backfilled,</span>
+<span class="c1">// the migration is done: the field goes back to being fully</span>
+<span class="c1">// transient, @EnableMigrationSupport comes off, and (in a system</span>
+<span class="c1">// backed by a real database) the now-unused plaintext column gets</span>
+<span class="c1">// dropped from the schema. MigratedEntity is what cardNumber looks</span>
+<span class="c1">// like on the other side of that cutover - identical to every</span>
+<span class="c1">// entity from Real Encryption onward.</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">cutoverShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">MigratedEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="n">MigratedEntity</span><span class="w"> </span><span class="n">migrated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MigratedEntity</span><span class="p">();</span>
+<span class="n">migrated</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5444444444444447"</span><span class="p">);</span>
+<span class="n">cutoverShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">migrated</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"post-cutover field still encrypts fine: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">migrated</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+</code></pre></div>
 <h2 id="running-it">Running it</h2>
-<p><code>starter/</code> throws before either <code>System.out</code> line is ever reached - the exception shown above, on the first entity <code>CryptoShield</code> tries to register.</p>
-<p>After both changes:</p>
+<p><code>starter/</code> throws before any <code>System.out</code> line is ever reached - the exception shown above, on the first entity <code>CryptoShield</code> tries to register.</p>
+<p>After all three changes:</p>
 <div class="highlight"><pre><span></span><code>in-progress field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 overdue field still encrypts fine:     {"cryptoKeyId":"workshop-encryption-key",...}
+legacy records backfilled: 3 / 3
+post-cutover field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 </code></pre></div>
-<p>Plus the two log lines above, printed during <code>CryptoShield.Builder().build()</code> before either of those.</p>
+<p>Plus the two log lines from earlier, printed during <code>CryptoShield.Builder().build()</code> before any of those. The last two lines are this addition: the backfill count confirms every legacy record picked up its ciphertext, and <code>MigratedEntity</code> - built with a completely separate <code>CryptoShield</code> that's never even heard of <code>@EnableMigrationSupport</code> - proves the field works exactly like any other stage's once the migration is behind it.</p>
 <h2 id="the-rest-of-the-migration-story">The rest of the migration story</h2>
-<p>This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what <code>talk/naive-migration/</code> walks through: a table mid-backfill has rows in both states at once, and a naive <code>load()</code> that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs both pieces - a tracked, dated relaxation for whatever still needs direct access (this stage), and a backfill process that tolerates a table in a mixed state until it isn't (that talk chapter's subject).</p>
+<p>This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what <code>talk/naive-migration/</code> walks through: a table mid-backfill has rows in both states at once, and a naive <code>load()</code> that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs all three pieces demonstrated on this page - a tracked, dated relaxation for whatever still needs direct access, a backfill sweep that reaches every record, and a cutover once it has - plus the piece only <code>talk/naive-migration/</code> covers: tolerating a table in a mixed state for as long as the backfill is still in progress.</p>
 <hr />
 <p>This is the last stage in the hands-on arc. Together with <a href="../09-key-rotation/">Key Rotation</a>, <a href="../10-rekeying-encryption/">Rekeying: Encryption</a>, and <a href="../11-rekeying-hmacs/">Rekeying: HMACs</a>, it completes the promise made all the way back in <a href="../00-intro/">Introduction</a>: pluggable encryption providers, multiple HMAC strategies, rekeying support, and migration of existing unencrypted fields, each demonstrated with real, runnable code rather than just described.</p>
 
