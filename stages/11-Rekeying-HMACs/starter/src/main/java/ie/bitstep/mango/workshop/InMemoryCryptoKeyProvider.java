@@ -5,24 +5,28 @@ import ie.bitstep.mango.crypto.core.domain.CryptoKeyUsage;
 import ie.bitstep.mango.crypto.core.providers.CryptoKeyProvider;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The encryption key stays fixed - this stage doesn't rotate it. The list
- * of active HMAC keys is mutable, the same shape List HMAC Strategy
- * introduced, but now changed live: addActiveHmacKey()/removeActiveHmacKey()
- * are what an application actually calls as a rotation progresses, one at
- * the start (add the new key) and one at the end (retire the old one) -
- * with a sweep expected to run in between.
+ * The key map is shared and mutable (a static ConcurrentHashMap, not an
+ * immutable Map.of()): RekeyScheduler mutates CryptoKey.rekeyMode and
+ * calls back to remove keys, from its own background thread, so the same
+ * CryptoKey objects need to be visible everywhere, live. "Current" HMAC
+ * keys are still constructor-configured per instance, the same pattern
+ * List HMAC Strategy introduced.
  */
 public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
 
     private static final String CURRENT_ENCRYPTION_KEY_ID = "workshop-encryption-key";
-    private static final Map<String, CryptoKey> KEYS_BY_ID = buildKeys();
+    private static final Map<String, CryptoKey> KEYS_BY_ID = new ConcurrentHashMap<>(buildKeys());
 
-    private final List<String> currentHmacKeyIds = new ArrayList<>(List.of("workshop-hmac-key"));
+    private final List<String> currentHmacKeyIds;
+
+    public InMemoryCryptoKeyProvider(List<String> currentHmacKeyIds) {
+        this.currentHmacKeyIds = currentHmacKeyIds;
+    }
 
     @Override
     public CryptoKey getById(String cryptoKeyId) {
@@ -44,23 +48,24 @@ public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
         return List.copyOf(KEYS_BY_ID.values());
     }
 
-    public void addActiveHmacKey(String keyId) {
-        currentHmacKeyIds.add(keyId);
-    }
-
-    public void removeActiveHmacKey(String keyId) {
-        currentHmacKeyIds.remove(keyId);
+    /**
+     * Called by RetiringKeyManager once RekeyScheduler confirms nothing is
+     * using a retired key anymore.
+     */
+    static void remove(String keyId) {
+        KEYS_BY_ID.remove(keyId);
     }
 
     private static Map<String, CryptoKey> buildKeys() {
+        Instant longAgo = Instant.now().minusSeconds(3600);
         CryptoKey encryptionKey = buildKey(
-                CURRENT_ENCRYPTION_KEY_ID, CryptoKeyUsage.ENCRYPTION,
+                CURRENT_ENCRYPTION_KEY_ID, CryptoKeyUsage.ENCRYPTION, longAgo,
                 "workshop-demo-passphrase-do-not-use-in-production", "workshop-demo-salt");
         CryptoKey hmacKeyV1 = buildKey(
-                "workshop-hmac-key", CryptoKeyUsage.HMAC,
+                "workshop-hmac-key", CryptoKeyUsage.HMAC, longAgo,
                 "workshop-hmac-passphrase-do-not-use-in-production", "workshop-hmac-salt");
         CryptoKey hmacKeyV2 = buildKey(
-                "workshop-hmac-key-v2", CryptoKeyUsage.HMAC,
+                "workshop-hmac-key-v2", CryptoKeyUsage.HMAC, longAgo.plusSeconds(60),
                 "workshop-hmac-passphrase-v2-do-not-use-in-production", "workshop-hmac-salt-v2");
         return Map.of(
                 encryptionKey.getId(), encryptionKey,
@@ -69,11 +74,11 @@ public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
         );
     }
 
-    private static CryptoKey buildKey(String id, CryptoKeyUsage usage, String passPhrase, String salt) {
+    private static CryptoKey buildKey(String id, CryptoKeyUsage usage, Instant createdDate, String passPhrase, String salt) {
         CryptoKey key = new CryptoKey();
         key.setId(id);
         key.setUsage(usage);
-        key.setCreatedDate(Instant.now());
+        key.setCreatedDate(createdDate);
         key.setType("PBKDF2");
         key.setConfiguration(Map.of(
                 "algorithm", "AES",

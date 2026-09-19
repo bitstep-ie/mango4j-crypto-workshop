@@ -1,12 +1,12 @@
 Rekeying: HMACs
 
 !!! abstract "Overview"
-    The final stage of the rotation story: regenerating HMACs under a new key and safely retiring the old one. Facilitators should lead with [Rekeying: HMACs](../talk/rekeying-hmacs.md)'s teardown ordering rule: removing the old HMAC key from the active list before every record has been swept makes unswept records silently unfindable in search - exactly what this stage's `starter/` reproduces, and what `talk/naive-hmac-rekey/` demonstrates in a hand-rolled implementation.
+    The final stage of the rotation story: regenerating HMACs under a new key and safely retiring the old one, using mango4j-crypto's real `RekeyScheduler` again - the HMAC side of what [Rekeying: Encryption](10-rekeying-encryption.md) already introduced for ciphertext. Facilitators should lead with [Rekeying: HMACs](../talk/rekeying-hmacs.md)'s teardown ordering rule, and note that this stage's two-phase shape (bring the new key on, *then* retire the old one, as two separate scheduler-driven passes) is the real operational sequence, not a workshop simplification.
 
 This stage comes as two projects:
 
-- **`starter/`** - what you work in. It compiles and runs, but the old HMAC key is retired before the sweep reaches every record, so the last record becomes unfindable. Look for the `// TODO` comment.
-- **`complete/`** - the finished reference, where the sweep finishes first and nothing is lost.
+- **`starter/`** - what you work in. It compiles and runs, but neither key ever gets its `rekeyMode` set, so both scheduler passes find nothing to do and time out. Look for the `// TODO` comments.
+- **`complete/`** - the finished reference, where both phases actually run.
 
 !!! tip "Follow along"
     ```bash
@@ -14,50 +14,80 @@ This stage comes as two projects:
     ```
     Using an IDE instead? Open `stages/11-Rekeying-HMACs/starter` as its own project.
 
-## Refreshing HMACs is the same call as everything else
+## Phase one: bring the new key on
 
 ```java
---8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/RekeyHmacSweep.java"
+--8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:bring-new-key-on"
 ```
 
-mango4j-crypto doesn't expose an "HMACs only" path - `encrypt()` is `encrypt()`, the same call every previous stage has used. Calling it again on an already-encrypted record also re-encrypts `cardNumber`, which is harmless here since this stage doesn't rotate the encryption key (fresh IV, same key, same plaintext), but it's worth knowing: Rekeying: Encryption and Rekeying: HMACs being conceptually separate doesn't mean calling one never touches what the other owns.
+Marking the new HMAC key `KEY_ON` tells `RekeyScheduler` to sweep every record onto it - additive, alongside whatever HMAC entries already exist, exactly [List HMAC Strategy](08-list-hmac-strategy.md)'s semantics, just driven by the scheduler instead of a hand-written loop.
 
-## Adding the new key, then a sweep that doesn't finish
+**Your turn:** in `starter/.../Main.java`, mark `"workshop-hmac-key-v2"` `KEY_ON`.
 
 ```java
---8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:write-then-add-key"
+--8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:phase-one-report"
 ```
 
-```java
---8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:partial-sweep"
-```
-
-Three records, written while only the old key was active. The new key is added alongside it - so far, identical to [List HMAC Strategy](08-list-hmac-strategy.md)'s setup. Then the sweep runs, but only over the first two records: a stand-in for a rekey job that got interrupted, ran out of time, or simply hasn't gotten to everything yet.
-
-**Your turn:** in `starter/.../Main.java`, finish the sweep - rekey the remaining record(s) too, before moving on.
+## Phase two: retire the old key
 
 ```java
 --8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:retire-old-key"
 ```
 
-This line assumes the sweep is completely finished. It's given, unconditional, in both `starter/` and `complete/` - the bug isn't in this line, it's in whether the sweep actually finished before it ran.
+Two things happen here, not one: `workshop-hmac-key-v2`'s `rekeyMode` gets cleared (it's not "being brought on" anymore, it's just the ordinary current key now), and `workshop-hmac-key` gets marked `KEY_OFF`. Only after that does `RekeyScheduler` retire it - the same "don't remove the old key until the sweep genuinely reaches everything" rule the earlier hand-rolled version of this stage enforced manually, now the framework's job.
+
+**Your turn:** in `starter/.../Main.java`, clear `"workshop-hmac-key-v2"`'s `rekeyMode` and mark `"workshop-hmac-key"` `KEY_OFF`.
+
+```java
+--8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:phase-two-report"
+```
+
+## What doesn't happen
+
+Running `complete/` shows something worth calling out explicitly: after phase two, every record's `lookups` list still has an entry for `workshop-hmac-key` - the key that was just retired:
+
+```
+lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+```
+
+Retiring a key removes it from the `CryptoKeyProvider` (nothing can resolve it by id anymore), but it does **not** reach into every record and strip its now-stale entry. mango4j-crypto has a separate event for that - `RekeyEvent.Type.PURGE_REDUNDANT_HMACS_ASSOCIATED_WITH_KEY` - a distinct cleanup step this stage doesn't cover. The stale entry is harmless (nothing can ever compute a matching HMAC under a deleted key again, so it can never produce a false match), just not free of the storage it occupies until something purges it.
+
+```java
+--8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:search-after-rotation"
+```
+
+Search still works throughout, exactly the way [List HMAC Strategy](08-list-hmac-strategy.md) demonstrated: a probe built against whatever's current finds every record, before and after the rotation.
 
 ## Running it
 
-```java
---8<-- "11-Rekeying-HMACs/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:search-after-retirement"
-```
-
-`starter/` before your change - the third record's `lookups` only ever had an entry for the old key, which is now gone from the active list. A search probe, computed only under the remaining (new) key, has nothing to match:
+`starter/` before your changes: neither key ever gets a `rekeyMode`, so both scheduler passes log "no re-keying needed" and do nothing. Both waits time out after 10 seconds each (about 20 seconds total):
 
 ```
-previously-unswept record still findable? false
+new key brought on within timeout? false
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+old key retired within timeout?    false
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+  lookups: [workshop-hmac-key]
+search still finds the record?     false
 ```
 
-After your change - the third record picked up a new-key entry during the (now complete) sweep, before the old key was retired:
+The last line fails too: the search probe is built against `workshop-hmac-key-v2` (the "current" this stage's shield always uses), which nothing in the store has yet.
+
+After all your changes:
 
 ```
-previously-unswept record still findable? true
+new key brought on within timeout? true
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+old key retired within timeout?    true
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+  lookups: [workshop-hmac-key-v2, workshop-hmac-key]
+search still finds the record?     true
 ```
 
-That's the entire rotation story end to end: [Key Rotation](09-key-rotation.md) pointed new writes at a new key while old data kept working under the old one; [Rekeying: Encryption](10-rekeying-encryption.md) swept existing ciphertext onto the new key, safely re-runnable; this stage swept existing HMACs the same way, with one added constraint neither of the others had - the old key can't be retired until the sweep genuinely reaches everything, or exactly the records still waiting become invisible to search.
+That's the entire rotation story end to end, using the actual framework mechanism throughout: [Key Rotation](09-key-rotation.md) pointed new writes at a new key while old data kept working under the old one; [Rekeying: Encryption](10-rekeying-encryption.md) used `RekeyScheduler` to sweep existing ciphertext onto the new key; this stage used the same scheduler, via `RekeyListHmacFieldStrategy`, to sweep existing HMACs the same way - with the one added constraint neither of the others had: the old key can't be retired until the sweep genuinely reaches everything, or exactly the records still waiting become invisible to search.
