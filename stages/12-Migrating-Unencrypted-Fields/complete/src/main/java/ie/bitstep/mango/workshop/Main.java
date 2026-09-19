@@ -35,5 +35,49 @@ public class Main {
         cryptoShield.encrypt(overdue);
         System.out.println("overdue field still encrypts fine:     " + overdue.getEncryptedData());
         // --8<-- [end:still-works]
+
+        // --8<-- [start:backfill-sweep]
+        // A handful of "legacy" records: plaintext already sitting in
+        // cardNumber (as if freshly loaded from the old plaintext column),
+        // no encryptedData yet. Backfilling one is exactly one encrypt()
+        // call - there's no ciphertext to decrypt first, since there was
+        // never any ciphertext.
+        List<InProgressMigrationEntity> legacyRecords = List.of(
+                newLegacyRecord("5111111111111111"),
+                newLegacyRecord("5222222222222226"),
+                newLegacyRecord("5333333333333335")
+        );
+
+        legacyRecords.forEach(cryptoShield::encrypt);
+
+        long backfilledCount = legacyRecords.stream().filter(record -> record.getEncryptedData() != null).count();
+        System.out.println("legacy records backfilled: " + backfilledCount + " / " + legacyRecords.size());
+        // --8<-- [end:backfill-sweep]
+
+        // --8<-- [start:cutover]
+        // Once every record - not just these three - has been backfilled,
+        // the migration is done: the field goes back to being fully
+        // transient, @EnableMigrationSupport comes off, and (in a system
+        // backed by a real database) the now-unused plaintext column gets
+        // dropped from the schema. MigratedEntity is what cardNumber looks
+        // like on the other side of that cutover - identical to every
+        // entity from Real Encryption onward.
+        CryptoShield cutoverShield = new CryptoShield.Builder()
+                .withCryptoKeyProvider(new InMemoryCryptoKeyProvider())
+                .withAnnotatedEntities(List.of(MigratedEntity.class))
+                .withEncryptionServiceDelegates(List.of(delegate))
+                .build();
+
+        MigratedEntity migrated = new MigratedEntity();
+        migrated.setCardNumber("5444444444444447");
+        cutoverShield.encrypt(migrated);
+        System.out.println("post-cutover field still encrypts fine: " + migrated.getEncryptedData());
+        // --8<-- [end:cutover]
+    }
+
+    private static InProgressMigrationEntity newLegacyRecord(String cardNumber) {
+        InProgressMigrationEntity record = new InProgressMigrationEntity();
+        record.setCardNumber(cardNumber);
+        return record;
     }
 }
