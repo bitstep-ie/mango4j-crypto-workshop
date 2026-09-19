@@ -64,22 +64,51 @@ Before the deadline: a warning. After it: an error - but note what doesn't happe
 
 Neither log level blocks anything. `@EnableMigrationSupport` is a paper trail for whoever's watching application logs or alerting on `SEVERE`-level messages, not a circuit breaker - the deadline passing is a signal for a person to act on, not a safety mechanism the library enforces on its own.
 
+## Backfilling what's already there
+
+`@EnableMigrationSupport` only covers records going through `CryptoShield` right now. Everything already sitting in the table - rows fetched, until this point, straight off the old plaintext column - still needs `encryptedData` populated at least once:
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:backfill-sweep"
+```
+
+Unlike [Rekeying: Encryption](10-rekeying-encryption.md)'s sweep, there's nothing to decrypt first - these records only ever had a plaintext value, never any ciphertext, so backfilling one is a single `encrypt()` call.
+
+**Your turn:** in `starter/.../Main.java`, backfill `legacyRecords`: call `cryptoShield.encrypt()` on each one.
+
+## Completing the cutover
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/MigratedEntity.java"
+```
+
+Once every record in the system - not just these three - has `encryptedData` populated, the migration is actually done, and `@EnableMigrationSupport` has served its purpose. `MigratedEntity` is what `cardNumber` looks like on the other side of that cutover: `transient` again, no migration annotation, identical in shape to every entity since [Real Encryption](03-real-encryption.md). Two things happen together at cutover, in code and in the schema:
+
+1. The field goes back to plain `@Encrypt private transient String cardNumber;` - `@EnableMigrationSupport` comes off entirely, not just its deadline pushed out.
+2. The now-unused plaintext column gets dropped from the database. Nothing in this workshop's plain Java entities has an actual schema to alter, but the code change is the signal that it's safe to: once nothing maps `cardNumber` to a persisted column anymore, nothing is reading that column either, and keeping a dropped field's data around is pure liability with no upside.
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:cutover"
+```
+
 ## Running it
 
-`starter/` throws before either `System.out` line is ever reached - the exception shown above, on the first entity `CryptoShield` tries to register.
+`starter/` throws before any `System.out` line is ever reached - the exception shown above, on the first entity `CryptoShield` tries to register.
 
-After both changes:
+After all three changes:
 
 ```
 in-progress field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 overdue field still encrypts fine:     {"cryptoKeyId":"workshop-encryption-key",...}
+legacy records backfilled: 3 / 3
+post-cutover field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 ```
 
-Plus the two log lines above, printed during `CryptoShield.Builder().build()` before either of those.
+Plus the two log lines from earlier, printed during `CryptoShield.Builder().build()` before any of those. The last two lines are this addition: the backfill count confirms every legacy record picked up its ciphertext, and `MigratedEntity` - built with a completely separate `CryptoShield` that's never even heard of `@EnableMigrationSupport` - proves the field works exactly like any other stage's once the migration is behind it.
 
 ## The rest of the migration story
 
-This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what `talk/naive-migration/` walks through: a table mid-backfill has rows in both states at once, and a naive `load()` that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs both pieces - a tracked, dated relaxation for whatever still needs direct access (this stage), and a backfill process that tolerates a table in a mixed state until it isn't (that talk chapter's subject).
+This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what `talk/naive-migration/` walks through: a table mid-backfill has rows in both states at once, and a naive `load()` that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs all three pieces demonstrated on this page - a tracked, dated relaxation for whatever still needs direct access, a backfill sweep that reaches every record, and a cutover once it has - plus the piece only `talk/naive-migration/` covers: tolerating a table in a mixed state for as long as the backfill is still in progress.
 
 ---
 
