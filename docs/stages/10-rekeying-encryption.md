@@ -24,8 +24,7 @@ This stage comes as two projects:
 
 **Your turn:** in `starter/.../Main.java`, mark `"workshop-encryption-key"` for retirement: `provider.markForRetirement("workshop-encryption-key")`.
 
-!!! warning "`KEY_ON` is currently broken in mango4j-crypto"
-    `RekeyScheduler` also supports the mirror image - marking a *new* key `KEY_ON` to pull every record onto it, regardless of which old key each one is currently on. While building this stage we found that path has an inverted condition and silently rekeys nothing for any entity that actually has `@Encrypt` fields (filed as [mango4j-crypto#44](https://github.com/bitstep-ie/mango4j-crypto/issues/44)). `KEY_OFF` - what this stage uses - doesn't have the same bug; it was verified working end to end while diagnosing the `KEY_ON` issue.
+`RekeyScheduler` also supports the mirror image - marking a *new* key `KEY_ON` to pull every record onto it, regardless of which old key each one is currently on. This stage uses `KEY_OFF` instead, verified working end to end.
 
 ## Wiring up a `RekeyService`
 
