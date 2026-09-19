@@ -46,6 +46,7 @@ public class FakeKmsClient implements KmsClient {
         // Nothing to close - there's no real connection.
     }
 
+    // --8<-- [start:encrypt]
     @Override
     public EncryptResponse encrypt(EncryptRequest encryptRequest) {
         byte[] iv = new byte[IV_LENGTH];
@@ -59,6 +60,7 @@ public class FakeKmsClient implements KmsClient {
                 .ciphertextBlob(SdkBytes.fromByteArray(blob))
                 .build();
     }
+    // --8<-- [end:encrypt]
 
     @Override
     public DecryptResponse decrypt(DecryptRequest decryptRequest) {
