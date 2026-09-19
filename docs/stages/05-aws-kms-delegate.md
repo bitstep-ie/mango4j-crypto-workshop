@@ -16,13 +16,14 @@ This stage comes as two projects:
 
 ## Why this stage doesn't need real AWS
 
-`AwsKmsEncryptionServiceDelegate` only ever talks to the `KmsClient` interface it's constructed with - it has no idea whether that's the AWS SDK's real client or something else entirely:
+`AwsKmsEncryptionServiceDelegate` only ever talks to the `KmsClient` interface it's constructed with - it has no idea whether that's the AWS SDK's real client or something else entirely. `FakeKmsClient` implements that same interface with real AES/GCM underneath, no network calls:
 
 ```java
---8<-- "05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/FakeKmsClient.java"
+--8<-- "05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/FakeKmsClient.java:encrypt"
 ```
+<!-- link -->
 
-`FakeKmsClient` implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since `Decrypt` requests never specify one (see the class's own comments for why). This is the same trick [Getting Started](01-getting-started.md)'s `Base64EncryptionService` and [Real Encryption](03-real-encryption.md)'s comparison used: real enough to prove the wiring, not real infrastructure behind it.
+Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since `Decrypt` requests never specify one (see the full file, linked above, for that side and the class's own comments on why). This is the same trick [Getting Started](01-getting-started.md)'s `Base64EncryptionService` and [Real Encryption](03-real-encryption.md)'s comparison used: real enough to prove the wiring, not real infrastructure behind it.
 
 ## Choosing a delegate
 
