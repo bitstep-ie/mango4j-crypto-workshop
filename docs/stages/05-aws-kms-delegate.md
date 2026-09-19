@@ -22,14 +22,7 @@ This stage comes as two projects:
 --8<-- "05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/FakeKmsClient.java"
 ```
 
-`FakeKmsClient` implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since `Decrypt` requests never specify one (see the class's own comments for why). This is the same trick [Getting Started](01-getting-started.md)'s `Base64EncryptionService` and [Real Encryption](03-real-encryption.md)'s comparison used: real enough to prove the wiring, not real infrastructure behind it. In a real deployment, this is the one line that changes:
-
-```java
-KmsClient.builder().build()   // real AWS, talking to real KMS
-new FakeKmsClient()           // this workshop
-```
-
-Everything else - the delegate, the key configuration shape, the `encrypt()`/`decrypt()` call sites - is identical either way.
+`FakeKmsClient` implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since `Decrypt` requests never specify one (see the class's own comments for why). This is the same trick [Getting Started](01-getting-started.md)'s `Base64EncryptionService` and [Real Encryption](03-real-encryption.md)'s comparison used: real enough to prove the wiring, not real infrastructure behind it.
 
 ## Choosing a delegate
 
@@ -62,6 +55,17 @@ The calls are unchanged, again:
 ```java
 --8<-- "05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:decrypt"
 ```
+
+## Switching from `FakeKmsClient` to a real KMS endpoint
+
+```java
+--8<-- "05-AWS-KMS-Delegate/complete/src/main/java/ie/bitstep/mango/workshop/RealAwsKmsClientExample.java:real-kms-client"
+```
+<!-- link -->
+
+`RealAwsKmsClientExample` isn't called from `Main` - CI compiles it (proving the construction is genuinely valid) but never runs it, since actually calling `realKmsClient()`'s result would need a real AWS account, real credentials, and network access to a real KMS endpoint, none of which this workshop requires. That's the entire difference between this stage's demo and a real deployment: swap `new FakeKmsClient()` for `KmsClient.builder()...build()` where `AwsKmsEncryptionServiceDelegate` gets constructed in `Main`, and leave everything else - the delegate itself, the `CryptoKey` configuration, the `encrypt()`/`decrypt()` call sites - untouched.
+
+`KmsClient.builder().build()` alone (no `.region(...)`) resolves both region and credentials from the AWS SDK's standard default chain - environment variables, `~/.aws/credentials`, an EC2/ECS/Lambda IAM role, and so on - which is usually the right choice in a real deployment rather than hardcoding either. `.region(Region.EU_WEST_1)` is shown here only to match this stage's example ARN; a real key's ARN already names its own region, so that override is often unnecessary too.
 
 ## Running it
 
