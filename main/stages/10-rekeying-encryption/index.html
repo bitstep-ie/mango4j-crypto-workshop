@@ -1528,10 +1528,7 @@ Using an IDE instead? Open <code>stages/10-Rekeying-Encryption/starter</code> as
 </code></pre></div>
 <p><code>CryptoKey</code> has a <code>rekeyMode</code> field for exactly this (<code>KEY_ON</code>/<code>KEY_OFF</code>, see the framework's <code>CryptoKey</code> javadoc). Marking a key <code>KEY_OFF</code> tells <code>RekeyScheduler</code> "sweep everything using this key onto whichever key is current, then tell me it's safe to delete."</p>
 <p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, mark <code>"workshop-encryption-key"</code> for retirement: <code>provider.markForRetirement("workshop-encryption-key")</code>.</p>
-<div class="admonition warning">
-<p class="admonition-title"><code>KEY_ON</code> is currently broken in mango4j-crypto</p>
-<p><code>RekeyScheduler</code> also supports the mirror image - marking a <em>new</em> key <code>KEY_ON</code> to pull every record onto it, regardless of which old key each one is currently on. While building this stage we found that path has an inverted condition and silently rekeys nothing for any entity that actually has <code>@Encrypt</code> fields (filed as <a href="https://github.com/bitstep-ie/mango4j-crypto/issues/44">mango4j-crypto#44</a>). <code>KEY_OFF</code> - what this stage uses - doesn't have the same bug; it was verified working end to end while diagnosing the <code>KEY_ON</code> issue.</p>
-</div>
+<p><code>RekeyScheduler</code> also supports the mirror image - marking a <em>new</em> key <code>KEY_ON</code> to pull every record onto it, regardless of which old key each one is currently on. This stage uses <code>KEY_OFF</code> instead, verified working end to end.</p>
 <h2 id="wiring-up-a-rekeyservice">Wiring up a <code>RekeyService</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
 
