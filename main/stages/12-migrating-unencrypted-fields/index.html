@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-rule-this-stage-is-about" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1112,6 +1117,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating Unencrypted Fields
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1128,6 +1151,78 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-rule-this-stage-is-about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rule this stage is about
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-escape-hatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The escape hatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changes-at-the-deadline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changes at the deadline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rest-of-the-migration-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rest of the migration story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1396,69 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-rule-this-stage-is-about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rule this stage is about
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-escape-hatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The escape hatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changes-at-the-deadline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changes at the deadline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rest-of-the-migration-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rest of the migration story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1482,85 @@
 <p>Migrating Unencrypted Fields</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>Every previous stage started from a field that was already encrypted. This stage covers the other direction: an existing plaintext field in production, backfilled to encrypted while the application keeps running. Facilitators should open with the naive failure mode <code>talk/naive-migration/</code> demonstrates — a table mid-backfill has rows in both states at once, and a <code>load()</code> that assumes everything's already ciphertext throws on the rows the backfill hasn't reached — before showing mango4j-crypto's migration support as the fix.</p>
+<p>Every previous stage's <code>cardNumber</code> has been <code>transient</code> - CryptoShield requires that of every <code>@Encrypt</code> field, since a non-transient field risks the plaintext getting persisted right alongside its own ciphertext. This stage covers what happens when that requirement collides with reality: some other part of the system (a legacy batch export, a report, a second service) still reads the field directly and isn't ready for it to become transient yet. <code>@EnableMigrationSupport</code> is mango4j-crypto's answer - not a runtime safety mechanism, but a tracked, dated exception with a paper trail. Facilitators should open with the naive failure mode <code>talk/naive-migration/</code> demonstrates - a table mid-backfill has rows in both states at once - as the broader migration story this annotation is one small, narrowly-scoped piece of, not a replacement for it.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>A tracked-migration flag per record (mirroring <code>@EnableMigrationSupport</code>) so <code>load()</code> can tell which representation a given row is in</li>
-<li>A backfill job that encrypts plaintext rows in place and flips the flag, safe to run incrementally/resumably</li>
-<li>Confirmation the application keeps serving reads/writes correctly against both migrated and not-yet-migrated rows throughout the backfill</li>
-<li>A closing note on cutover: what changes once the backfill is complete (the flag/branch can eventually be removed)</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles, but throws immediately on startup: both entities have a non-transient <code>@Encrypt</code> field with no <code>@EnableMigrationSupport</code> to excuse it. Look for the <code>// TODO</code> comments.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, where both fields build successfully and log exactly what's expected of them.</li>
 </ul>
-<p>Last stage in the "full framework usage" arc — reasonable place to also add a short closing/wrap-up page once all stages exist, similar to how the talk's Rekeying: HMACs closes out that arc.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/12-Migrating-Unencrypted-Fields/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/12-Migrating-Unencrypted-Fields/starter</code> as its own project.</p>
 </div>
+<h2 id="the-rule-this-stage-is-about">The rule this stage is about</h2>
+<p>Every <code>@Encrypt</code> field in every previous stage has been declared <code>transient</code>, without comment - it was just always already that way. <code>AnnotatedEntityManager</code> enforces it: build a <code>CryptoShield</code> over an entity with a non-transient <code>@Encrypt</code> field and nothing else, and it throws immediately, before any encryption ever happens.</p>
+<div class="highlight"><pre><span></span><code>InProgressMigrationEntity has a field named cardNumber marked with @Encrypt but it is not transient.
+Please mark any fields annotated with @Encrypt as transient
+</code></pre></div>
+<p>That's what <code>starter/</code> does, unmodified - this is the exception you're fixing.</p>
+<h2 id="the-escape-hatch">The escape hatch</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@EnableMigrationSupport</span><span class="p">(</span>
+<span class="w">        </span><span class="n">completedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"2027-01-01"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">justification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Legacy nightly export job still reads cardNumber directly; not yet updated to call decrypt()"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ticket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"WORKSHOP-12"</span>
+<span class="p">)</span>
+<span class="nd">@Encrypt</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+</code></pre></div>
+<p><code>@EnableMigrationSupport</code> doesn't change how <code>cardNumber</code> behaves at runtime - <code>encrypt()</code>/<code>decrypt()</code> read and write it by reflection either way, <code>transient</code> or not. What it changes is registration: instead of throwing, <code>AnnotatedEntityManager</code> logs a message naming the field, the justification, and a ticket reference, and moves on.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../InProgressMigrationEntity.java</code>, add <code>@EnableMigrationSupport</code> above <code>cardNumber</code>, with a <code>completedBy</code> date in the future.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@EnableMigrationSupport</span><span class="p">(</span>
+<span class="w">        </span><span class="n">completedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"2025-01-01"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">justification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Same export job, a different field - this one's deadline was missed"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ticket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"WORKSHOP-13"</span>
+<span class="p">)</span>
+<span class="nd">@Encrypt</span>
+<span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="p">;</span>
+</code></pre></div>
+<p>Same fix, but with <code>completedBy</code> already in the past - a migration that should have been finished by now, and wasn't.</p>
+<p><strong>Your turn:</strong> in <code>starter/.../OverdueMigrationEntity.java</code>, add <code>@EnableMigrationSupport</code> above its <code>cardNumber</code> too, with a <code>completedBy</code> date already behind you.</p>
+<h2 id="what-changes-at-the-deadline">What changes at the deadline</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Building the shield is where @EnableMigrationSupport actually gets</span>
+<span class="c1">// checked. Watch the console: one WARNING (deadline still ahead) and</span>
+<span class="c1">// one ERROR (deadline already missed) - neither one stops the build.</span>
+<span class="n">CryptoShield</span><span class="w"> </span><span class="n">cryptoShield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CryptoShield</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withAnnotatedEntities</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">InProgressMigrationEntity</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">OverdueMigrationEntity</span><span class="p">.</span><span class="na">class</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withEncryptionServiceDelegates</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">delegate</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></pre></div>
+<p>Building the shield is where both annotations actually get evaluated - watch the console, not the program's <code>System.out</code> lines, since these come from mango4j-crypto's own logger:</p>
+<div class="highlight"><pre><span></span><code>WARNING: Field InProgressMigrationEntity.cardNumber is marked with @EnableMigrationSupport. Justification: ... Expected completion: 2027-01-01. Ticket: WORKSHOP-12
+SEVERE: Field OverdueMigrationEntity.cardNumber is marked with @EnableMigrationSupport. Justification: ... Expected completion: 2025-01-01. Ticket: WORKSHOP-13 - MIGRATION DEADLINE HAS PASSED!
+</code></pre></div>
+<p>Before the deadline: a warning. After it: an error - but note what doesn't happen either way. The build still succeeds, and encryption still works:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Neither field behaves any differently at runtime - transient or</span>
+<span class="c1">// not, encrypt()/decrypt() read and write it by reflection either way.</span>
+<span class="n">InProgressMigrationEntity</span><span class="w"> </span><span class="n">inProgress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InProgressMigrationEntity</span><span class="p">();</span>
+<span class="n">inProgress</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+<span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">inProgress</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"in-progress field still encrypts fine: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">inProgress</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+
+<span class="n">OverdueMigrationEntity</span><span class="w"> </span><span class="n">overdue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OverdueMigrationEntity</span><span class="p">();</span>
+<span class="n">overdue</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5222222222222226"</span><span class="p">);</span>
+<span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">overdue</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"overdue field still encrypts fine:     "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">overdue</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+</code></pre></div>
+<p>Neither log level blocks anything. <code>@EnableMigrationSupport</code> is a paper trail for whoever's watching application logs or alerting on <code>SEVERE</code>-level messages, not a circuit breaker - the deadline passing is a signal for a person to act on, not a safety mechanism the library enforces on its own.</p>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> throws before either <code>System.out</code> line is ever reached - the exception shown above, on the first entity <code>CryptoShield</code> tries to register.</p>
+<p>After both changes:</p>
+<div class="highlight"><pre><span></span><code>in-progress field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
+overdue field still encrypts fine:     {"cryptoKeyId":"workshop-encryption-key",...}
+</code></pre></div>
+<p>Plus the two log lines above, printed during <code>CryptoShield.Builder().build()</code> before either of those.</p>
+<h2 id="the-rest-of-the-migration-story">The rest of the migration story</h2>
+<p>This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what <code>talk/naive-migration/</code> walks through: a table mid-backfill has rows in both states at once, and a naive <code>load()</code> that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs both pieces - a tracked, dated relaxation for whatever still needs direct access (this stage), and a backfill process that tolerates a table in a mixed state until it isn't (that talk chapter's subject).</p>
+<hr />
+<p>This is the last stage in the hands-on arc. Together with <a href="../09-key-rotation/">Key Rotation</a>, <a href="../10-rekeying-encryption/">Rekeying: Encryption</a>, and <a href="../11-rekeying-hmacs/">Rekeying: HMACs</a>, it completes the promise made all the way back in <a href="../00-intro/">Introduction</a>: pluggable encryption providers, multiple HMAC strategies, rekeying support, and migration of existing unencrypted fields, each demonstrated with real, runnable code rather than just described.</p>
 
 
 
