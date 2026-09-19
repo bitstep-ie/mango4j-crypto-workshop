@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#why-this-stage-doesnt-need-real-aws" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -916,6 +921,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS KMS Delegate
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -932,6 +955,78 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-stage-doesnt-need-real-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this stage doesn't need real AWS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-delegate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a delegate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-the-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring the key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypting-and-decrypting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypting and decrypting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1301,6 +1396,69 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-stage-doesnt-need-real-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this stage doesn't need real AWS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-a-delegate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a delegate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-the-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring the key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypting-and-decrypting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypting and decrypting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,19 +1482,223 @@
 <p>AWS KMS Delegate</p>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>Stage 3 swapped the fake Base64 delegate for <code>PBKDF2EncryptionService</code>, a real but local-only cryptographic provider. This stage swaps again, this time for <code>mango4j-crypto-aws-kms-delegate</code>, showing that moving to a production key management service is the same shape of change: a different delegate, a different <code>CryptoKey.type</code>/<code>configuration</code>, and nothing else. Facilitators should frame this as proof that the delegate abstraction from <a href="../../talk/key-aliases/">Key Aliases &amp; Key Configs</a> holds up against a real external provider, not just the local PBKDF2 example.</p>
+<p><a href="../03-real-encryption/">Real Encryption</a> swapped the fake Base64 delegate for <code>PBKDF2EncryptionService</code>, a real but local-only cryptographic provider. This stage swaps again, this time for <code>AwsKmsEncryptionServiceDelegate</code> from <code>mango4j-crypto-aws-kms-delegate</code>, showing that moving to a production key management service is the same shape of change: a different delegate, a different <code>CryptoKey.type</code>/<code>configuration</code>, and nothing else. Facilitators should frame this as proof that the delegate abstraction from <a href="../04-key-aliases-and-configs/">Key Aliases &amp; Key Configs</a> holds up against a real external provider, not just the local PBKDF2 example - and be upfront that this stage runs against <code>FakeKmsClient</code>, not real AWS, so it works anywhere with no cloud account or credentials needed.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Content coming soon</p>
-<p>This stage is a placeholder. It should give learners:</p>
+<p>This stage comes as two projects:</p>
 <ul>
-<li>A local or mocked AWS KMS setup runnable without real AWS credentials (e.g. LocalStack, or a documented "point this at your own KMS key" fallback) so CI and self-serve learners aren't blocked on cloud access</li>
-<li>The <code>mango4j-crypto-aws-kms-delegate</code> dependency added alongside the existing ones</li>
-<li>A <code>CryptoKey</code> configured with the KMS key ARN/ID instead of a PBKDF2 passphrase</li>
-<li>Confirmation that <code>encrypt()</code>/<code>decrypt()</code> call sites in <code>Main.java</code> are unchanged from stage 3</li>
+<li><strong><code>starter/</code></strong> - what you work in. It runs, but still on the <code>PBKDF2EncryptionService</code> delegate from Real Encryption. Look for the <code>// TODO</code> comments.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, using the real <code>AwsKmsEncryptionServiceDelegate</code>.</li>
 </ul>
-<p>Needs a decision on the CI story (LocalStack container vs. skip in CI) before this can move from placeholder to real content — check with the maintainers of <code>../mango4j-crypto-aws-kms-delegate</code> for the recommended local testing setup.</p>
+<div class="admonition tip">
+<p class="admonition-title">Follow along</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>stages/05-AWS-KMS-Delegate/starter
+</code></pre></div>
+Using an IDE instead? Open <code>stages/05-AWS-KMS-Delegate/starter</code> as its own project.</p>
 </div>
+<h2 id="why-this-stage-doesnt-need-real-aws">Why this stage doesn't need real AWS</h2>
+<p><code>AwsKmsEncryptionServiceDelegate</code> only ever talks to the <code>KmsClient</code> interface it's constructed with - it has no idea whether that's the AWS SDK's real client or something else entirely:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.core.SdkBytes</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.KmsClient</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.DecryptRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.DecryptResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.EncryptRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.EncryptResponse</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.GenerateMacRequest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">software.amazon.awssdk.services.kms.model.GenerateMacResponse</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.crypto.Cipher</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.crypto.Mac</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.crypto.spec.GCMParameterSpec</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.crypto.spec.SecretKeySpec</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.ByteBuffer</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.StandardCharsets</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.security.MessageDigest</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.security.SecureRandom</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * A hand-written stand-in for a real AWS KMS endpoint - no network, no AWS</span>
+<span class="cm"> * account, no Docker container. Same role {@code Base64EncryptionService}</span>
+<span class="cm"> * played back in Encrypting a Field: real enough to prove the wiring works,</span>
+<span class="cm"> * not real cryptographic infrastructure behind it. mango4j-crypto's</span>
+<span class="cm"> * {@code AwsKmsEncryptionServiceDelegate} only ever talks to the</span>
+<span class="cm"> * {@code KmsClient} interface it's given - it has no idea this one is fake.</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Every KMS key id derives its own AES-256 key deterministically</span>
+<span class="cm"> * (SHA-256 of the key id string), so the same "key" always decrypts what</span>
+<span class="cm"> * it encrypted, and a different key id never can - without needing to</span>
+<span class="cm"> * pre-register any keys anywhere.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">FakeKmsClient</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">KmsClient</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">IV_LENGTH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">GCM_TAG_LENGTH_BITS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">serviceName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"fake-kms"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">close</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Nothing to close - there's no real connection.</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">EncryptResponse</span><span class="w"> </span><span class="nf">encrypt</span><span class="p">(</span><span class="n">EncryptRequest</span><span class="w"> </span><span class="n">encryptRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">IV_LENGTH</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">SecureRandom</span><span class="p">().</span><span class="na">nextBytes</span><span class="p">(</span><span class="n">iv</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">cipherBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runCipher</span><span class="p">(</span><span class="n">Cipher</span><span class="p">.</span><span class="na">ENCRYPT_MODE</span><span class="p">,</span><span class="w"> </span><span class="n">encryptRequest</span><span class="p">.</span><span class="na">keyId</span><span class="p">(),</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">encryptRequest</span><span class="p">.</span><span class="na">plaintext</span><span class="p">().</span><span class="na">asByteArray</span><span class="p">());</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">blob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildBlob</span><span class="p">(</span><span class="n">encryptRequest</span><span class="p">.</span><span class="na">keyId</span><span class="p">(),</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">cipherBytes</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">EncryptResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">keyId</span><span class="p">(</span><span class="n">encryptRequest</span><span class="p">.</span><span class="na">keyId</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">encryptionAlgorithm</span><span class="p">(</span><span class="n">encryptRequest</span><span class="p">.</span><span class="na">encryptionAlgorithmAsString</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">ciphertextBlob</span><span class="p">(</span><span class="n">SdkBytes</span><span class="p">.</span><span class="na">fromByteArray</span><span class="p">(</span><span class="n">blob</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">DecryptResponse</span><span class="w"> </span><span class="nf">decrypt</span><span class="p">(</span><span class="n">DecryptRequest</span><span class="w"> </span><span class="n">decryptRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Real KMS never needs a keyId passed to Decrypt either - the</span>
+<span class="w">        </span><span class="c1">// ciphertext blob it returns from Encrypt already carries</span>
+<span class="w">        </span><span class="c1">// everything needed to reverse the operation. This fake follows</span>
+<span class="w">        </span><span class="c1">// suit: the key id travels inside the blob itself, not as a</span>
+<span class="w">        </span><span class="c1">// separate parameter mango4j-crypto's delegate would have to track.</span>
+<span class="w">        </span><span class="n">BlobParts</span><span class="w"> </span><span class="n">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parseBlob</span><span class="p">(</span><span class="n">decryptRequest</span><span class="p">.</span><span class="na">ciphertextBlob</span><span class="p">().</span><span class="na">asByteArray</span><span class="p">());</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">plaintext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runCipher</span><span class="p">(</span><span class="n">Cipher</span><span class="p">.</span><span class="na">DECRYPT_MODE</span><span class="p">,</span><span class="w"> </span><span class="n">parts</span><span class="p">.</span><span class="na">keyId</span><span class="p">(),</span><span class="w"> </span><span class="n">parts</span><span class="p">.</span><span class="na">iv</span><span class="p">(),</span><span class="w"> </span><span class="n">parts</span><span class="p">.</span><span class="na">cipherBytes</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DecryptResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">keyId</span><span class="p">(</span><span class="n">parts</span><span class="p">.</span><span class="na">keyId</span><span class="p">())</span>
+<span class="w">                </span><span class="p">.</span><span class="na">plaintext</span><span class="p">(</span><span class="n">SdkBytes</span><span class="p">.</span><span class="na">fromByteArray</span><span class="p">(</span><span class="n">plaintext</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">GenerateMacResponse</span><span class="w"> </span><span class="nf">generateMac</span><span class="p">(</span><span class="n">GenerateMacRequest</span><span class="w"> </span><span class="n">generateMacRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Mac</span><span class="w"> </span><span class="n">mac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mac</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">"HmacSHA256"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">mac</span><span class="p">.</span><span class="na">init</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SecretKeySpec</span><span class="p">(</span><span class="n">deriveKeyBytes</span><span class="p">(</span><span class="n">generateMacRequest</span><span class="p">.</span><span class="na">keyId</span><span class="p">()),</span><span class="w"> </span><span class="s">"HmacSHA256"</span><span class="p">));</span>
+<span class="w">            </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mac</span><span class="p">.</span><span class="na">doFinal</span><span class="p">(</span><span class="n">generateMacRequest</span><span class="p">.</span><span class="na">message</span><span class="p">().</span><span class="na">asByteArray</span><span class="p">());</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">GenerateMacResponse</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">keyId</span><span class="p">(</span><span class="n">generateMacRequest</span><span class="p">.</span><span class="na">keyId</span><span class="p">())</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">mac</span><span class="p">(</span><span class="n">SdkBytes</span><span class="p">.</span><span class="na">fromByteArray</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">"Fake KMS generateMac failed"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">buildBlob</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">cipherBytes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">keyIdBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keyId</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ByteBuffer</span><span class="w"> </span><span class="n">blob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ByteBuffer</span><span class="p">.</span><span class="na">allocate</span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">keyIdBytes</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">iv</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cipherBytes</span><span class="p">.</span><span class="na">length</span><span class="p">);</span>
+<span class="w">        </span><span class="n">blob</span><span class="p">.</span><span class="na">putInt</span><span class="p">(</span><span class="n">keyIdBytes</span><span class="p">.</span><span class="na">length</span><span class="p">).</span><span class="na">put</span><span class="p">(</span><span class="n">keyIdBytes</span><span class="p">).</span><span class="na">put</span><span class="p">(</span><span class="n">iv</span><span class="p">).</span><span class="na">put</span><span class="p">(</span><span class="n">cipherBytes</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">blob</span><span class="p">.</span><span class="na">array</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">BlobParts</span><span class="w"> </span><span class="nf">parseBlob</span><span class="p">(</span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">blob</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ByteBuffer</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ByteBuffer</span><span class="p">.</span><span class="na">wrap</span><span class="p">(</span><span class="n">blob</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">keyIdBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">buffer</span><span class="p">.</span><span class="na">getInt</span><span class="p">()</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">buffer</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">keyIdBytes</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">IV_LENGTH</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">buffer</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">iv</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">cipherBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">buffer</span><span class="p">.</span><span class="na">remaining</span><span class="p">()</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">buffer</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">cipherBytes</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BlobParts</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">keyIdBytes</span><span class="p">,</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">),</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="n">cipherBytes</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">record</span> <span class="nc">BlobParts</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">cipherBytes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">runCipher</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">input</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Cipher</span><span class="w"> </span><span class="n">cipher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cipher</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">"AES/GCM/NoPadding"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">SecretKeySpec</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SecretKeySpec</span><span class="p">(</span><span class="n">deriveKeyBytes</span><span class="p">(</span><span class="n">keyId</span><span class="p">),</span><span class="w"> </span><span class="s">"AES"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">cipher</span><span class="p">.</span><span class="na">init</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GCMParameterSpec</span><span class="p">(</span><span class="n">GCM_TAG_LENGTH_BITS</span><span class="p">,</span><span class="w"> </span><span class="n">iv</span><span class="p">));</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cipher</span><span class="p">.</span><span class="na">doFinal</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">"Fake KMS cipher operation failed"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">deriveKeyBytes</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">MessageDigest</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">"SHA-256"</span><span class="p">).</span><span class="na">digest</span><span class="p">(</span><span class="n">keyId</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>FakeKmsClient</code> implements that same interface with real AES/GCM underneath, no network calls. Every KMS key id derives its own AES key deterministically (a SHA-256 hash of the id), so the same "key" always decrypts what it encrypted, and a different key id never can - with nothing to pre-register or configure. It even carries the key id inside the returned ciphertext blob, the same way real KMS does, since <code>Decrypt</code> requests never specify one (see the class's own comments for why). This is the same trick <a href="../01-getting-started/">Getting Started</a>'s <code>Base64EncryptionService</code> and <a href="../03-real-encryption/">Real Encryption</a>'s comparison used: real enough to prove the wiring, not real infrastructure behind it. In a real deployment, this is the one line that changes:</p>
+<div class="highlight"><pre><span></span><code><span class="n">KmsClient</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">build</span><span class="p">()</span><span class="w">   </span><span class="c1">// real AWS, talking to real KMS</span>
+<span class="k">new</span><span class="w"> </span><span class="n">FakeKmsClient</span><span class="p">()</span><span class="w">           </span><span class="c1">// this workshop</span>
+</code></pre></div>
+<p>Everything else - the delegate, the key configuration shape, the <code>encrypt()</code>/<code>decrypt()</code> call sites - is identical either way.</p>
+<h2 id="choosing-a-delegate">Choosing a delegate</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// The previous stage's delegate: PBKDF2EncryptionService, real</span>
+<span class="c1">// cryptography with no external service to talk to.</span>
+<span class="n">EncryptionServiceDelegate</span><span class="w"> </span><span class="n">delegate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PBKDF2EncryptionService</span><span class="p">();</span>
+
+<span class="n">delegate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AwsKmsEncryptionServiceDelegate</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">FakeKmsClient</span><span class="p">());</span>
+</code></pre></div>
+<p><code>AwsKmsEncryptionServiceDelegate</code> ships in its own module, <code>mango4j-crypto-aws-kms-delegate</code>, separate from <code>mango4j-crypto</code> itself - a real deployment only pulls in the KMS SDK dependency if it's actually using KMS.</p>
+<p><strong>Your turn:</strong> in <code>starter/src/main/java/ie/bitstep/mango/workshop/Main.java</code>, reassign <code>delegate</code> to <code>new AwsKmsEncryptionServiceDelegate(new FakeKmsClient())</code>.</p>
+<h2 id="configuring-the-key">Configuring the key</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// The previous stage's key was type "PBKDF2", needing a passphrase</span>
+<span class="c1">// and cipher parameters it had to carry itself.</span>
+<span class="n">String</span><span class="w"> </span><span class="n">keyType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"PBKDF2"</span><span class="p">;</span>
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">keyConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"algorithm"</span><span class="p">,</span><span class="w"> </span><span class="s">"AES"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"mode"</span><span class="p">,</span><span class="w"> </span><span class="s">"GCM"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"padding"</span><span class="p">,</span><span class="w"> </span><span class="s">"NoPadding"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"keySize"</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"iterations"</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"gcmTagLength"</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"ivSize"</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"passPhrase"</span><span class="p">,</span><span class="w"> </span><span class="s">"workshop-demo-passphrase-do-not-use-in-production"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"salt"</span><span class="p">,</span><span class="w"> </span><span class="s">"workshop-demo-salt"</span>
+<span class="p">);</span>
+
+<span class="n">keyType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"AWS_KMS"</span><span class="p">;</span>
+<span class="n">keyConfiguration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"awsKeyId"</span><span class="p">,</span><span class="w"> </span><span class="s">"arn:aws:kms:eu-west-1:111122223333:key/workshop-demo-key"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"algorithm"</span><span class="p">,</span><span class="w"> </span><span class="s">"SYMMETRIC_DEFAULT"</span>
+<span class="p">);</span>
+
+<span class="n">key</span><span class="p">.</span><span class="na">setType</span><span class="p">(</span><span class="n">keyType</span><span class="p">);</span>
+<span class="n">key</span><span class="p">.</span><span class="na">setConfiguration</span><span class="p">(</span><span class="n">keyConfiguration</span><span class="p">);</span>
+</code></pre></div>
+<p>Same shape as <a href="../03-real-encryption/">Real Encryption</a>: <code>type</code> selects the delegate (<code>AwsKmsEncryptionServiceDelegate</code> reports <code>"AWS_KMS"</code> from <code>supportedCryptoKeyType()</code>), and <code>configuration</code> carries whatever that delegate needs - here, a KMS key id/ARN and the encryption algorithm. Still no key material, and still never reaching application code.</p>
+<p><strong>Your turn:</strong> in <code>starter/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java</code>, set <code>keyType</code> to <code>"AWS_KMS"</code> and populate <code>keyConfiguration</code> (see the <code>// TODO</code>).</p>
+<h2 id="encrypting-and-decrypting">Encrypting and decrypting</h2>
+<p>The calls are unchanged, again:</p>
+<div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">);</span>
+
+<span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"cardNumber (still in memory): "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">card</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"encryptedData:                "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">card</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
+<span class="n">loaded</span><span class="p">.</span><span class="na">setEncryptedData</span><span class="p">(</span><span class="n">card</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
+
+<span class="n">cryptoShield</span><span class="p">.</span><span class="na">decrypt</span><span class="p">(</span><span class="n">loaded</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"decrypted cardNumber:         "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loaded</span><span class="p">.</span><span class="na">getCardNumber</span><span class="p">());</span>
+</code></pre></div>
+<h2 id="running-it">Running it</h2>
+<p><code>starter/</code> before your changes still runs on PBKDF2:</p>
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
+encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"algorithm":"AES","iv":"...","cipherText":"...",...}}
+decrypted cardNumber:         5111111111111111
+</code></pre></div>
+<p>After both changes:</p>
+<div class="highlight"><pre><span></span><code>cardNumber (still in memory): 5111111111111111
+encryptedData:                {"cryptoKeyId":"workshop-encryption-key","data":{"data":"AAAAOGFybjphd3M6a21zOmV1LXdlc3QtMToxMTExMjIyMjMzMzM6a2V5L3dvcmtzaG9wLWRlbW8ta2V5...","awsKeyId":"arn:aws:kms:eu-west-1:111122223333:key/workshop-demo-key","algorithm":"SYMMETRIC_DEFAULT"}}
+decrypted cardNumber:         5111111111111111
+</code></pre></div>
+<p>The ciphertext's shape changed - a single opaque <code>data</code> blob (what KMS actually returns) alongside the <code>awsKeyId</code>/<code>algorithm</code> this stage's key config carries - but nothing about how <code>cryptoShield.encrypt()</code>/<code>decrypt()</code> are called did.</p>
 
 
 
