@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-sweep-itself" class="md-skip">
+        <a href="#triggering-a-rekey-mark-the-old-key-key_off" class="md-skip">
           Skip to content
         </a>
       
@@ -1110,10 +1110,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-sweep-itself" class="md-nav__link">
+  <a href="#triggering-a-rekey-mark-the-old-key-key_off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The sweep itself
+        Triggering a rekey: mark the old key KEY_OFF
       
     </span>
   </a>
@@ -1121,10 +1121,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-under-the-old-key-rotating-then-sweeping" class="md-nav__link">
+  <a href="#wiring-up-a-rekeyservice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing under the old key, rotating, then sweeping
+        Wiring up a RekeyService
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-up-key-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring up key deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-the-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#waiting-for-an-asynchronous-job-to-finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Waiting for an asynchronous job to finish
       
     </span>
   </a>
@@ -1381,10 +1414,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-sweep-itself" class="md-nav__link">
+  <a href="#triggering-a-rekey-mark-the-old-key-key_off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The sweep itself
+        Triggering a rekey: mark the old key KEY_OFF
       
     </span>
   </a>
@@ -1392,10 +1425,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-under-the-old-key-rotating-then-sweeping" class="md-nav__link">
+  <a href="#wiring-up-a-rekeyservice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing under the old key, rotating, then sweeping
+        Wiring up a RekeyService
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring-up-key-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring up key deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-the-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#waiting-for-an-asynchronous-job-to-finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Waiting for an asynchronous job to finish
       
     </span>
   </a>
@@ -1437,12 +1503,12 @@
 
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p><a href="../09-key-rotation/">Key Rotation</a> switched new writes to a new key but left existing data exactly where it was: still encrypted under the old one. This stage is phase 2 - sweeping already-persisted records, decrypting each under whichever key it was actually written with and re-encrypting it under the current one. Facilitators should pair this with <a href="../../talk/rekeying-encryption/">Rekeying: Encryption</a>, and be explicit that this stage covers ciphertext only: HMACs get rekeyed separately, next, because they're a distinct operation with a different retirement rule for the old key.</p>
+<p><a href="../09-key-rotation/">Key Rotation</a> switched new writes to a new key but left existing data exactly where it was: still encrypted under the old one. This stage is phase 2 - sweeping already-persisted records onto the new key - and it uses mango4j-crypto's own production <code>RekeyScheduler</code>, not a hand-rolled loop. Facilitators should pair this with <a href="../../talk/rekeying-encryption/">Rekeying: Encryption</a>, and set expectations up front: this is a heavier API than anything earlier in the workshop - a background scheduled job, asynchronous completion, and a forced <code>System.exit()</code> - because that's genuinely what the production mechanism looks like, not a workshop simplification.</p>
 </div>
 <p>This stage comes as two projects:</p>
 <ul>
-<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, and the sweep correctly rekeys every record on its first pass - but running it a second time rekeys them all over again instead of doing nothing. Look for the <code>// TODO</code> comment.</li>
-<li><strong><code>complete/</code></strong> - the finished reference, where a second sweep is a safe no-op.</li>
+<li><strong><code>starter/</code></strong> - what you work in. It compiles and runs, but the old key is never marked for retirement, so <code>RekeyScheduler</code> finds nothing to do and the wait just times out after 10 seconds. Look for the <code>// TODO</code> comment.</li>
+<li><strong><code>complete/</code></strong> - the finished reference, where the scheduler actually sweeps all three records.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Follow along</p>
@@ -1450,65 +1516,161 @@
 </code></pre></div>
 Using an IDE instead? Open <code>stages/10-Rekeying-Encryption/starter</code> as its own project.</p>
 </div>
-<h2 id="the-sweep-itself">The sweep itself</h2>
-<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isAlreadyOnKey</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// The previous stages' sweep-free world: nothing was ever "already</span>
-<span class="w">    </span><span class="c1">// on" a key, so this always says no, and every record gets</span>
-<span class="w">    </span><span class="c1">// rekeyed - correct, but wasteful, and not actually idempotent.</span>
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">alreadyOnKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-
-<span class="w">    </span><span class="n">alreadyOnKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">"\"cryptoKeyId\":\""</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">keyId</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"\""</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">alreadyOnKey</span><span class="p">;</span>
+<h2 id="triggering-a-rekey-mark-the-old-key-key_off">Triggering a rekey: mark the old key <code>KEY_OFF</code></h2>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * Marks a key for retirement: RekeyScheduler picks this up on its next</span>
+<span class="cm"> * cycle and sweeps every record still using it onto whichever key is</span>
+<span class="cm"> * "current" for this stage's shield.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">markForRetirement</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">keyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">getById</span><span class="p">(</span><span class="n">keyId</span><span class="p">).</span><span class="na">setRekeyMode</span><span class="p">(</span><span class="n">CryptoKey</span><span class="p">.</span><span class="na">RekeyMode</span><span class="p">.</span><span class="na">KEY_OFF</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The actual rekey - <code>decrypt()</code> then <code>encrypt()</code> again - is only two lines, given in full in <code>RekeySweep.run()</code>: nothing new, the exact same calls every previous stage has already used. What's new is deciding <em>whether</em> to bother: without a check, re-running the sweep after it's already finished would decrypt and re-encrypt every record all over again, for no reason.</p>
-<p><strong>Your turn:</strong> in <code>starter/.../RekeySweep.java</code>, make <code>isAlreadyOnKey()</code> actually check whether <code>record</code>'s <code>encryptedData</code> already carries <code>keyId</code>.</p>
-<h2 id="writing-under-the-old-key-rotating-then-sweeping">Writing under the old key, rotating, then sweeping</h2>
-<div class="highlight"><pre><span></span><code><span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardStore</span><span class="p">();</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cardNumber</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">"5111111111111111"</span><span class="p">,</span><span class="w"> </span><span class="s">"5222222222222226"</span><span class="p">,</span><span class="w"> </span><span class="s">"5333333333333335"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">();</span>
-<span class="w">    </span><span class="n">card</span><span class="p">.</span><span class="na">setCardNumber</span><span class="p">(</span><span class="n">cardNumber</span><span class="p">);</span>
-<span class="w">    </span><span class="n">cryptoShield</span><span class="p">.</span><span class="na">encrypt</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
-<span class="w">    </span><span class="n">store</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">card</span><span class="p">);</span>
-<span class="p">}</span>
+<p><code>CryptoKey</code> has a <code>rekeyMode</code> field for exactly this (<code>KEY_ON</code>/<code>KEY_OFF</code>, see the framework's <code>CryptoKey</code> javadoc). Marking a key <code>KEY_OFF</code> tells <code>RekeyScheduler</code> "sweep everything using this key onto whichever key is current, then tell me it's safe to delete."</p>
+<p><strong>Your turn:</strong> in <code>starter/.../Main.java</code>, mark <code>"workshop-encryption-key"</code> for retirement: <code>provider.markForRetirement("workshop-encryption-key")</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>KEY_ON</code> is currently broken in mango4j-crypto</p>
+<p><code>RekeyScheduler</code> also supports the mirror image - marking a <em>new</em> key <code>KEY_ON</code> to pull every record onto it, regardless of which old key each one is currently on. While building this stage we found that path has an inverted condition and silently rekeys nothing for any entity that actually has <code>@Encrypt</code> fields (filed as <a href="https://github.com/bitstep-ie/mango4j-crypto/issues/44">mango4j-crypto#44</a>). <code>KEY_OFF</code> - what this stage uses - doesn't have the same bug; it was verified working end to end while diagnosing the <code>KEY_ON</code> issue.</p>
+</div>
+<h2 id="wiring-up-a-rekeyservice">Wiring up a <code>RekeyService</code></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
 
-<span class="c1">// Key Rotation already happened - new writes go out under the new</span>
-<span class="c1">// key - but these three records are still sitting there under the</span>
-<span class="c1">// old one, exactly like beforeRotation was in that stage.</span>
-<span class="n">provider</span><span class="p">.</span><span class="na">rotateEncryptionKeyTo</span><span class="p">(</span><span class="s">"workshop-encryption-key-v2"</span><span class="p">);</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.core.domain.CryptoKey</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.keyrotation.RekeyEvent</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.keyrotation.RekeyService</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.CountDownLatch</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The bridge between RekeyScheduler and this workshop's in-memory store.</span>
+<span class="cm"> * RekeyScheduler calls findRecordsUsingCryptoKey()/save() over and over,</span>
+<span class="cm"> * in batches, until an empty list comes back - so both "which records</span>
+<span class="cm"> * still need this?" methods have to inspect the record's *current* state</span>
+<span class="cm"> * each time, not a snapshot taken once.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PaymentCardRekeyService</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">RekeyService</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">CountDownLatch</span><span class="w"> </span><span class="n">rekeyFinishedLatch</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">PaymentCardRekeyService</span><span class="p">(</span><span class="n">PaymentCardStore</span><span class="w"> </span><span class="n">store</span><span class="p">,</span><span class="w"> </span><span class="n">CountDownLatch</span><span class="w"> </span><span class="n">rekeyFinishedLatch</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">store</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">rekeyFinishedLatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rekeyFinishedLatch</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getEntityType</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">PaymentCardEntity</span><span class="p">.</span><span class="na">class</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findRecordsNotUsingCryptoKey</span><span class="p">(</span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">().</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">record</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">isOnKey</span><span class="p">(</span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PaymentCardEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findRecordsUsingCryptoKey</span><span class="p">(</span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">().</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">record</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">isOnKey</span><span class="p">(</span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">))</span>
+<span class="w">                </span><span class="p">.</span><span class="na">toList</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Our records are already updated in place (no serialization round</span>
+<span class="w">        </span><span class="c1">// trip in this workshop); a real RekeyService persists them here.</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">notify</span><span class="p">(</span><span class="n">RekeyEvent</span><span class="w"> </span><span class="n">rekeyEvent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rekeyEvent</span><span class="p">.</span><span class="na">getType</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">RekeyEvent</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">REKEY_FINISHED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rekeyFinishedLatch</span><span class="p">.</span><span class="na">countDown</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isOnKey</span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">"\"cryptoKeyId\":\""</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cryptoKey</span><span class="p">.</span><span class="na">getId</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"\""</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Three records, written before the rotation - exactly <code>beforeRotation</code>'s situation from <a href="../09-key-rotation/">Key Rotation</a>, just three of them in a store instead of one loose variable.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">rekeyedCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RekeySweep</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">provider</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="p">);</span>
-<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"records rekeyed on first sweep:  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rekeyedCount</span><span class="p">);</span>
+<p><code>RekeyScheduler</code> doesn't know how to query your store - <code>RekeyService&lt;T&gt;</code> is the interface it calls to find records and save them back. <code>findRecordsUsingCryptoKey()</code> is called repeatedly, in batches, until it returns empty, so it has to check each record's <em>current</em> state every time, not a snapshot taken once. <code>notify()</code> is the only way to know the job finished - there's no return value to wait on, since the scheduler runs asynchronously.</p>
+<h2 id="wiring-up-key-deletion">Wiring up key deletion</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">ie.bitstep.mango.workshop</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.core.domain.CryptoKey</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ie.bitstep.mango.crypto.keyrotation.RekeyCryptoKeyManager</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.CountDownLatch</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * RekeyScheduler calls this once it's confirmed nothing is using a</span>
+<span class="cm"> * KEY_OFF-marked key anymore - the automatic version of what earlier</span>
+<span class="cm"> * stages had to check for manually before removing an old key.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RetiringKeyManager</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">RekeyCryptoKeyManager</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">CountDownLatch</span><span class="w"> </span><span class="n">keyRetiredLatch</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">RetiringKeyManager</span><span class="p">(</span><span class="n">CountDownLatch</span><span class="w"> </span><span class="n">keyRetiredLatch</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">keyRetiredLatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keyRetiredLatch</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">markKeyForDeletion</span><span class="p">(</span><span class="n">CryptoKey</span><span class="w"> </span><span class="n">retiredKey</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">InMemoryCryptoKeyProvider</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">retiredKey</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">keyRetiredLatch</span><span class="p">.</span><span class="na">countDown</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Once every record using the retired key has been swept, <code>RekeyScheduler</code> calls <code>RekeyCryptoKeyManager.markKeyForDeletion()</code> on its own - the manual "has the sweep reached everything yet?" bookkeeping earlier versions of this stage did by hand is now the framework's job.</p>
+<h2 id="starting-the-scheduler">Starting the scheduler</h2>
+<div class="highlight"><pre><span></span><code><span class="n">RekeySchedulerConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RekeySchedulerConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoShield</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withRekeyServices</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">PaymentCardRekeyService</span><span class="p">(</span><span class="n">store</span><span class="p">,</span><span class="w"> </span><span class="n">rekeyFinishedLatch</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withRekeyCryptoKeyManager</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RetiringKeyManager</span><span class="p">(</span><span class="n">keyRetiredLatch</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withObjectMapper</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ObjectMapper</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withClock</span><span class="p">(</span><span class="n">Clock</span><span class="p">.</span><span class="na">systemUTC</span><span class="p">())</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withCryptoKeyCachePeriod</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ZERO</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withRekeyCheckInterval</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="c1">// RekeyScheduler polls on its own background thread with no</span>
+<span class="c1">// shutdown()/close() method exposed anywhere - once started, it</span>
+<span class="c1">// never stops on its own. See System.exit() below.</span>
+<span class="k">new</span><span class="w"> </span><span class="n">RekeyScheduler</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+</code></pre></div>
+<p><code>RekeySchedulerConfig</code> is a real production configuration surface - cache duration (how long application instances might still be caching old key data, to avoid rekeying onto a key some instances don't know about yet), batch interval, failure tolerance, and the poll interval itself. This stage sets a 1-second poll interval and zero cache duration purely to make the demo finish fast; a real deployment would set these to match its own caching and traffic patterns.</p>
+<h2 id="waiting-for-an-asynchronous-job-to-finish">Waiting for an asynchronous job to finish</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">boolean</span><span class="w"> </span><span class="n">rekeyed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rekeyFinishedLatch</span><span class="p">.</span><span class="na">await</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+<span class="kt">boolean</span><span class="w"> </span><span class="n">retired</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rekeyed</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">keyRetiredLatch</span><span class="p">.</span><span class="na">await</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"rekey finished within timeout?  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rekeyed</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"old key retired within timeout? "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">retired</span><span class="p">);</span>
 <span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">PaymentCardEntity</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="na">all</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">record</span><span class="p">.</span><span class="na">getEncryptedData</span><span class="p">());</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The first sweep has to do real work: none of the three records are on the current key yet, so all three get decrypted and re-encrypted.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Running it again should be a safe no-op: every record is already</span>
-<span class="c1">// on the current key, so nothing should be decrypted/re-encrypted</span>
-<span class="c1">// a second time.</span>
-<span class="kt">int</span><span class="w"> </span><span class="n">secondSweepCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RekeySweep</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">cryptoShield</span><span class="p">,</span><span class="w"> </span><span class="n">provider</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="p">);</span>
-<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"records rekeyed on second sweep: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">secondSweepCount</span><span class="p">);</span>
-</code></pre></div>
-<p>The second sweep, run immediately after with nothing else having changed, should find nothing left to do.</p>
+<p>Every previous stage's "sweep" was a synchronous method call: <code>RekeySweep.run(...)</code> returned once it was done. <code>RekeyScheduler</code> doesn't work that way - it's a background job polling on its own schedule, so <code>Main</code> has no method call to block on. <code>PaymentCardRekeyService.notify()</code> and <code>RetiringKeyManager.markKeyForDeletion()</code> are the only signals available, so this stage uses two <code>CountDownLatch</code>es to turn "the scheduler will eventually tell us, asynchronously" into something a single-shot <code>Main</code> can wait on with a timeout.</p>
+<p><code>RekeyScheduler</code> also has no <code>shutdown()</code>/<code>close()</code> method - its background thread pool is non-daemon and polls forever once started, so nothing in <code>Main</code> returning normally would actually end the process. The <code>System.exit(0)</code> at the very end of <code>main()</code> is there on purpose, not a shortcut.</p>
 <h2 id="running-it">Running it</h2>
-<p><code>starter/</code> before your change: the first sweep works correctly, but the second one doesn't know it's already finished:</p>
-<div class="highlight"><pre><span></span><code>records rekeyed on first sweep:  3
-  {"cryptoKeyId":"workshop-encryption-key-v2",...}
-  {"cryptoKeyId":"workshop-encryption-key-v2",...}
-  {"cryptoKeyId":"workshop-encryption-key-v2",...}
-records rekeyed on second sweep: 3
+<p><code>starter/</code> before your change: nothing is marked for retirement, so every scheduler cycle logs "No re-keying needed" and does nothing. Both waits time out after 10 seconds each:</p>
+<div class="highlight"><pre><span></span><code>rekey finished within timeout?  false
+old key retired within timeout? false
+  {"cryptoKeyId":"workshop-encryption-key",...}
+  {"cryptoKeyId":"workshop-encryption-key",...}
+  {"cryptoKeyId":"workshop-encryption-key",...}
 </code></pre></div>
-<p>After your change:</p>
-<div class="highlight"><pre><span></span><code>records rekeyed on first sweep:  3
+<p>After your change, the scheduler finds the marked key on its very first cycle:</p>
+<div class="highlight"><pre><span></span><code>rekey finished within timeout?  true
+old key retired within timeout? true
   {"cryptoKeyId":"workshop-encryption-key-v2",...}
   {"cryptoKeyId":"workshop-encryption-key-v2",...}
   {"cryptoKeyId":"workshop-encryption-key-v2",...}
-records rekeyed on second sweep: 0
 </code></pre></div>
-<p>Only the last line changes. That's the point: correctness (every record ends up on the new key) was never in question, even in <code>starter/</code>. What <code>isAlreadyOnKey()</code> buys you is being able to run the sweep on a schedule, or resume it after an interruption, without redoing - or re-paying for - work that's already done. The old key still has to stay resolvable via <code>getById()</code> for as long as any record in the store hasn't been swept yet; nothing in this stage removes it.</p>
+<p>You'll also see <code>RekeyScheduler</code>'s own log lines above those - "Re-key complete", "All records (3) using deprecated encryption key ... have been keyed onto the current encryption key ...", and "Notifying the application to mark the following Crypto key as deleted". A recurring "0 HMAC keys were found ... skipping" line is expected noise: the scheduler always checks for HMAC rekey work too, on every cycle, whether or not this stage's entity uses any.</p>
 
 
 
