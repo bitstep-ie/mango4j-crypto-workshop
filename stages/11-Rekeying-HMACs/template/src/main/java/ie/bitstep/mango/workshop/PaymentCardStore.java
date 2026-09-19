@@ -2,18 +2,19 @@ package ie.bitstep.mango.workshop;
 
 import ie.bitstep.mango.crypto.domain.CryptoShieldHmacHolder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Unchanged from List HMAC Strategy: a flat list of records, searched by
- * comparing HMAC lists for any shared value.
+ * A flat list of records, same as List HMAC Strategy's store -
+ * CopyOnWriteArrayList since RekeyScheduler reads this from its own
+ * background thread.
  */
 public class PaymentCardStore {
 
-    private final List<PaymentCardEntity> records = new ArrayList<>();
+    private final List<PaymentCardEntity> records = new CopyOnWriteArrayList<>();
 
     public void save(PaymentCardEntity entity) {
         records.add(entity);
