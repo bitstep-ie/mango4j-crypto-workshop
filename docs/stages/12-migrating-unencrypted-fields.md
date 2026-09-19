@@ -64,17 +64,19 @@ Before the deadline: a warning. After it: an error - but note what doesn't happe
 
 Neither log level blocks anything. `@EnableMigrationSupport` is a paper trail for whoever's watching application logs or alerting on `SEVERE`-level messages, not a circuit breaker - the deadline passing is a signal for a person to act on, not a safety mechanism the library enforces on its own.
 
-## Backfilling what's already there
+## Finding what still needs backfilling
 
-`@EnableMigrationSupport` only covers records going through `CryptoShield` right now. Everything already sitting in the table - rows fetched, until this point, straight off the old plaintext column - still needs `encryptedData` populated at least once:
+`@EnableMigrationSupport` only covers records going through `CryptoShield` right now. Everything already sitting in the table - rows fetched, until this point, straight off the old plaintext column - still needs `encryptedData` populated at least once. mango4j-crypto doesn't track backfill progress anywhere, so the application has to answer "which records still need this?" itself, the same way a real completeness query against the table would:
 
 ```java
 --8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:backfill-sweep"
 ```
 
-Unlike [Rekeying: Encryption](10-rekeying-encryption.md)'s sweep, there's nothing to decrypt first - these records only ever had a plaintext value, never any ciphertext, so backfilling one is a single `encrypt()` call.
+`encryptedData == null` is the signal - it stays null until `encrypt()` has been called on a record for the first time, and there's no other one to go on for a record that never had *any* encrypted field before. This matters because it's not the only migration shape: a record that already has *other* `@Encrypt` fields already has a non-null `encryptedData` from those, so this check can't find records newly adding one more field to the mix. That case doesn't need a backfill at all - it rides along with an ordinary [Rekeying: Encryption](10-rekeying-encryption.md)-style sweep instead, since `decrypt()`/`encrypt()` already touch every `@Encrypt` field on the entity together; the only extra step is making sure the new field's legacy value is set on the entity before that `encrypt()` call, since `decrypt()` can't produce a value that was never in the original ciphertext.
 
-**Your turn:** in `starter/.../Main.java`, backfill `legacyRecords`: call `cryptoShield.encrypt()` on each one.
+Unlike that sweep, backfilling a genuinely-new field has nothing to decrypt first - these records only ever had a plaintext value, never any ciphertext, so backfilling one is a single `encrypt()` call.
+
+**Your turn:** in `starter/.../Main.java`, backfill `stillUnmigrated`: call `cryptoShield.encrypt()` on each one.
 
 ## Completing the cutover
 
@@ -82,7 +84,7 @@ Unlike [Rekeying: Encryption](10-rekeying-encryption.md)'s sweep, there's nothin
 --8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/MigratedEntity.java"
 ```
 
-Once every record in the system - not just these three - has `encryptedData` populated, the migration is actually done, and `@EnableMigrationSupport` has served its purpose. `MigratedEntity` is what `cardNumber` looks like on the other side of that cutover: `transient` again, no migration annotation, identical in shape to every entity since [Real Encryption](03-real-encryption.md). Two things happen together at cutover, in code and in the schema:
+Once that remaining-unmigrated count is genuinely zero - not just for these three records, every record - the migration is actually done, and `@EnableMigrationSupport` has served its purpose. `MigratedEntity` is what `cardNumber` looks like on the other side of that cutover: `transient` again, no migration annotation, identical in shape to every entity since [Real Encryption](03-real-encryption.md). Two things happen together at cutover, in code and in the schema:
 
 1. The field goes back to plain `@Encrypt private transient String cardNumber;` - `@EnableMigrationSupport` comes off entirely, not just its deadline pushed out.
 2. The now-unused plaintext column gets dropped from the database. Nothing in this workshop's plain Java entities has an actual schema to alter, but the code change is the signal that it's safe to: once nothing maps `cardNumber` to a persisted column anymore, nothing is reading that column either, and keeping a dropped field's data around is pure liability with no upside.
@@ -90,6 +92,8 @@ Once every record in the system - not just these three - has `encryptedData` pop
 ```java
 --8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:cutover"
 ```
+
+Cutover is gated on that count, not run unconditionally - a real migration doesn't get to assume the backfill actually finished just because the sweep ran once.
 
 ## Running it
 
@@ -100,11 +104,11 @@ After all three changes:
 ```
 in-progress field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 overdue field still encrypts fine:     {"cryptoKeyId":"workshop-encryption-key",...}
-legacy records backfilled: 3 / 3
+legacy records still unmigrated after this sweep: 0 / 3
 post-cutover field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 ```
 
-Plus the two log lines from earlier, printed during `CryptoShield.Builder().build()` before any of those. The last two lines are this addition: the backfill count confirms every legacy record picked up its ciphertext, and `MigratedEntity` - built with a completely separate `CryptoShield` that's never even heard of `@EnableMigrationSupport` - proves the field works exactly like any other stage's once the migration is behind it.
+Plus the two log lines from earlier, printed during `CryptoShield.Builder().build()` before any of those. The last two lines are this addition: the remaining-unmigrated count confirms every legacy record picked up its ciphertext, and `MigratedEntity` - built with a completely separate `CryptoShield` that's never even heard of `@EnableMigrationSupport` - proves the field works exactly like any other stage's once the migration is behind it.
 
 ## The rest of the migration story
 
