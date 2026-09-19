@@ -7,19 +7,24 @@ import ie.bitstep.mango.crypto.core.providers.CryptoKeyProvider;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Unchanged from Key Rotation: a single, live instance whose "current"
- * encryption key can be repointed mid-run via rotateEncryptionKeyTo(). That
- * stage covered new writes; this one is about everything rotateEncryptionKeyTo()
- * leaves behind - records already encrypted under whichever key used to be
- * current.
+ * The key map is now shared and mutable (a static ConcurrentHashMap, not
+ * an immutable Map.of()): RekeyScheduler runs on its own background
+ * thread, mutating CryptoKey.rekeyMode directly and calling back into
+ * RekeyCryptoKeyManager to remove keys once they're safe to retire, so the
+ * same CryptoKey objects need to be visible everywhere, live.
  */
 public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
 
-    private static final Map<String, CryptoKey> KEYS_BY_ID = buildKeys();
+    private static final Map<String, CryptoKey> KEYS_BY_ID = new ConcurrentHashMap<>(buildKeys());
 
-    private String currentEncryptionKeyId = "workshop-encryption-key";
+    private final String currentEncryptionKeyId;
+
+    public InMemoryCryptoKeyProvider(String currentEncryptionKeyId) {
+        this.currentEncryptionKeyId = currentEncryptionKeyId;
+    }
 
     @Override
     public CryptoKey getById(String cryptoKeyId) {
@@ -41,25 +46,39 @@ public class InMemoryCryptoKeyProvider implements CryptoKeyProvider {
         return List.copyOf(KEYS_BY_ID.values());
     }
 
-    public void rotateEncryptionKeyTo(String newCurrentEncryptionKeyId) {
-        this.currentEncryptionKeyId = newCurrentEncryptionKeyId;
+    /**
+     * Marks a key for retirement: RekeyScheduler picks this up on its next
+     * cycle and sweeps every record still using it onto whichever key is
+     * "current" for this stage's shield.
+     */
+    public void markForRetirement(String keyId) {
+        getById(keyId).setRekeyMode(CryptoKey.RekeyMode.KEY_OFF);
+    }
+
+    /**
+     * Called by RetiringKeyManager once RekeyScheduler confirms nothing is
+     * using a retired key anymore.
+     */
+    static void remove(String keyId) {
+        KEYS_BY_ID.remove(keyId);
     }
 
     private static Map<String, CryptoKey> buildKeys() {
+        Instant longAgo = Instant.now().minusSeconds(3600);
         CryptoKey encryptionKeyV1 = buildKey(
-                "workshop-encryption-key",
+                "workshop-encryption-key", longAgo,
                 "workshop-demo-passphrase-do-not-use-in-production", "workshop-demo-salt");
         CryptoKey encryptionKeyV2 = buildKey(
-                "workshop-encryption-key-v2",
+                "workshop-encryption-key-v2", longAgo.plusSeconds(60),
                 "workshop-demo-passphrase-v2-do-not-use-in-production", "workshop-demo-salt-v2");
         return Map.of(encryptionKeyV1.getId(), encryptionKeyV1, encryptionKeyV2.getId(), encryptionKeyV2);
     }
 
-    private static CryptoKey buildKey(String id, String passPhrase, String salt) {
+    private static CryptoKey buildKey(String id, Instant createdDate, String passPhrase, String salt) {
         CryptoKey key = new CryptoKey();
         key.setId(id);
         key.setUsage(CryptoKeyUsage.ENCRYPTION);
-        key.setCreatedDate(Instant.now());
+        key.setCreatedDate(createdDate);
         key.setType("PBKDF2");
         key.setConfiguration(Map.of(
                 "algorithm", "AES",
