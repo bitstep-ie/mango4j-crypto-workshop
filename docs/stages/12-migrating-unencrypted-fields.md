@@ -1,14 +1,86 @@
 Migrating Unencrypted Fields
 
 !!! abstract "Overview"
-    Every previous stage started from a field that was already encrypted. This stage covers the other direction: an existing plaintext field in production, backfilled to encrypted while the application keeps running. Facilitators should open with the naive failure mode `talk/naive-migration/` demonstrates — a table mid-backfill has rows in both states at once, and a `load()` that assumes everything's already ciphertext throws on the rows the backfill hasn't reached — before showing mango4j-crypto's migration support as the fix.
+    Every previous stage's `cardNumber` has been `transient` - CryptoShield requires that of every `@Encrypt` field, since a non-transient field risks the plaintext getting persisted right alongside its own ciphertext. This stage covers what happens when that requirement collides with reality: some other part of the system (a legacy batch export, a report, a second service) still reads the field directly and isn't ready for it to become transient yet. `@EnableMigrationSupport` is mango4j-crypto's answer - not a runtime safety mechanism, but a tracked, dated exception with a paper trail. Facilitators should open with the naive failure mode `talk/naive-migration/` demonstrates - a table mid-backfill has rows in both states at once - as the broader migration story this annotation is one small, narrowly-scoped piece of, not a replacement for it.
 
-!!! info "Content coming soon"
-    This stage is a placeholder. It should give learners:
+This stage comes as two projects:
 
-    - A tracked-migration flag per record (mirroring `@EnableMigrationSupport`) so `load()` can tell which representation a given row is in
-    - A backfill job that encrypts plaintext rows in place and flips the flag, safe to run incrementally/resumably
-    - Confirmation the application keeps serving reads/writes correctly against both migrated and not-yet-migrated rows throughout the backfill
-    - A closing note on cutover: what changes once the backfill is complete (the flag/branch can eventually be removed)
+- **`starter/`** - what you work in. It compiles, but throws immediately on startup: both entities have a non-transient `@Encrypt` field with no `@EnableMigrationSupport` to excuse it. Look for the `// TODO` comments.
+- **`complete/`** - the finished reference, where both fields build successfully and log exactly what's expected of them.
 
-    Last stage in the "full framework usage" arc — reasonable place to also add a short closing/wrap-up page once all stages exist, similar to how the talk's Rekeying: HMACs closes out that arc.
+!!! tip "Follow along"
+    ```bash
+    cd stages/12-Migrating-Unencrypted-Fields/starter
+    ```
+    Using an IDE instead? Open `stages/12-Migrating-Unencrypted-Fields/starter` as its own project.
+
+## The rule this stage is about
+
+Every `@Encrypt` field in every previous stage has been declared `transient`, without comment - it was just always already that way. `AnnotatedEntityManager` enforces it: build a `CryptoShield` over an entity with a non-transient `@Encrypt` field and nothing else, and it throws immediately, before any encryption ever happens.
+
+```
+InProgressMigrationEntity has a field named cardNumber marked with @Encrypt but it is not transient.
+Please mark any fields annotated with @Encrypt as transient
+```
+
+That's what `starter/` does, unmodified - this is the exception you're fixing.
+
+## The escape hatch
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/InProgressMigrationEntity.java:in-progress"
+```
+
+`@EnableMigrationSupport` doesn't change how `cardNumber` behaves at runtime - `encrypt()`/`decrypt()` read and write it by reflection either way, `transient` or not. What it changes is registration: instead of throwing, `AnnotatedEntityManager` logs a message naming the field, the justification, and a ticket reference, and moves on.
+
+**Your turn:** in `starter/.../InProgressMigrationEntity.java`, add `@EnableMigrationSupport` above `cardNumber`, with a `completedBy` date in the future.
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/OverdueMigrationEntity.java:overdue"
+```
+
+Same fix, but with `completedBy` already in the past - a migration that should have been finished by now, and wasn't.
+
+**Your turn:** in `starter/.../OverdueMigrationEntity.java`, add `@EnableMigrationSupport` above its `cardNumber` too, with a `completedBy` date already behind you.
+
+## What changes at the deadline
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:build-shield"
+```
+
+Building the shield is where both annotations actually get evaluated - watch the console, not the program's `System.out` lines, since these come from mango4j-crypto's own logger:
+
+```
+WARNING: Field InProgressMigrationEntity.cardNumber is marked with @EnableMigrationSupport. Justification: ... Expected completion: 2027-01-01. Ticket: WORKSHOP-12
+SEVERE: Field OverdueMigrationEntity.cardNumber is marked with @EnableMigrationSupport. Justification: ... Expected completion: 2025-01-01. Ticket: WORKSHOP-13 - MIGRATION DEADLINE HAS PASSED!
+```
+
+Before the deadline: a warning. After it: an error - but note what doesn't happen either way. The build still succeeds, and encryption still works:
+
+```java
+--8<-- "12-Migrating-Unencrypted-Fields/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:still-works"
+```
+
+Neither log level blocks anything. `@EnableMigrationSupport` is a paper trail for whoever's watching application logs or alerting on `SEVERE`-level messages, not a circuit breaker - the deadline passing is a signal for a person to act on, not a safety mechanism the library enforces on its own.
+
+## Running it
+
+`starter/` throws before either `System.out` line is ever reached - the exception shown above, on the first entity `CryptoShield` tries to register.
+
+After both changes:
+
+```
+in-progress field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
+overdue field still encrypts fine:     {"cryptoKeyId":"workshop-encryption-key",...}
+```
+
+Plus the two log lines above, printed during `CryptoShield.Builder().build()` before either of those.
+
+## The rest of the migration story
+
+This annotation buys a legacy code path time - it doesn't do the migration itself. Actually moving a genuinely unencrypted field to encrypted, field by field, across records already in production, is what `talk/naive-migration/` walks through: a table mid-backfill has rows in both states at once, and a naive `load()` that assumes everything's already ciphertext throws on the rows the backfill hasn't reached yet. A real migration needs both pieces - a tracked, dated relaxation for whatever still needs direct access (this stage), and a backfill process that tolerates a table in a mixed state until it isn't (that talk chapter's subject).
+
+---
+
+This is the last stage in the hands-on arc. Together with [Key Rotation](09-key-rotation.md), [Rekeying: Encryption](10-rekeying-encryption.md), and [Rekeying: HMACs](11-rekeying-hmacs.md), it completes the promise made all the way back in [Introduction](00-intro.md): pluggable encryption providers, multiple HMAC strategies, rekeying support, and migration of existing unencrypted fields, each demonstrated with real, runnable code rather than just described.

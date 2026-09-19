@@ -1,0 +1,47 @@
+package ie.bitstep.mango.workshop;
+
+import ie.bitstep.mango.crypto.annotations.EnableMigrationSupport;
+import ie.bitstep.mango.crypto.annotations.Encrypt;
+import ie.bitstep.mango.crypto.annotations.EncryptedData;
+
+/**
+ * Every previous stage's cardNumber has been transient - a source value
+ * that's never itself persisted, only its ciphertext is. This entity is
+ * what a field looks like mid-migration away from being plain, persisted
+ * text: something else in the system (a legacy batch export, say) still
+ * reads cardNumber directly and isn't ready for it to become transient
+ * yet. @EnableMigrationSupport is the escape hatch that lets @Encrypt
+ * accept that, for a stated deadline.
+ */
+public class InProgressMigrationEntity {
+
+    /* TODO: Add @EnableMigrationSupport above this field, with a
+     * completedBy date in the future, a justification, and a ticket
+     * reference.
+     *
+     * Without it, a non-transient @Encrypt field fails CryptoShield's
+     * registration outright - that's the exception you'll see if you run
+     * this class as-is.
+     */
+    @Encrypt
+    private String cardNumber;
+
+    @EncryptedData
+    private String encryptedData;
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getEncryptedData() {
+        return encryptedData;
+    }
+
+    public void setEncryptedData(String encryptedData) {
+        this.encryptedData = encryptedData;
+    }
+}
