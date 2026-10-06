@@ -2,7 +2,7 @@ Plain Ciphertext → Structured Ciphertext
 
 ## The naive approach
 
-The naive approach is the simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one garbled blob of bytes.
+The naive approach (and [why it is so common](why-naive-is-common.md)) is the simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one garbled blob of bytes.
 
 That gets you *an* opaque blob. However, an opaque blob on its own can't answer the questions your application will inevitably need to ask later:
 
