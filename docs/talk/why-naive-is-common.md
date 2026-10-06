@@ -1,18 +1,17 @@
 Why the Naive Approach Is the Most Common One
 
-## Why people do it
+## Why developers do it
 
-**It's the shortest path to working code.** The first requirement is almost always "this column needs to be encrypted". The shortest answer is `encrypt(plaintext)` and `store(ciphertext)`. Nothing in that moment asks "which key?", because there is only one key, and one set of encryption parameters. The metadata problem doesn't exist yet, as there is only one encryption mechanism, so it doesn't get designed for.
+**It's the quickest way to working code.** The first request is usually "this column needs to be encrypted". So you call `encrypt()` and store the result. There's only one key at the start, so nobody asks "which key?" And nobody asks what happens when that key has to change.
 
-**The problems are invisible until much later.** Key rotation, provider changes and retiring a key are all future events. A team shipping a feature this sprint is rewarded for working code now, and nobody is penalised in the demo for not predicting the future. The failure modes only appear after a rotation, an audit finding or a compliance deadline, by then the data is already in production for quite some time.
+**The problems show up later.** Rotating keys, switching providers and retiring keys all happen in the future. Teams get rewarded for shipping now, and nobody is marked down in a demo for failing to predict the future. By the time an audit or a rotation exposes the gap, the data has been in production for a long time.
 
-**Libraries and tutorials teach it.** Cipher API examples, Stack Overflow answers and blog posts show `Cipher.getInstance(...)`, `init`, `doFinal`, and stop. They treat the output bytes as "the ciphertext". Most developers copy that shape, and the IV is the only extra piece they learn to carry along.
+**Tutorials teach it.** Most examples show `Cipher.getInstance(...)`, `init` and `doFinal`, then stop. They treat the output bytes as "the ciphertext". Developers copy that, and the IV is the only extra piece they learn to store.
 
-**A single key hides the design flaw.** With one key and one provider, the naive design works and passes every test. Single-key systems never expose the missing elements, like key ID, so there is no feedback telling the team to change course.
+**One key hides the flaw.** With a single key and a single provider, the naive design passes every test. Nothing is missing until there is more than one key, so nothing tells the team to change course.
 
-**The structured approach needs foresight.** It asks the team to build a key object, a resolver and a self-describing format before there is a concrete need. That looks like over-engineering to anyone who hasn't been through a painful rotation. The people who do it right have usually done it wrong before.
+**The better design needs foresight.** It means building a key object, a resolver and a self-describing format before you need them. That looks like over-engineering to anyone who hasn't been through a painful rotation. The people who get it right have usually got it wrong before.
 
-**Retrofitting is expensive, so it keeps getting deferred.** Once naive blobs exist, moving to a structured format means a migration of live encrypted data. That is exactly the work the structured format would have avoided. So the naive design tends to stay until outages for key rotation become too long to be acceptable.
+**Fixing it later is expensive.** Once naive blobs are in the database, moving to a structured format means migrating live encrypted data, which is the work the structured format would have avoided. So the migration keeps getting put off, often until rotation outages become unacceptably long.
 
-**Ownership is split.** The developer writing the feature rarely owns key management, compliance or operations. The people who feel the rotation pain are not the people who chose the storage format.
-
+**Nobody owns the whole problem.** The developer who writes the feature is rarely the one who has to rotate the keys later.
