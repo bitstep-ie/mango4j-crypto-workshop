@@ -48,7 +48,7 @@ All of an entity's confidential fields can be bundled into a single payload and 
 
 Every capability covered later in this talk depends on the ciphertext carrying its own metadata, rather than living in a bare column with the key/provider/IV tracked (or guessed at) elsewhere:
 
-- **[Key rotation](key-rotation.md)** — old records keep decrypting correctly after the current key changes, because each one's stored key ID and other metadata says exactly which key asnd other details to use, permanently.
+- **[Key rotation](key-rotation.md)** — old records keep decrypting correctly after the current key changes, because each one's stored key ID and other metadata say exactly which key and other details to use, permanently.
 - **[Multi-provider support](key-aliases.md)** — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.
 - **Rekeying ([encryption](rekeying-encryption.md), [HMACs](rekeying-hmacs.md))** — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new current one.
 

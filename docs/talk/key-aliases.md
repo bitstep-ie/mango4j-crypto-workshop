@@ -3,7 +3,7 @@ Key Aliases → Crypto Key Configs
 ## The limits of representing a key as a string
 
 It's tempting to represent an encryption key in your code as a simple String, usually due to the fact that applications rarely deal directly with the actual encryption key itself. 
-Often they use a key reference such as a JKS key alias or a HSM slot label; just a String your encrypt/decrypt calls pass around. e.g. 
+Often they use a key reference such as a JKS key alias or an HSM slot label; just a String your encrypt/decrypt calls pass around. e.g. 
 ```java
 public class MyBusinessService { 
     
@@ -53,7 +53,7 @@ rather than just assuming that it's always dealing with a JKS encryption key.
 
 The simple change of moving from a text based encryption key to an encryption key object now allows our code to use infinitely many methods/providers to carry 
 out the encryption without ever having to change the business logic. The MyBusinessService class can remain provider-agnostic, rather than directly call a particular hard-coded provider. 
-The EncryptionKey object can carry all the information needed to tell the encryptionService code how perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
+The EncryptionKey object can carry all the information needed to tell the encryptionService code how to perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
 and any other configuration that provider needs to actually perform the operation (algorithm, iv length, padding mode).
 
 Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. Plus the code can now support multiple providers side by side, 
