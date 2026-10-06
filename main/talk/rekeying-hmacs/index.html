@@ -1502,7 +1502,7 @@
   <h1>Rekeying: HMACs</h1>
 
 <h2 id="why-hmacs-need-their-own-rekey-process">Why HMACs need their own rekey process</h2>
-<p><a href="../rekeying-encryption/">Rekeying: Encryption</a> covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because a HMAC isn't just replaced in place. Under the <a href="../list-hmac/">List HMAC Strategy</a>, a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
+<p><a href="../rekeying-encryption/">Rekeying: Encryption</a> covered re-encrypting a record's ciphertext from an old key to a new one. HMACs need the same eventual outcome — get everything off old keys — but the process looks different, because an HMAC isn't just replaced in place. Under the <a href="../list-hmac/">List HMAC Strategy</a>, a record can legitimately have HMACs from <em>multiple</em> keys stored simultaneously, and the rekey job has to <em>add</em> new entries without disturbing old ones that other in-flight operations might still depend on.</p>
 <p>This additive requirement is why HMAC rekeying, in practice, is only well-supported for entities using the List HMAC Strategy, unlike encryption-only rekeying (<a href="../rekeying-encryption/">Rekeying: Encryption</a>), which works regardless of HMAC strategy.</p>
 <h2 id="the-process">The process</h2>
 <ol>

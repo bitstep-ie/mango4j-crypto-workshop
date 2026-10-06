@@ -1438,7 +1438,7 @@
 <p>Plain Ciphertext → Structured Ciphertext</p>
 <h2 id="the-naive-approach">The naive approach</h2>
 <p>The naive approach is the simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one garbled blob of bytes.</p>
-<p>That gets you <em>an</em> opaque blob. But an opaque blob on its own can't answer the questions your application will inevitably need to ask later:</p>
+<p>That gets you <em>an</em> opaque blob. However, an opaque blob on its own can't answer the questions your application will inevitably need to ask later:</p>
 <ul>
 <li>Which key encrypted this? (You need to know, in order to decrypt it.)</li>
 <li>Which provider handled that key? (AWS KMS? An HSM? Something else?)</li>
@@ -1453,7 +1453,7 @@ and it's exactly the kind of design that makes <a href="../key-rotation/">key ro
 <span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">ciphertext</span><span class="p">;</span>
 </code></pre></div>
 <p>Without a key ID, decrypting an old record after a key rotation means trying every key you still happen to have, one at a time, until one works. 
-And it also probably assumes that the same encryption approach was used for each key, which is not necessarily true if you rotate to a different provider, algorithm, etc.:</p>
+It also probably assumes that the same encryption approach was used for each key, which is not necessarily true if you rotate to a different provider, algorithm, etc.:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">decryptByBruteForce</span><span class="p">(</span><span class="n">NaiveBlob</span><span class="w"> </span><span class="n">blob</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">SecretKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allKnownKeysNewestFirst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">SecretKey</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">allKnownKeysNewestFirst</span><span class="p">.</span><span class="na">values</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">plaintext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tryDecrypt</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span><span class="w"> </span><span class="n">candidate</span><span class="p">);</span>

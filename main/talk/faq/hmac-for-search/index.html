@@ -1303,7 +1303,7 @@
   <h1>Hmac for search</h1>
 
 <p>Why do I need to HMAC data to make it searchable?</p>
-<p>With the usual randomized or nonce-based encryption schemes, the same plaintext produces different ciphertext each time (see <a href="../iv/">What's an IV, and why does it matter?</a>), so ciphertext is not normally suitable for equality search. A HMAC of the same normalized value, computed with the same key, is deterministic; storing it alongside ciphertext enables equality lookup by HMAC. This also reveals equality between matching stored values, so normalization, authorization, and key management are part of the design. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
+<p>With the usual randomized or nonce-based encryption schemes, the same plaintext produces different ciphertext each time (see <a href="../iv/">What's an IV, and why does it matter?</a>), so ciphertext is not normally suitable for equality search. An HMAC of the same normalized value, computed with the same key, is deterministic; storing it alongside ciphertext enables equality lookup by HMAC. This also reveals equality between matching stored values, so normalization, authorization, and key management are part of the design. See <a href="../../introducing-hmacs/">Introducing HMACs</a>.</p>
 
 
 

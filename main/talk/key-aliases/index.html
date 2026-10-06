@@ -1504,7 +1504,7 @@ rather than just assuming that it's always dealing with a JKS encryption key.</p
 out the encryption without ever having to change the business logic. The MyBusinessService class can remain provider-agnostic, rather than directly call a particular hard-coded provider. 
 The EncryptionKey object can carry all the information needed to tell the encryptionService code how to perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
 and any other configuration that provider needs to actually perform the operation (algorithm, iv length, padding mode).</p>
-<p>Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. Plus the code can now support multiple providers side by side, 
+<p>Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. The code can also now support multiple providers side by side, 
 and can rotate keys without touching a single line of application code.</p>
 <h2 id="key-resolution-how-application-code-actually-asks-for-a-key">Key resolution: how application code actually asks for a key</h2>
 <p>In the code snippet above the EncryptionKey object was statically bound to the class (in this case via a Spring properties configuration). Although there's nothing wrong with this, 
