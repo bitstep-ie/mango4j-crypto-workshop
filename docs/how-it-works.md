@@ -43,7 +43,7 @@ private transient String cardNumber;
 // --8<-- [end:encrypt-field]
 ```
 
-And a docs page includes just that section with:
+A docs page includes just that section with:
 
 ```
 --8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/PaymentCardEntity.java:encrypt-field"

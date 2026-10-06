@@ -56,7 +56,7 @@ out the encryption without ever having to change the business logic. The MyBusin
 The EncryptionKey object can carry all the information needed to tell the encryptionService code how to perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
 and any other configuration that provider needs to actually perform the operation (algorithm, iv length, padding mode).
 
-Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. Plus the code can now support multiple providers side by side, 
+Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. The code can also now support multiple providers side by side, 
 and can rotate keys without touching a single line of application code.
 
 ## Key resolution: how application code actually asks for a key

@@ -22,7 +22,7 @@ Once new writes are on the new key, old rows are still sitting there encrypted u
 
 ## The same shape of problem: migrating an *unencrypted* field to encrypted
 
-Everything above assumes the field was already encrypted, just under an old key. But the very first time a field becomes confidential, you're migrating from *no* encryption at all — and the mechanics are similar to phase 2 above, with a few additional considerations:
+Everything above assumes the field was already encrypted, just under an old key. However, the very first time a field becomes confidential, you're migrating from *no* encryption at all — and the mechanics are similar to phase 2 above, with a few additional considerations:
 
 - **Encryption for an existing column can't just be switched on.** Every existing row is plaintext; there's no ciphertext yet to decrypt, so the migration has to write encrypted values for the first time, not just re-key existing ones.
 - **Backfilling millions of rows without downtime** is the same operational problem as any large-scale rekey, just with no prior art in the table to compare against as you go.

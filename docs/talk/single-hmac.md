@@ -2,7 +2,7 @@ The Single HMAC Strategy
 
 ## One column per HMAC
 
-[Introducing HMACs](introducing-hmacs.md) covered why a HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying ([encryption](rekeying-encryption.md), [HMACs](rekeying-hmacs.md)) needs later to find what's stale.
+[Introducing HMACs](introducing-hmacs.md) covered why an HMAC is what you actually search and enforce uniqueness on. The simplest possible design for storing one: one HMAC column per field, holding a single HMAC value, sitting alongside the encrypted record — a `USERNAME_HMAC` column next to the `userName` ciphertext, a `PAN_HMAC` column next to the `pan` ciphertext, and typically a column recording which HMAC key produced them, which rekeying ([encryption](rekeying-encryption.md), [HMACs](rekeying-hmacs.md)) needs later to find what's stale.
 
 It's the design many applications default to — simple, relational-DB-friendly, no join required — but it inherits both of the HMAC key rotation challenges head-on.
 

@@ -31,9 +31,9 @@ Do not invent nonce generation rules from a generic example. Reuse of a nonce wh
 
 ## Treat HMAC search as an equality index with leakage
 
-A HMAC lets the application calculate the same protected index for the same normalized input and key. It is therefore suitable for equality lookup and, with the right storage strategy, uniqueness enforcement. It is not a general substring, prefix, fuzzy, or range-search mechanism.
+An HMAC lets the application calculate the same protected index for the same normalized input and key. It is therefore suitable for equality lookup and, with the right storage strategy, uniqueness enforcement. It is not a general substring, prefix, fuzzy, or range-search mechanism.
 
-This convenience has a cost: matching HMAC values reveal that the underlying values match. An observer of the index can see frequency and equality patterns even without knowing the plaintext. Derived tokens create additional patterns. For example, a HMAC of the last four digits of a card number supports equality lookup on those four digits, but the input domain is small and can be easy to enumerate through a search or write oracle.
+This convenience has a cost: matching HMAC values reveal that the underlying values match. An observer of the index can see frequency and equality patterns even without knowing the plaintext. Derived tokens create additional patterns. For example, an HMAC of the last four digits of a card number supports equality lookup on those four digits, but the input domain is small and can be easy to enumerate through a search or write oracle.
 
 Before adding an HMAC index, specify:
 

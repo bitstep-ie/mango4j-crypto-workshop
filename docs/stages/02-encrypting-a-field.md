@@ -36,7 +36,7 @@ This stage comes as two projects:
 
 `CryptoShield` is the object you call `encrypt()`/`decrypt()` on. Building one needs two things: something that supplies cryptographic keys (a `CryptoKeyProvider`), and something that does the actual encrypting (an `EncryptionServiceDelegate`). Both are already wired up for you in `starter/` — this part isn't the exercise.
 
-For this stage, [`InMemoryCryptoKeyProvider`](https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java) hands back one hardcoded key — a real application would look keys up from wherever it stores them. And rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in `Base64EncryptionService`, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.
+For this stage, [`InMemoryCryptoKeyProvider`](https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/stages/02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/InMemoryCryptoKeyProvider.java) hands back one hardcoded key — a real application would look keys up from wherever it stores them. Rather than wiring up real encryption (KMS, a cipher, ...), we use the library's built-in `Base64EncryptionService`, which just Base64-encodes data — it exists specifically so you can learn and test the mechanics without any real cryptographic setup.
 
 ```java
 --8<-- "02-Encrypt-a-Field/complete/src/main/java/ie/bitstep/mango/workshop/Main.java:build-shield"

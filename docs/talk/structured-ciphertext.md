@@ -4,7 +4,7 @@ Plain Ciphertext → Structured Ciphertext
 
 The naive approach is the simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one garbled blob of bytes.
 
-That gets you *an* opaque blob. But an opaque blob on its own can't answer the questions your application will inevitably need to ask later:
+That gets you *an* opaque blob. However, an opaque blob on its own can't answer the questions your application will inevitably need to ask later:
 
 - Which key encrypted this? (You need to know, in order to decrypt it.)
 - Which provider handled that key? (AWS KMS? An HSM? Something else?)
@@ -22,7 +22,7 @@ Here's that naive shape in code, just an IV and the raw ciphertext bytes, with n
 ```
 
 Without a key ID, decrypting an old record after a key rotation means trying every key you still happen to have, one at a time, until one works. 
-And it also probably assumes that the same encryption approach was used for each key, which is not necessarily true if you rotate to a different provider, algorithm, etc.:
+It also probably assumes that the same encryption approach was used for each key, which is not necessarily true if you rotate to a different provider, algorithm, etc.:
 
 ```java
 --8<-- "naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveVault.java:brute-force-decrypt"

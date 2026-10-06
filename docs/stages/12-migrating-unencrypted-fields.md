@@ -108,7 +108,7 @@ legacy records still unmigrated after this sweep: 0 / 3
 post-cutover field still encrypts fine: {"cryptoKeyId":"workshop-encryption-key",...}
 ```
 
-Plus the two log lines from earlier, printed during `CryptoShield.Builder().build()` before any of those. The last two lines are this addition: the remaining-unmigrated count confirms every legacy record picked up its ciphertext, and `MigratedEntity` - built with a completely separate `CryptoShield` that's never even heard of `@EnableMigrationSupport` - proves the field works exactly like any other stage's once the migration is behind it.
+The two log lines from earlier are also present, printed during `CryptoShield.Builder().build()` before any of those. The last two lines are this addition: the remaining-unmigrated count confirms every legacy record picked up its ciphertext, and `MigratedEntity` - built with a completely separate `CryptoShield` that's never even heard of `@EnableMigrationSupport` - proves the field works exactly like any other stage's once the migration is behind it.
 
 ## The rest of the migration story
 
