@@ -1460,7 +1460,7 @@
 <p>Key Aliases → Crypto Key Configs</p>
 <h2 id="the-limits-of-representing-a-key-as-a-string">The limits of representing a key as a string</h2>
 <p>It's tempting to represent an encryption key in your code as a simple String, usually due to the fact that applications rarely deal directly with the actual encryption key itself. 
-Often they use a key reference such as a JKS key alias or a HSM slot label; just a String your encrypt/decrypt calls pass around. e.g. 
+Often they use a key reference such as a JKS key alias or an HSM slot label; just a String your encrypt/decrypt calls pass around. e.g. 
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyBusinessService</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
 
 <span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">"${encryption.key.alias}"</span><span class="p">)</span>
@@ -1502,7 +1502,7 @@ It is now just a generic encryption service that can use information in the <cod
 rather than just assuming that it's always dealing with a JKS encryption key.</p>
 <p>The simple change of moving from a text based encryption key to an encryption key object now allows our code to use infinitely many methods/providers to carry 
 out the encryption without ever having to change the business logic. The MyBusinessService class can remain provider-agnostic, rather than directly call a particular hard-coded provider. 
-The EncryptionKey object can carry all the information needed to tell the encryptionService code how perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
+The EncryptionKey object can carry all the information needed to tell the encryptionService code how to perform the operation: What provider to use (HSM, JKS, AWS-KMS, etc.), what type of key it is (encryption vs. HMAC), 
 and any other configuration that provider needs to actually perform the operation (algorithm, iv length, padding mode).</p>
 <p>Adding or changing a provider or algorithm can then just be a configuration change rather than a change to business logic. Plus the code can now support multiple providers side by side, 
 and can rotate keys without touching a single line of application code.</p>
