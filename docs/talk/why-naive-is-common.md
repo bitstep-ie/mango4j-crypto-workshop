@@ -2,9 +2,9 @@ Why the Naive Approach Is the Most Common One
 
 ## Why people do it
 
-**It's the shortest path to working code.** The first requirement is almost always "this column needs to be encrypted". The shortest answer is `encrypt(plaintext)` and `store(ciphertext)`. Nothing in that moment asks "which key?", because there is only one key, and one set of encrypion paramaters. The metadata problem doesn't exist yet, as there is only one encryption machanism, so it doesn't get designed for.
+**It's the shortest path to working code.** The first requirement is almost always "this column needs to be encrypted". The shortest answer is `encrypt(plaintext)` and `store(ciphertext)`. Nothing in that moment asks "which key?", because there is only one key, and one set of encryption parameters. The metadata problem doesn't exist yet, as there is only one encryption mechanism, so it doesn't get designed for.
 
-**The problems are invisible until much later.** Key rotation, provider changes and retiring a key are all future events. A team shipping a feature this sprint is rewarded for working code now, and nobody is penalised in the demo for not predicting the future. The failure modes, only appear after a rotation, an audit finding or a compliance deadline, by then the data is already in production for quite some time.
+**The problems are invisible until much later.** Key rotation, provider changes and retiring a key are all future events. A team shipping a feature this sprint is rewarded for working code now, and nobody is penalised in the demo for not predicting the future. The failure modes only appear after a rotation, an audit finding or a compliance deadline, by then the data is already in production for quite some time.
 
 **Libraries and tutorials teach it.** Cipher API examples, Stack Overflow answers and blog posts show `Cipher.getInstance(...)`, `init`, `doFinal`, and stop. They treat the output bytes as "the ciphertext". Most developers copy that shape, and the IV is the only extra piece they learn to carry along.
 
