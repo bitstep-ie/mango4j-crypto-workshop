@@ -2,7 +2,7 @@ Why the Naive Approach Is the Most Common One
 
 ## Why developers do it
 
-**It's the quickest way to working code.** The first request is usually "this column needs to be encrypted". So you call `encrypt()` and store the result. There's only one key at the start, so nobody asks "which key?", and nobody asks what happens when that key has to change.
+**It's the quickest way to working code.** The first request is usually "this column needs to be encrypted". So you call `encrypt()` and store the result. There's only one key at the start, so nobody asks "which key?", or "what happens when that key has to change".
 
 **The problems show up later.** Rotating keys, switching providers and retiring keys all happen in the future. Teams get rewarded for shipping now, and nobody is marked down in a demo for failing to predict the future. By the time an audit or a rotation exposes the gap, the data has been in production for a long time.
 
