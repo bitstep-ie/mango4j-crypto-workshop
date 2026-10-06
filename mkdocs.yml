@@ -5,7 +5,7 @@ repo_name: bitstep-ie/mango4j-crypto-workshop
 
 theme:
   name: material
-  logo: assets/mango-black.png
+  logo: assets/mango-slit.png
   favicon: assets/favicon.ico
   features:
     - navigation.tabs
