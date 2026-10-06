@@ -11,10 +11,6 @@
       
       
       
-        <link rel="prev" href="../key-aliases/">
-      
-      
-        <link rel="next" href="../transient-vs-encrypted-blobs/">
       
       
         
@@ -25,7 +21,7 @@
     
     
       
-        <title>Structured Ciphertext - ALE Workshop</title>
+        <title>Why naive is common - ALE Workshop</title>
       
     
     
@@ -76,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-naive-approach" class="md-skip">
+        <a href="#why-people-take-it" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Structured Ciphertext
+              Why naive is common
             
           </span>
         </div>
@@ -222,12 +218,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../intro/" class="md-tabs__link">
           
   
@@ -347,31 +341,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
             
   
   
@@ -389,7 +378,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -460,35 +449,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Structured Ciphertext
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../structured-ciphertext/" class="md-nav__link">
         
   
   
@@ -504,57 +468,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-naive-approach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The naive approach
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-fix-a-structured-ciphertext-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The fix: a structured ciphertext format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-structure-is-the-foundation-for-everything-after-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why this structure is the foundation for everything after it
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1381,10 +1294,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-naive-approach" class="md-nav__link">
+  <a href="#why-people-take-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The naive approach
+        Why people take it
       
     </span>
   </a>
@@ -1392,21 +1305,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-fix-a-structured-ciphertext-format" class="md-nav__link">
+  <a href="#why-the-talk-starts-here" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The fix: a structured ciphertext format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-structure-is-the-foundation-for-everything-after-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why this structure is the foundation for everything after it
+        Why the talk starts here
       
     </span>
   </a>
@@ -1433,62 +1335,20 @@
   
 
 
-  <h1>Structured Ciphertext</h1>
+  <h1>Why naive is common</h1>
 
-<p>Plain Ciphertext → Structured Ciphertext</p>
-<h2 id="the-naive-approach">The naive approach</h2>
-<p>The naive approach (and <a href="../why-naive-is-common/">why it is so common</a>) is the simplest possible way to implement ALE: encrypt the value, store the ciphertext. One field, one column, one garbled blob of bytes.</p>
-<p>That gets you <em>an</em> opaque blob. However, an opaque blob on its own can't answer the questions your application will inevitably need to ask later:</p>
-<ul>
-<li>Which key encrypted this? (You need to know, in order to decrypt it.)</li>
-<li>Which provider handled that key? (AWS KMS? An HSM? Something else?)</li>
-<li>What IV or nonce was used? (Needed to reverse the encryption operation; the encryption scheme defines whether it must be random, unique, or both.)</li>
-<li>What other specifics do I need to know to decrypt this? What algorithm was used? What padding mode was used?</li>
-</ul>
-<p>Naive implementations tend to bolt these on piecemeal and inconsistently: a key alias tacked on as a sibling column, 
-static cryptographic code scattered wherever a field happened to need it. None of it is wrong exactly — it's just uncoordinated, 
-and it's exactly the kind of design that makes <a href="../key-rotation/">key rotation</a> and <a href="../key-aliases/">multi-provider support</a> difficult to retrofit later.</p>
-<p>Here's that naive shape in code, just an IV and the raw ciphertext bytes, with nothing that says which key produced them:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">iv</span><span class="p">;</span>
-<span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">ciphertext</span><span class="p">;</span>
-</code></pre></div>
-<p>Without a key ID, decrypting an old record after a key rotation means trying every key you still happen to have, one at a time, until one works. 
-It also probably assumes that the same encryption approach was used for each key, which is not necessarily true if you rotate to a different provider, algorithm, etc.:</p>
-<p><div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">decryptByBruteForce</span><span class="p">(</span><span class="n">NaiveBlob</span><span class="w"> </span><span class="n">blob</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">SecretKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allKnownKeysNewestFirst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">SecretKey</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">allKnownKeysNewestFirst</span><span class="p">.</span><span class="na">values</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">plaintext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tryDecrypt</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span><span class="w"> </span><span class="n">candidate</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plaintext</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">plaintext</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<small><a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/blob/main/talk/naive-ciphertext-blob/src/main/java/ie/bitstep/mango/workshop/talk/naiveciphertextblob/NaiveVault.java#L66-L74">View on GitHub</a></small></p>
-<p>That's <code>X(number of keys ever issued)</code> per read, forever, and once a key is retired and its material destroyed (as compliance often requires), 
-there was never a way to query "which records still depend on this key?" to migrate (rekey) them first. 
-See <a href="https://github.com/bitstep-ie/mango4j-crypto-workshop/tree/main/talk/naive-ciphertext-blob"><code>talk/naive-ciphertext-blob/</code></a> for the full runnable demo, including that failure.</p>
-<h2 id="the-fix-a-structured-ciphertext-format">The fix: a structured ciphertext format</h2>
-<p>The fix is to stop treating "the ciphertext" as just the raw encrypted bytes, and instead treat it as a small structured record — commonly something like:</p>
-<ul>
-<li><strong>key ID</strong> — an identifier for the key that performed the encryption. This is how decryption always knows which key to ask for, even years after a key has stopped being "current."</li>
-<li><strong>IV</strong> — the Initialization Vector used for this specific encryption operation (see <a href="../intro/">What Is ALE, and Why Do We Still Need It?</a> — this is what makes ciphertext non-deterministic, and it must travel with the ciphertext to reverse the operation).</li>
-<li><strong>the actual encrypted output</strong> — whatever bytes the underlying cryptographic operation produced. This doesn't need to be a fixed shape, because different providers can return different kinds of output here — an HSM-backed operation's output looks nothing like a password-derived key's.</li>
-</ul>
-<p>All of an entity's confidential fields can be bundled into a single payload and encrypted together in one operation, with this whole structure — key ID, IV, output 
-— written into a single stored field, rather than encrypting each field independently and scattering key/IV metadata across several columns.</p>
-<h2 id="why-this-structure-is-the-foundation-for-everything-after-it">Why this structure is the foundation for everything after it</h2>
-<p>Every capability covered later in this talk depends on the ciphertext carrying its own metadata, rather than living in a bare column with the key/provider/IV tracked (or guessed at) elsewhere:</p>
-<ul>
-<li><strong><a href="../key-rotation/">Key rotation</a></strong> — old records keep decrypting correctly after the current key changes, because each one's stored key ID and other metadata say exactly which key and other details to use, permanently.</li>
-<li><strong><a href="../key-aliases/">Multi-provider support</a></strong> — a new key can point at a totally different provider, and existing ciphertext is unaffected because it already recorded which key (and therefore which provider) it needs.</li>
-<li><strong>Rekeying (<a href="../rekeying-encryption/">encryption</a>, <a href="../rekeying-hmacs/">HMACs</a>)</strong> — a rekey process can find every record still on an old key by inspecting its stored key ID, decrypt with the old key, and re-encrypt with the new current one.</li>
-</ul>
-<p>One structured field replaces what would otherwise be several loosely-coordinated columns and a lot of implicit assumptions about "which key and other details did we use back then?"</p>
-<p>For simplicity and flexibility, the workshop's code examples (and the mango4j-crypto framework itself) use a JSON representation of this structure, 
-but any format that can carry the same information is valid. The important part is that the ciphertext is self-describing and able to describe different types of 
-details depending on the encryption approach used by different types of encryption keys, not that it's JSON specifically. 
-JSON is just perfect for this because of its generality and universal support.</p>
+<p>Why the Naive Approach Is the Most Common One</p>
+<p>Most teams end up with the naive approach (encrypt the value, store the ciphertext) because every incentive on day one points toward it, and the costs only show up much later. See <a href="../structured-ciphertext/">Structured Ciphertext</a> for what it looks like and why it breaks down.</p>
+<h2 id="why-people-take-it">Why people take it</h2>
+<p><strong>It's the shortest path to working code.</strong> The first requirement is almost always "encrypt this column". The shortest answer is <code>encrypt(plaintext)</code> and <code>store(ciphertext)</code>. Nothing in that moment asks "which key?", because there is only one key. The metadata problem doesn't exist yet, so it doesn't get designed for.</p>
+<p><strong>The problems are invisible until much later.</strong> Key rotation, provider changes and retiring a key are all future events. A team shipping a feature this sprint is rewarded for working code now, and nobody is penalised in the demo for missing metadata. The failure modes (the brute-force decrypt, the unanswerable "which records still use this key?") only appear after a rotation, an audit finding or a compliance deadline. By then the data is already in production.</p>
+<p><strong>Libraries and tutorials teach it.</strong> Cipher API examples, Stack Overflow answers and blog posts show <code>Cipher.getInstance(...)</code>, <code>init</code>, <code>doFinal</code>, and stop. They treat the output bytes as "the ciphertext". Most developers copy that shape, and the IV is the only extra piece they learn to carry along.</p>
+<p><strong>A single key hides the design flaw.</strong> With one key and one provider, the naive design works and passes every test. Single-key systems never expose the missing key ID, so there is no feedback telling the team to change course.</p>
+<p><strong>The structured approach needs foresight.</strong> It asks the team to build a key object, a resolver and a self-describing format before there is a concrete need. That looks like over-engineering to anyone who hasn't been through a painful rotation. The people who do it right have usually been burned before.</p>
+<p><strong>Retrofitting is expensive, so it keeps getting deferred.</strong> Once naive blobs exist, moving to a structured format means a migration of live encrypted data. That is exactly the work the structured format would have avoided. So the naive design tends to stay.</p>
+<p><strong>Ownership is split.</strong> The developer writing the feature rarely owns key management, compliance or operations. The people who feel the rotation pain are not the people who chose the storage format.</p>
+<h2 id="why-the-talk-starts-here">Why the talk starts here</h2>
+<p>This is why the talk leads with the naive version and runs it until it fails. It lets the audience see why the extra structure matters before the structured version is introduced.</p>
 
 
 
@@ -1513,44 +1373,6 @@ JSON is just perfect for this because of its generality and universal support.</
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../key-aliases/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Key Aliases &amp; Key Configs">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Key Aliases & Key Configs
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../transient-vs-encrypted-blobs/" class="md-footer__link md-footer__link--next" aria-label="Next: Transient vs. Encrypted Blobs">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Transient vs. Encrypted Blobs
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
