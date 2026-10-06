@@ -1328,7 +1328,7 @@
 
 <p>Why the Naive Approach Is the Most Common One</p>
 <h2 id="why-developers-do-it">Why developers do it</h2>
-<p><strong>It's the quickest way to working code.</strong> The first request is usually "this column needs to be encrypted". So you call <code>encrypt()</code> and store the result. There's only one key at the start, so nobody asks "which key?" And nobody asks what happens when that key has to change.</p>
+<p><strong>It's the quickest way to working code.</strong> The first request is usually "this column needs to be encrypted". So you call <code>encrypt()</code> and store the result. There's only one key at the start, so nobody asks "which key?", and nobody asks what happens when that key has to change.</p>
 <p><strong>The problems show up later.</strong> Rotating keys, switching providers and retiring keys all happen in the future. Teams get rewarded for shipping now, and nobody is marked down in a demo for failing to predict the future. By the time an audit or a rotation exposes the gap, the data has been in production for a long time.</p>
 <p><strong>Tutorials teach it.</strong> Most examples show <code>Cipher.getInstance(...)</code>, <code>init</code> and <code>doFinal</code>, then stop. They treat the output bytes as "the ciphertext". Developers copy that, and the IV is the only extra piece they learn to store.</p>
 <p><strong>One key hides the flaw.</strong> With a single key and a single provider, the naive design passes every test. Nothing is missing until there is more than one key, so nothing tells the team to change course.</p>
